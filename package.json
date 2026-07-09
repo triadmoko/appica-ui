@@ -1,0 +1,33 @@
+{
+  "name": "appica-ui",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @appica/ui-react dev",
+    "playground": "pnpm --filter playground-react dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean",
+    "pack:react": "pnpm --filter @appica/ui-react build && pnpm --filter @appica/ui-react exec pnpm pack",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "sync-exports:check": "pnpm --filter @appica/ui-react exec node scripts/sync-exports.mjs --check",
+    "release": "pnpm --filter @appica/ui-react publish"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.6.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.4",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.63.0"
+  }
+}

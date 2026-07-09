@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+.next
+.source
+*.tsbuildinfo
+
+# Next.js-generated (regenerated with its own formatting on every dev/build)
+next-env.d.ts
+
+# Lockfiles
+pnpm-lock.yaml
+
+# Coverage and test artifacts
+coverage
+
+# Logs
+*.log
+
+# Agent-facing docs (hand-authored; Prettier off so emphasis/list/table style is preserved)
+AGENTS.md
+ARCHITECTURE.md
+CLAUDE.md
+
+# Claude Code skills & config
+.claude

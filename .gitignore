@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+.turbo/
+.tmp/
+*.tsbuildinfo
+*.tgz
+.DS_Store
+*.log
+.env
+.env.local
+
+# Claude Code — personal/machine-local, not shared
+.claude/settings.local.json
+.claude/projects/
