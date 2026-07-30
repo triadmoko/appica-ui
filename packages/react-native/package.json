@@ -1,0 +1,100 @@
+{
+  "name": "@appica/ui-react-native",
+  "version": "0.1.0",
+  "description": "Appica UI components library for React Native / Expo applications",
+  "license": "MIT",
+  "author": "Appica UI",
+  "homepage": "https://appica.dev/ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appica-dev/appica-ui.git",
+    "directory": "packages/react-native"
+  },
+  "bugs": {
+    "url": "https://github.com/appica-dev/appica-ui/issues"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "components",
+    "ui",
+    "component-library",
+    "design-system",
+    "accessible"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./button": {
+      "types": "./dist/components/button/index.d.ts",
+      "import": "./dist/components/button/index.js",
+      "default": "./dist/components/button/index.js"
+    },
+    "./hooks/use-theme": {
+      "types": "./dist/hooks/use-theme.d.ts",
+      "import": "./dist/hooks/use-theme.js",
+      "default": "./dist/hooks/use-theme.js"
+    },
+    "./providers/theme-provider": {
+      "types": "./dist/providers/theme-provider/index.d.ts",
+      "import": "./dist/providers/theme-provider/index.js",
+      "default": "./dist/providers/theme-provider/index.js"
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "sync-exports": "node scripts/sync-exports.mjs",
+    "prebuild": "pnpm sync-exports",
+    "prepack": "pnpm sync-exports",
+    "prepublishOnly": "pnpm run build && pnpm run test",
+    "build": "pnpm clean && tsc -p tsconfig.build.json && rollup -c rollup.config.mjs",
+    "dev": "rollup -c rollup.config.mjs --watch",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
+    "@types/react": "^19.2.17",
+    "expo": "^57.0.9",
+    "jest": "^29.7.0",
+    "jest-expo": "^57.0.3",
+    "react": "^19.2.3",
+    "react-native": "^0.86.2",
+    "rollup": "^4.62.2",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "test-renderer": "^1.2.0",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "react-native": ">=0.74.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  }
+}

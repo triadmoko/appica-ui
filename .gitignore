@@ -3,6 +3,7 @@ dist/
 .next/
 .turbo/
 .tmp/
+.expo/
 *.tsbuildinfo
 *.tgz
 .DS_Store

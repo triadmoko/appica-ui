@@ -5,6 +5,7 @@ workspace so far (`pnpm-workspace.yaml`), with more integrations (html, vue, …
 to land as sibling packages:
 
 - **`packages/react`** — the `@appica/ui-react` component library (React 19 + Base UI `@base-ui/react` + Motion + Tailwind v4). Conventions: [packages/react/AGENTS.md](packages/react/AGENTS.md).
+- **`packages/react-native`** — the `@appica/ui-react-native` component library for React Native / Expo (React 19 + RN `StyleSheet` + hand-mirrored design tokens, no Tailwind/NativeWind yet). Conventions: [packages/react-native/AGENTS.md](packages/react-native/AGENTS.md).
 
 **Always read the scoped guide for the area you're working in** before writing code there.
 

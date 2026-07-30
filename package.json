@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "pnpm --filter @appica/ui-react dev",
     "playground": "pnpm --filter playground-react dev",
+    "playground:native": "pnpm --filter playground-react-native start",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
@@ -17,7 +18,7 @@
     "pack:react": "pnpm --filter @appica/ui-react build && pnpm --filter @appica/ui-react exec pnpm pack",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "sync-exports:check": "pnpm --filter @appica/ui-react exec node scripts/sync-exports.mjs --check",
+    "sync-exports:check": "pnpm -r --if-present run sync-exports -- --check",
     "release": "pnpm --filter @appica/ui-react publish"
   },
   "devDependencies": {
