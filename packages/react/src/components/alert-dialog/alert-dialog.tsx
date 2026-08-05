@@ -29,18 +29,28 @@ type AlertDialogContentProps = ModalContentProps<
    * @default true
    */
   backdrop?: boolean
+  /**
+   * Wrap the popup in a translucent glass frame. Needs `backdrop`: without one the popup
+   * is always a plain solid card.
+   * @default true
+   */
+  frame?: boolean
 }
 
 function AlertDialogContent({
   className,
   children,
   backdrop = true,
+  frame = true,
   backdropProps,
   viewportProps,
   ...props
 }: AlertDialogContentProps) {
   const { portal, popup } = splitModalProps(props)
   const forceBackdrop = backdropProps?.forceRender === true
+  // The frame is a rim of blurred page around the popup, so it only reads against the
+  // backdrop. Without one it collapses to a plain solid card.
+  const showFrame = frame && backdrop
   return (
     <BaseAlertDialog.Portal {...portal}>
       {backdrop && (
@@ -65,16 +75,18 @@ function AlertDialogContent({
       >
         <BaseAlertDialog.Popup
           data-slot="alert-dialog-popup"
+          {...(showFrame ? { 'data-frame': '' } : {})}
           className={cn(
             'group/alert-dialog-popup relative flex max-h-full min-h-0 w-100 max-w-full flex-col',
             'rounded-2xl border',
-            backdrop
+            showFrame
               ? cn(
                   'border-white/15 bg-white/10 p-1.5 backdrop-blur-sm',
                   !forceBackdrop &&
                     'data-nested:border-border-overlay data-nested:bg-background data-nested:p-0 data-nested:shadow-2xl data-nested:backdrop-blur-none',
                 )
-              : 'bg-background border-border-overlay shadow-2xl',
+              : 'bg-background border-border-overlay',
+            !showFrame && 'shadow-2xl',
             'isolate transform-gpu outline-none',
             'motion-safe:transition-[opacity,scale] motion-safe:duration-250 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
             'data-starting-style:motion-safe:scale-95 data-starting-style:motion-safe:opacity-0',
@@ -87,7 +99,7 @@ function AlertDialogContent({
             data-slot="alert-dialog-content"
             className={cn(
               'flex min-h-0 flex-col overflow-hidden not-has-[>[data-slot=alert-dialog-footer]]:pb-6 not-has-[>[data-slot=alert-dialog-header]]:pt-6 [&>[data-slot=alert-dialog-header]+[data-slot=alert-dialog-footer]]:pt-0',
-              backdrop &&
+              showFrame &&
                 cn(
                   'bg-background rounded-[calc(var(--radius-2xl)*5/6)]',
                   !forceBackdrop &&

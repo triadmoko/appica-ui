@@ -40,6 +40,12 @@ type DialogContentProps = ModalContentProps<
    * @default true
    */
   backdrop?: boolean
+  /**
+   * Wrap the popup in a translucent glass frame. Needs `backdrop`: without one the popup
+   * is always a plain solid card.
+   * @default true
+   */
+  frame?: boolean
 }
 
 function DialogContent({
@@ -48,10 +54,14 @@ function DialogContent({
   closeButton = true,
   closeLabel = 'Close',
   backdrop = true,
+  frame = true,
   backdropProps,
   viewportProps,
   ...props
 }: DialogContentProps) {
+  // The frame is a rim of blurred page around the popup, so it only reads against the
+  // backdrop. Without one it collapses to a plain solid card.
+  const showFrame = frame && backdrop
   const { portal, popup } = splitModalProps(props)
   return (
     <BaseDialog.Portal {...portal}>
@@ -77,12 +87,12 @@ function DialogContent({
       >
         <BaseDialog.Popup
           data-slot="dialog-popup"
+          {...(showFrame ? { 'data-frame': '' } : {})}
           className={cn(
             'group/dialog-popup relative flex max-h-full min-h-0 w-150 max-w-full flex-col',
             'rounded-2xl border',
-            backdrop
-              ? 'border-white/15 bg-white/10 p-1.5 backdrop-blur-sm'
-              : 'bg-background border-border-overlay shadow-2xl',
+            showFrame ? 'border-white/15 bg-white/10 p-1.5 backdrop-blur-sm' : 'bg-background border-border-overlay',
+            !showFrame && 'shadow-2xl',
             'isolate transform-gpu outline-none',
             'motion-safe:transition-[opacity,scale] motion-safe:duration-250 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
             'data-starting-style:motion-safe:scale-95 data-starting-style:motion-safe:opacity-0',
@@ -96,7 +106,7 @@ function DialogContent({
             data-slot="dialog-content"
             className={cn(
               'relative flex min-h-0 flex-col overflow-hidden not-has-[>[data-slot=dialog-footer]]:pb-6 not-has-[>[data-slot=dialog-header]]:pt-6 [&>[data-slot=dialog-header]+[data-slot=dialog-footer]]:pt-0',
-              backdrop && 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]',
+              showFrame && 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]',
             )}
           >
             {children}

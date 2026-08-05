@@ -20,12 +20,14 @@ function renderDialog({
   description = 'Make changes to your account.',
   closeButton,
   backdrop,
+  frame,
   contentClassName,
 }: {
   title?: string
   description?: string
   closeButton?: boolean
   backdrop?: boolean
+  frame?: boolean
   contentClassName?: string
 } = {}) {
   return render(
@@ -35,6 +37,7 @@ function renderDialog({
         className={contentClassName}
         {...(closeButton !== undefined ? { closeButton } : {})}
         {...(backdrop !== undefined ? { backdrop } : {})}
+        {...(frame !== undefined ? { frame } : {})}
       >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -157,6 +160,32 @@ describe('Dialog', () => {
     await screen.findByRole('dialog')
 
     expect(document.querySelector('[data-slot="dialog-backdrop"]')).toBeNull()
+  })
+
+  it('frames the popup by default and drops the frame when frame is false', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderDialog()
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    await screen.findByRole('dialog')
+    expect(document.querySelector('[data-slot="dialog-popup"]')).toHaveAttribute('data-frame')
+
+    unmount()
+    renderDialog({ frame: false })
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    await screen.findByRole('dialog')
+    expect(document.querySelector('[data-slot="dialog-popup"]')).not.toHaveAttribute('data-frame')
+  })
+
+  it('drops the frame when the backdrop is off, even if frame is set', async () => {
+    const user = userEvent.setup()
+    renderDialog({ backdrop: false, frame: true })
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    await screen.findByRole('dialog')
+
+    expect(document.querySelector('[data-slot="dialog-popup"]')).not.toHaveAttribute('data-frame')
   })
 
   it('has no accessibility violations when open', async () => {
