@@ -221,14 +221,45 @@ function Unit({ text, index, total, by, stagger, globalProgress, reduced, effect
 }
 
 interface TextAnimateProps extends Omit<React.ComponentProps<'span'>, 'children'> {
+  /** The text to animate. Use `\n` for explicit line breaks. */
   children: string
+  /**
+   * A preset name (`typewriter`, `scramble`, `rise`, `highlight`, `wave`, `flip`, `shimmer`) or a custom `(progress,
+   * ctx) => {…}`.
+   * @default 'typewriter'
+   */
   effect?: TextAnimateEffectName | TextAnimateEffect
+  /**
+   * Segmentation level. Defaults to the preset's natural level (e.g. `word` for `highlight`).
+   * @default preset's level
+   */
   by?: TextAnimateSegment
+  /** Controlled driver value (`0 → 1`). When set, the internal clock is disabled and you own the timeline. */
   progress?: number
+  /**
+   * Run the built-in clock when `progress` is not provided.
+   * @default true
+   */
   autoPlay?: boolean
+  /**
+   * Loop the built-in clock. Continuous presets (`wave`, `shimmer`) default to `true`.
+   * @default preset's value
+   */
   loop?: boolean
+  /**
+   * Built-in clock length in **seconds**.
+   * @default 1.6
+   */
   duration?: number
+  /**
+   * Built-in clock start delay in **seconds**.
+   * @default 0
+   */
   delay?: number
+  /**
+   * How offset each unit's window is from its neighbour's, `0 → 1`. `0` = all together; `1` = fully sequential.
+   * @default preset's value
+   */
   stagger?: number
 }
 

@@ -62,13 +62,37 @@ const transition = {
 
 type AlertLayout = 'block' | 'inline'
 
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof alertVariants> {
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeof alertVariants>, 'variant'> {
+  /**
+   * Color scheme; also drives the `AlertIcon` accent.
+   * @default 'default'
+   */
+  variant?: VariantProps<typeof alertVariants>['variant']
+  /**
+   * Stack the parts (`block`) or flow them on one row when wide enough (`inline`).
+   * @default 'block'
+   */
   layout?: AlertLayout
+  /**
+   * Render a close button that hides the alert (with an exit animation).
+   * @default false
+   */
   dismissible?: boolean
+  /** Controlled visibility. Pair with `onOpenChange`. */
   open?: boolean
+  /** Called when the alert is dismissed (with `false`). */
   onOpenChange?: (open: boolean) => void
+  /** Remember the dismissal under this key so the alert stays hidden on return (uncontrolled). */
   persistKey?: string
+  /**
+   * Which Web Storage backs `persistKey`.
+   * @default 'local'
+   */
   persistStorage?: 'local' | 'session'
+  /**
+   * Accessible label for the close button.
+   * @default 'Dismiss'
+   */
   closeLabel?: string
 }
 
@@ -190,6 +214,10 @@ function AlertIcon({ className, ...props }: AlertIconProps) {
 }
 
 interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  /**
+   * Heading level, so the alert fits the page's heading outline.
+   * @default 'h5'
+   */
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div'
 }
 

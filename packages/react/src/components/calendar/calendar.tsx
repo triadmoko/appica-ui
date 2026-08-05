@@ -20,7 +20,12 @@ type DayPickerProps = React.ComponentProps<typeof DayPicker>
 type DistributiveOmit<T, K extends keyof never> = T extends unknown ? Omit<T, K> : never
 
 interface CalendarExtensions {
+  /**
+   * Cell size and text scale (Appica extension).
+   * @default 'md'
+   */
   size?: CalendarSize
+  /** Extra classes on the root, merged via `tailwind-merge`. */
   className?: string
 }
 

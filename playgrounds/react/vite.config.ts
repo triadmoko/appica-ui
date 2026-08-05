@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: [
       // Import from the library *source* (root barrel) so component edits hot-reload
-      // without a rollup build. Import only from '@appica/ui-react' here — subpaths
+      // without a rollup build. Import only from '@appica/ui-react' here - subpaths
       // resolve to dist/ and would need a packed build.
       {
         find: /^@appica\/ui-react$/,

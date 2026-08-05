@@ -8,7 +8,15 @@ import { cn } from '../../utils'
 type SpinnerVariant = 'circular' | 'dots' | 'sparkle'
 
 interface SpinnerProps extends Omit<React.ComponentProps<'span'>, 'children'> {
+  /**
+   * The animated shape.
+   * @default 'circular'
+   */
   variant?: SpinnerVariant
+  /**
+   * Inherit the surrounding text color (`currentColor`) instead of the primary accent.
+   * @default false
+   */
   currentColor?: boolean
 }
 

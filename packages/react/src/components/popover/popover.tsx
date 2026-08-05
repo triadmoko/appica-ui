@@ -23,6 +23,10 @@ type PopoverContentProps = React.ComponentProps<typeof BasePopover.Popup> &
     React.ComponentProps<typeof BasePopover.Positioner>,
     React.ComponentProps<typeof BasePopover.Portal>
   > & {
+    /**
+     * Render the pointer and the thicker anchored border.
+     * @default true
+     */
     arrow?: boolean
   }
 

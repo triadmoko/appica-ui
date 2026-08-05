@@ -84,10 +84,24 @@ function AnimatedNumber({ value, direction }: { value: string; direction: AnimDi
 }
 
 interface NumberFieldProps extends Omit<React.ComponentProps<typeof BaseNumberField.Root>, 'className'> {
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: NumberFieldVariant
+  /**
+   * Scales field width, steppers, and text.
+   * @default 'md'
+   */
   size?: NumberFieldSize
+  /** Extra classes on the field root, merged via `tailwind-merge`. */
   className?: string
+  /**
+   * Placeholder text shown when empty.
+   * @default ' '
+   */
   placeholder?: string
+  /** Props forwarded to the inner `<input>` (`name`, `onChange`, `aria-*`, `className`, …). */
   inputProps?: React.ComponentProps<typeof BaseNumberField.Input>
 }
 

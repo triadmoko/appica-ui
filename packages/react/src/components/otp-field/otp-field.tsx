@@ -37,8 +37,17 @@ const SEPARATOR_SIZE: Record<OTPFieldSize, string> = {
 }
 
 interface OTPFieldProps extends Omit<React.ComponentProps<typeof BaseOTPField.Root>, 'className'> {
+  /**
+   * Slot appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: OTPFieldVariant
+  /**
+   * Scales every slot.
+   * @default 'md'
+   */
   size?: OTPFieldSize
+  /** Extra classes on the root, merged via `tailwind-merge`. */
   className?: string
 }
 

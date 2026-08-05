@@ -165,7 +165,12 @@ const indicatorClasses =
   'bg-primary select-none data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full'
 
 interface SliderProps extends Omit<BaseSlider.Root.Props, 'children'> {
+  /**
+   * When the value tooltip shows - on interaction, always, or never.
+   * @default 'auto'
+   */
   tooltipVisibility?: SliderTooltipVisibility
+  /** Accessible name for each thumb. Use a function to name range ends. */
   thumbAriaLabel?: string | ((index: number) => string)
 }
 

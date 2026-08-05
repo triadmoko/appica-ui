@@ -69,6 +69,10 @@ function DecorativePattern({ variant, horizontal }: { variant: SeparatorVariant;
 }
 
 type SeparatorProps = React.ComponentProps<typeof BaseSeparator> & {
+  /**
+   * Line style. `gradient`, `wave`, `zigzag`, and `dotted` are decorative.
+   * @default 'solid'
+   */
   variant?: SeparatorVariant
 }
 

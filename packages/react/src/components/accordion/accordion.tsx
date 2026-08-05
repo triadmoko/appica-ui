@@ -93,9 +93,25 @@ const iconBoxVariants = cva(
 )
 
 interface AccordionProps extends React.ComponentProps<typeof BaseAccordion.Root> {
+  /**
+   * Surface style applied to every item.
+   * @default 'default'
+   */
   variant?: AccordionVariant
+  /**
+   * The open/close indicator, or `false` to hide it.
+   * @default 'chevron'
+   */
   icon?: AccordionIcon
+  /**
+   * Plain glyph, or wrapped in a tinted tile.
+   * @default 'icon'
+   */
   iconVariant?: AccordionIconVariant
+  /**
+   * Place the icon after or before the trigger label.
+   * @default 'end'
+   */
   iconPosition?: AccordionIconPosition
 }
 
@@ -124,7 +140,12 @@ function Accordion({
 }
 
 interface AccordionItemProps extends Omit<React.ComponentProps<typeof BaseAccordion.Item>, 'disabled'> {
+  /** Override the root's `variant` for this item. */
   variant?: AccordionVariant
+  /**
+   * Lock this item shut and skip it during keyboard navigation.
+   * @default false
+   */
   disabled?: boolean | undefined
 }
 
@@ -145,8 +166,11 @@ function AccordionItem({ className, variant, ...props }: AccordionItemProps) {
 }
 
 interface AccordionTriggerProps extends React.ComponentProps<typeof BaseAccordion.Trigger> {
+  /** Override the root's icon for this trigger. */
   icon?: AccordionIcon
+  /** Override the root's icon style. */
   iconVariant?: AccordionIconVariant
+  /** Override the root's icon position. */
   iconPosition?: AccordionIconPosition
 }
 

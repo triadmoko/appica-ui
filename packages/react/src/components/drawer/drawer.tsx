@@ -20,6 +20,10 @@ const DrawerDepthContext = React.createContext(0)
 const DrawerSnapContext = React.createContext(false)
 
 interface DrawerProps extends Omit<React.ComponentProps<typeof BaseDrawer.Root>, 'swipeDirection'> {
+  /**
+   * The edge the drawer slides in from.
+   * @default 'bottom'
+   */
   side?: DrawerSide
 }
 
@@ -164,8 +168,17 @@ type DrawerContentProps = ModalContentProps<
   React.ComponentProps<typeof BaseDrawer.Backdrop>,
   React.ComponentProps<typeof BaseDrawer.Viewport>
 > & {
+  /**
+   * Render the × button in the corner.
+   * @default true
+   */
   closeButton?: boolean
+  /**
+   * Accessible label for the close button.
+   * @default 'Close'
+   */
   closeLabel?: string
+  /** Render the dimmed backdrop. Defaults to `true` at the top level, off when nested. */
   backdrop?: boolean
 }
 

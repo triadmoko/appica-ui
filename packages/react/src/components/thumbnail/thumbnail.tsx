@@ -43,13 +43,33 @@ type ThumbnailVariant = NonNullable<VariantProps<typeof thumbnailVariants>['vari
 type BaseImageProps = React.ComponentProps<typeof BaseAvatar.Image>
 
 interface ThumbnailProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'size' | 'children'> {
+  /**
+   * Image tile, or a colored icon tile.
+   * @default 'image'
+   */
   variant?: ThumbnailVariant
+  /**
+   * Rounded square or full circle.
+   * @default 'rounded'
+   */
   shape?: ThumbnailShape
+  /**
+   * A preset scale, or a pixel number for an exact size.
+   * @default 'md'
+   */
   size?: ThumbnailPresetSize | number
+  /** Image URL (image variant). Lifted from `render` when omitted. */
   src?: string
+  /**
+   * Alternative text describing the image. Defaults to `""` (decorative) when omitted.
+   * @default ''
+   */
   alt?: string
+  /** Swap the `<img>` for another element - e.g. a Next.js `<Image>`. */
   render?: BaseImageProps['render']
+  /** Fires as the image moves through its loading lifecycle. */
   onLoadingStatusChange?: BaseImageProps['onLoadingStatusChange']
+  /** The icon to frame (icon variants). */
   children?: React.ReactNode
 }
 

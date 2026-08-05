@@ -68,30 +68,85 @@ function useCarousel(): CarouselContextValue {
 }
 
 interface CarouselProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onSelect' | 'onScroll' | 'children'> {
+  /**
+   * Scroll axis. Maps to Embla's `axis`; exposed as `data-orientation`.
+   * @default 'horizontal'
+   */
   orientation?: CarouselOrientation
+  /**
+   * Wrap around from the last slide to the first.
+   * @default false
+   */
   loop?: boolean
+  /**
+   * Where slides settle within the viewport.
+   * @default 'start'
+   */
   align?: 'start' | 'center' | 'end'
+  /**
+   * How many slides advance per step. `'auto'` groups by how many fit the viewport.
+   * @default 1
+   */
   slidesToScroll?: number | 'auto'
+  /**
+   * Clamp scrolling so there's no empty space at the edges. `false` disables containment.
+   * @default 'trimSnaps'
+   */
   containScroll?: false | 'trimSnaps' | 'keepSnaps'
+  /** Release snap points; glide to a momentum stop. */
   dragFree?: boolean
+  /** Index of the slide to start on. */
   startSnap?: number
+  /**
+   * When `false`, the engine is inert (no drag/snap) - e.g. to disable at a breakpoint.
+   * @default true
+   */
   active?: boolean
+  /**
+   * Whether pointer dragging is enabled (Embla's `watchDrag`).
+   * @default true
+   */
   draggable?: boolean
+  /** Scroll animation duration (Embla's ease). Forced to `0` under reduced motion. */
   duration?: number
+  /** Escape hatch: a raw Embla options object, merged last so it wins over the flat props. */
   options?: CarouselOptions
+  /** Enable the Autoplay plugin. `resumeAfter` (ms) restarts the timer after user interaction. */
   autoplay?: boolean | CarouselAutoplayOptions
+  /** Enable continuous Auto Scroll. Mutually exclusive with `autoplay`; paused under reduced motion. */
   autoScroll?: boolean | CarouselAutoScrollOptions
+  /** Enable the Auto Height plugin; animates the viewport to each slide's height. */
   autoHeight?: boolean | CarouselAutoHeightOptions
+  /** Enable the Fade plugin (cross-fade instead of slide). Best with one slide per view. */
   fade?: boolean | CarouselFadeOptions
+  /** Enable the Class Names plugin, which toggles `snapped` / `inView` classes on slides. */
   classNames?: boolean | CarouselClassNamesOptions
+  /**
+   * Keyboard/ARIA plugin for the viewport. Set `false` to opt out.
+   * @default true
+   */
   accessibility?: boolean | CarouselAccessibilityOptions
+  /**
+   * Enable trackpad / mouse-wheel scrolling.
+   * @default false
+   */
   wheelGestures?: boolean | CarouselWheelGesturesOptions
+  /** Additional Embla plugins to append. */
   plugins?: CarouselPlugin[]
+  /** Receives the Embla instance once initialized - for imperative control. */
   setApi?: (api: CarouselApi) => void
+  /** Fires on init and whenever the engine re-initializes. */
   onReInit?: (api: CarouselApi) => void
+  /** Fires when the selected snap changes. */
   onSelect?: (api: CarouselApi) => void
+  /** Fires continuously while scrolling. */
   onScroll?: (api: CarouselApi) => void
+  /**
+   * Hint stored in context for light-on-dark surfaces; read via `useCarousel()`.
+   * @default false
+   */
   light?: boolean
+  /** The content. */
   children: React.ReactNode
 }
 
@@ -141,7 +196,7 @@ function Carousel({
     ) {
       warnedMutualExclusive.current = true
       // eslint-disable-next-line no-console
-      console.warn('[Carousel] `autoplay` and `autoScroll` are mutually exclusive — preferring `autoplay`.')
+      console.warn('[Carousel] `autoplay` and `autoScroll` are mutually exclusive - preferring `autoplay`.')
     }
   }, [autoplayEnabled, autoScrollEnabled])
 
@@ -648,7 +703,15 @@ function CarouselNext({ className, position = 'inside', disabled: disabledProp, 
 }
 
 interface CarouselPaginationProps extends React.ComponentPropsWithoutRef<'div'> {
+  /**
+   * Lay the bullets out in a row or a column.
+   * @default 'horizontal'
+   */
   orientation?: CarouselOrientation
+  /**
+   * Light-on-dark styling for use over imagery.
+   * @default false
+   */
   light?: boolean
 }
 
@@ -764,9 +827,25 @@ function CarouselAutoplayIndicator({ delay, isPlaying, light, orientation }: Car
 }
 
 interface CarouselProgressProps extends React.ComponentPropsWithoutRef<'div'> {
+  /**
+   * What drives the fill. `'auto'` counts down autoplay while it plays, otherwise tracks scroll position.
+   * @default 'auto'
+   */
   source?: 'auto' | 'autoplay' | 'scroll'
+  /**
+   * Straight bar or circular ring.
+   * @default 'bar'
+   */
   variant?: 'bar' | 'circular'
+  /**
+   * Fill direction for the bar variant.
+   * @default 'horizontal'
+   */
   orientation?: CarouselOrientation
+  /**
+   * Light-on-dark styling for use over imagery.
+   * @default false
+   */
   light?: boolean
 }
 
@@ -939,7 +1018,7 @@ function CarouselAutoplayCircularIndicator({
 }
 
 /**
- * Bidirectionally sync the selected snap between two carousels — the classic
+ * Bidirectionally sync the selected snap between two carousels - the classic
  * "main + thumbnails" pattern. Wires `select` on each so navigating either
  * one drives the other. Both apis can be undefined initially (e.g. waiting on
  * `setApi`); the effect re-runs once both resolve.

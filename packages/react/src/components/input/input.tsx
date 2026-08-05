@@ -10,12 +10,28 @@ type InputVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
 type InputSize = NonNullable<VariantProps<typeof inputVariants>['size']>
 
 interface InputProps extends Omit<React.ComponentProps<typeof BaseInput>, 'size'> {
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: InputVariant
+  /**
+   * Scales height, padding, and text. Named `inputSize` to avoid the native `size` attribute.
+   * @default 'md'
+   */
   inputSize?: InputSize
+  /**
+   * Show a clear (✕) button once the field has a value.
+   * @default false
+   */
   clearable?: boolean
+  /** Adornment rendered before the field, inside the frame. */
   startSlot?: React.ReactNode
+  /** Adornment rendered after the field, inside the frame. */
   endSlot?: React.ReactNode
+  /** Called when the clear button is pressed. */
   onClear?: () => void
+  /** Props for the inner `<input>` in wrapper mode (its own `className`, handlers, …). */
   inputProps?: Omit<React.ComponentProps<typeof BaseInput>, 'size'>
 }
 

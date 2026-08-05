@@ -41,6 +41,11 @@ function closestHeadingId(ids: readonly string[], rootBounds: DOMRectReadOnly | 
 }
 
 interface TocProps extends React.ComponentPropsWithoutRef<'nav'> {
+  /**
+   * `IntersectionObserver` `rootMargin` (`top right bottom left`) - offset the active boundary, e.g. for a sticky
+   * header.
+   * @default '0px'
+   */
   rootMargin?: string
 }
 
@@ -187,7 +192,12 @@ const DEPTH_INDENT: Record<number, string> = {
 }
 
 interface TocLinkProps extends useRender.ComponentProps<'a', TocLinkState> {
+  /** **Required.** The target heading, as a hash (`#id`). The `id` after `#` is the heading observed. */
   href: string
+  /**
+   * Heading level (2-6); controls the indentation. Higher = deeper indent.
+   * @default 2
+   */
   depth?: number
 }
 

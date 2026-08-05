@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-blue)](https://www.typescriptlang.org/)
 [![Figma](https://img.shields.io/badge/Figma-design_file-F24E1E?logo=figma&logoColor=white)](https://www.figma.com/community/file/1657080448204231925)
 
-A modern React component library — 60+ accessible, themeable components built on [Base UI](https://base-ui.com) primitives, animated with [Motion](https://motion.dev), and styled with Tailwind CSS v4 design tokens.
+A modern React component library - 60+ accessible, themeable components built on [Base UI](https://base-ui.com) primitives, animated with [Motion](https://motion.dev), and styled with Tailwind CSS v4 design tokens.
 
 **[Documentation](https://appica.dev/ui) · [Installation guide](https://appica.dev/ui/docs/react/installation) · [Components](https://appica.dev/ui/components/react/button)**
 
@@ -17,7 +17,7 @@ A modern React component library — 60+ accessible, themeable components built 
 | React DOM    | `>= 19`  |
 | Tailwind CSS | `>= 4.0` |
 
-React 19 is a hard requirement — components use the modern ref-as-prop API with no `forwardRef` shims. Tailwind v4 must be set up and compiling in your project first; Appica UI relies on your project's Tailwind to compile the component styles.
+React 19 is a hard requirement - components use the modern ref-as-prop API with no `forwardRef` shims. Tailwind v4 must be set up and compiling in your project first; Appica UI relies on your project's Tailwind to compile the component styles.
 
 ## Installation
 
@@ -78,7 +78,7 @@ See the [installation guide](https://appica.dev/ui/docs/react/installation) for 
 
 ## Figma design file
 
-Every component is also available as a free [Figma design file](https://www.figma.com/community/file/1657080448204231925) — variants, sizes, and states mirrored one-to-one with the code, built on the same design tokens. Design and develop from a single source of truth.
+Every component is also available as a free [Figma design file](https://www.figma.com/community/file/1657080448204231925) - variants, sizes, and states mirrored one-to-one with the code, built on the same design tokens. Design and develop from a single source of truth.
 
 ## Stay updated
 

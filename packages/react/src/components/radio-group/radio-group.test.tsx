@@ -62,7 +62,7 @@ describe('RadioGroup', () => {
       </RadioGroup>,
     )
     const group = screen.getByTestId('group')
-    // tailwind-merge dedupes conflicting display utilities — `grid` wins over `flex`.
+    // tailwind-merge dedupes conflicting display utilities - `grid` wins over `flex`.
     expect(group.className).toContain('grid')
     expect(group.className).toContain('grid-cols-2')
     expect(group.className).not.toMatch(/(^|\s)flex(\s|$)/)

@@ -23,6 +23,10 @@ type PreviewCardContentProps = React.ComponentProps<typeof BasePreviewCard.Popup
     React.ComponentProps<typeof BasePreviewCard.Positioner>,
     React.ComponentProps<typeof BasePreviewCard.Portal>
   > & {
+    /**
+     * Render the pointer and the thicker anchored border.
+     * @default true
+     */
     arrow?: boolean
   }
 

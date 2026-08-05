@@ -26,6 +26,10 @@ type TooltipContentProps = React.ComponentProps<typeof BaseTooltip.Popup> &
     React.ComponentProps<typeof BaseTooltip.Positioner>,
     React.ComponentProps<typeof BaseTooltip.Portal>
   > & {
+    /**
+     * Render the pointer.
+     * @default true
+     */
     arrow?: boolean
   }
 

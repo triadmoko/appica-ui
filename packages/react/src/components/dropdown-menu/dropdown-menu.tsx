@@ -27,6 +27,10 @@ function useDropdownMenuContext() {
 type BaseRootProps = React.ComponentProps<typeof BaseMenu.Root>
 
 interface DropdownMenuProps extends BaseRootProps {
+  /**
+   * Scales the popup radius, item padding, and icon size.
+   * @default 'md'
+   */
   size?: DropdownMenuSize
 }
 
@@ -77,6 +81,7 @@ type DropdownMenuFloatingProps = FloatingContentProps<
 
 type DropdownMenuContentProps = Omit<React.ComponentProps<typeof BaseMenu.Popup>, 'className'> &
   DropdownMenuFloatingProps & {
+    /** Extra classes on the popup. */
     className?: string
   }
 
@@ -245,6 +250,7 @@ function DropdownMenuSubTrigger({ className, children, ...props }: DropdownMenuS
 
 type DropdownMenuSubContentProps = Omit<React.ComponentProps<typeof BaseMenu.Popup>, 'className'> &
   DropdownMenuFloatingProps & {
+    /** Extra classes on the submenu popup. */
     className?: string
   }
 

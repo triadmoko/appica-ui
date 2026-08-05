@@ -44,7 +44,15 @@ function useMenubarContext() {
 type BaseMenubarRootProps = React.ComponentProps<typeof BaseMenubar>
 
 interface MenubarProps extends BaseMenubarRootProps {
+  /**
+   * Trigger appearance - hover/active pill, or an animated underline.
+   * @default 'pill'
+   */
   variant?: MenubarVariant
+  /**
+   * Scales the triggers, popups, and items together.
+   * @default 'md'
+   */
   size?: MenubarSize
 }
 

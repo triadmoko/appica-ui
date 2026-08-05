@@ -1,4 +1,4 @@
-// Shared plumbing for modal/overlay *Content components — the ones that wrap a
+// Shared plumbing for modal/overlay *Content components - the ones that wrap a
 // Base UI Portal → Backdrop → Viewport → Popup structure (Dialog, AlertDialog,
 // Drawer). Sibling to src/floating.ts (which handles the Positioner-based trio).
 //
@@ -12,7 +12,7 @@
 //      re-enumerating it.
 //
 // The Popup is what *Content represents, so its `className`/`style`/`render`
-// stay bound to it (via the regular spread) — reach the other elements through
+// stay bound to it (via the regular spread) - reach the other elements through
 // the escape hatches.
 
 /** Portal props promoted to flat props on every modal *Content. */
@@ -56,7 +56,7 @@ export interface SplitModalProps {
  *
  * Destructure `className`/`children`, the `backdropProps`/`viewportProps` escape
  * hatches, and any component-specific props (`backdrop`, `closeButton`, …) out of
- * the props object before calling this — everything left that isn't a known
+ * the props object before calling this - everything left that isn't a known
  * Portal prop is treated as a Popup prop.
  */
 export function splitModalProps(props: Record<string, unknown>): SplitModalProps {

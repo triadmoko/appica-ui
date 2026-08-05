@@ -27,6 +27,10 @@ function useContextMenuContext() {
 type BaseRootProps = React.ComponentProps<typeof BaseContextMenu.Root>
 
 interface ContextMenuProps extends BaseRootProps {
+  /**
+   * Scales the popup radius, item padding, and icon size.
+   * @default 'md'
+   */
   size?: ContextMenuSize
 }
 
@@ -77,6 +81,7 @@ type ContextMenuFloatingProps = FloatingContentProps<
 
 type ContextMenuContentProps = Omit<React.ComponentProps<typeof BaseContextMenu.Popup>, 'className'> &
   ContextMenuFloatingProps & {
+    /** Extra classes on the popup. */
     className?: string
   }
 
@@ -245,6 +250,7 @@ function ContextMenuSubTrigger({ className, children, ...props }: ContextMenuSub
 
 type ContextMenuSubContentProps = Omit<React.ComponentProps<typeof BaseContextMenu.Popup>, 'className'> &
   ContextMenuFloatingProps & {
+    /** Extra classes on the submenu popup. */
     className?: string
   }
 

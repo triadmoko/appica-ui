@@ -112,6 +112,10 @@ function SwitchThumb({
 }
 
 interface SwitchProps extends React.ComponentProps<typeof BaseSwitch.Root> {
+  /**
+   * Scales the track and thumb together.
+   * @default 'md'
+   */
   size?: SwitchSize
 }
 

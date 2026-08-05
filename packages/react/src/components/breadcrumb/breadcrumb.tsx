@@ -52,7 +52,15 @@ type BreadcrumbLinkState = {
 }
 
 interface BreadcrumbLinkProps extends useRender.ComponentProps<'a', BreadcrumbLinkState> {
+  /**
+   * Mark the current page. Renders a non-interactive `<span>` with `aria-current="page"`.
+   * @default false
+   */
   active?: boolean
+  /**
+   * Make the link non-interactive and dimmed.
+   * @default false
+   */
   disabled?: boolean
 }
 

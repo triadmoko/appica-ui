@@ -1,4 +1,4 @@
-// Shared plumbing for floating *Content components — the ones that wrap a Base UI
+// Shared plumbing for floating *Content components - the ones that wrap a Base UI
 // Portal → Positioner → Popup trio (Popover, Tooltip, PreviewCard, Menu, Select,
 // Combobox, Autocomplete, …).
 //
@@ -7,7 +7,7 @@
 // must map the Base UI surface itself. This module keeps that mapping consistent:
 //
 //   1. The common Positioner positioning props (+ the two Portal props) are
-//      promoted to flat props on *Content — Radix/shadcn ergonomics.
+//      promoted to flat props on *Content - Radix/shadcn ergonomics.
 //   2. `positionerProps` / `portalProps` escape hatches forward the long tail
 //      (e.g. `style`, `render`) without each component re-enumerating it.
 //
@@ -76,7 +76,7 @@ export interface SplitFloatingProps {
  * - Anything left that isn't a known Positioner/Portal prop is treated as a Popup prop.
  *
  * Destructure `className`/`children` (and any component-specific props) out of the
- * props object before calling this — they should not reach the generic Popup spread.
+ * props object before calling this - they should not reach the generic Popup spread.
  */
 export function splitFloatingProps(props: Record<string, unknown>): SplitFloatingProps {
   const { positionerProps, portalProps, ...rest } = props as {

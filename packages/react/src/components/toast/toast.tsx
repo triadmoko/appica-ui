@@ -83,10 +83,28 @@ function ToastProvider(props: ToastProviderProps) {
 }
 
 interface ToasterProps extends Omit<BaseToast.Viewport.Props, 'children'> {
+  /**
+   * Where the stack is anchored; also sets the default swipe-to-dismiss directions.
+   * @default 'bottom-right'
+   */
   position?: ToastPosition
+  /**
+   * Opt in to a countdown progress bar on auto-dismissing toasts.
+   * @default false
+   */
   progress?: boolean
+  /**
+   * Provider default (ms) used to size the progress bar for toasts that don't set their own `timeout`. Match your
+   * `ToastProvider`'s `timeout`.
+   * @default 5000
+   */
   timeout?: number
+  /**
+   * Portal target - scope the toasts to a specific element.
+   * @default document.body
+   */
   container?: React.ComponentProps<typeof BaseToast.Portal>['container']
+  /** Escape hatch forwarded to the underlying `Toast.Portal`. */
   portalProps?: Omit<React.ComponentProps<typeof BaseToast.Portal>, 'children'>
 }
 

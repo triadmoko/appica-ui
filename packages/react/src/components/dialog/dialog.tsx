@@ -25,8 +25,20 @@ type DialogContentProps = ModalContentProps<
   React.ComponentProps<typeof BaseDialog.Backdrop>,
   React.ComponentProps<typeof BaseDialog.Viewport>
 > & {
+  /**
+   * Render the × button in the corner.
+   * @default true
+   */
   closeButton?: boolean
+  /**
+   * Accessible label for the close button.
+   * @default 'Close'
+   */
   closeLabel?: string
+  /**
+   * Render the dimmed, blurred backdrop behind the popup.
+   * @default true
+   */
   backdrop?: boolean
 }
 

@@ -105,7 +105,7 @@ describe('DatePicker', () => {
       await user.keyboard('09')
 
       await user.click(screen.getByRole('button', { name: /open calendar/i }))
-      // react-day-picker labels the month caption — September should now be visible.
+      // react-day-picker labels the month caption - September should now be visible.
       const grid = await screen.findByRole('grid')
       expect(grid).toHaveAccessibleName(/september 2026/i)
     })

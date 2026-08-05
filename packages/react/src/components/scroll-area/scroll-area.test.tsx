@@ -107,7 +107,7 @@ describe('ScrollArea', () => {
     )
     expect(container.querySelector('[data-slot="scroll-area-scrollbar"]')).toBeNull()
     expect(container.querySelector('[data-slot="scroll-area-corner"]')).toBeNull()
-    // Viewport stays scrollable — it's still in the DOM.
+    // Viewport stays scrollable - it's still in the DOM.
     expect(container.querySelector('[data-slot="scroll-area-viewport"]')).not.toBeNull()
   })
 

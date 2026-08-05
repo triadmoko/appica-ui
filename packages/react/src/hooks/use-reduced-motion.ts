@@ -6,7 +6,7 @@ import { useReducedMotionContext } from '../providers/reduced-motion-provider'
 const QUERY = '(prefers-reduced-motion: reduce)'
 
 /**
- * Returns `true` when animations should be skipped — either because the OS
+ * Returns `true` when animations should be skipped - either because the OS
  * exposes `prefers-reduced-motion: reduce` or because a parent
  * `<ReducedMotionProvider disableAnimations>` opted out globally.
  */

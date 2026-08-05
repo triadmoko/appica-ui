@@ -13,15 +13,11 @@ const DEFAULT_CONTEXT: ReducedMotionContextValue = {
 const ReducedMotionContext = createContext<ReducedMotionContextValue>(DEFAULT_CONTEXT)
 
 export interface ReducedMotionProviderProps {
+  /** The subtree to opt out of animation */
   children: ReactNode
   /**
-   * Force-disable all component animations regardless of OS `prefers-reduced-motion`.
-   * Components also respect the OS preference automatically — this is the global override.
-   *
-   * The attribute is set on `<html>` (not on a wrapper div) so it reaches Base UI's portaled
-   * popups, which render under `document.body` and therefore escape the React subtree. The
-   * `motion-reduce:` / `motion-safe:` custom variants in styles.css already target
-   * `[data-disable-animations] *`.
+   * Force-disable animations regardless of the OS preference
+   * @default false
    */
   disableAnimations?: boolean
 }
@@ -35,7 +31,7 @@ const ATTR = 'data-disable-animations'
  * written to `<html>`, so it applies page-wide while mounted and covers
  * portaled popups.
  *
- * Optional — components already respect the OS `prefers-reduced-motion`
+ * Optional - components already respect the OS `prefers-reduced-motion`
  * preference with no provider. Reach for this only to force-disable animations.
  */
 export function ReducedMotionProvider({ children, disableAnimations = false }: ReducedMotionProviderProps) {

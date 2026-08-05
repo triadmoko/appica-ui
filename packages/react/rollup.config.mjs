@@ -65,7 +65,7 @@ export default defineConfig({
     propertyReadSideEffects: false,
   },
   onwarn(warning, warn) {
-    // Rollup hoists "use client" / "use server" — that's exactly what we want.
+    // Rollup hoists "use client" / "use server" - that's exactly what we want.
     if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return
     warn(warning)
   },

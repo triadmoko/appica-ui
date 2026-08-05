@@ -8,7 +8,15 @@ import { cn } from '../../utils'
 type LoaderVariant = 'bar' | 'dots'
 
 interface LoaderProps extends Omit<React.ComponentProps<'span'>, 'children'> {
+  /**
+   * The animated shape.
+   * @default 'bar'
+   */
   variant?: LoaderVariant
+  /**
+   * Inherit the surrounding text color (`currentColor`) instead of the primary accent.
+   * @default false
+   */
   currentColor?: boolean
 }
 

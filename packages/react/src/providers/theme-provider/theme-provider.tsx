@@ -16,12 +16,12 @@ export interface ThemeContextValue {
   /** The chosen theme, possibly `'system'`. */
   theme: string | undefined
   setTheme: (value: string | ((prev: string) => string)) => void
-  /** The theme actually applied — `'system'` resolved to `'light'`/`'dark'`. */
+  /** The theme actually applied - `'system'` resolved to `'light'`/`'dark'`. */
   resolvedTheme: string | undefined
   systemTheme: 'light' | 'dark' | undefined
   themes: string[]
   forcedTheme: string | undefined
-  /** `false` until the client has mounted — guard theme-dependent UI with this. */
+  /** `false` until the client has mounted - guard theme-dependent UI with this. */
   mounted: boolean
 }
 
@@ -42,26 +42,42 @@ export function useThemeContext(): ThemeContextValue {
 }
 
 export interface ThemeProviderProps {
+  /** The subtree the theme applies to */
   children?: React.ReactNode
-  /** Available theme names. Default `['light', 'dark']`. */
+  /**
+   * Available theme names
+   * @default ['light', 'dark']
+   */
   themes?: string[]
-  /** Force a theme for the whole tree (e.g. a docs page); overrides storage + system. */
+  /** Force a theme for the whole subtree (overrides storage + OS) */
   forcedTheme?: string
-  /** Respect the OS `prefers-color-scheme`. Default `true`. */
+  /**
+   * Respect the OS `prefers-color-scheme`
+   * @default true
+   */
   enableSystem?: boolean
-  /** Suppress CSS transitions during a theme change so colors don't animate. Default `false`. */
+  /**
+   * Suppress CSS transitions during a theme switch
+   * @default false
+   */
   disableTransitionOnChange?: boolean
-  /** Set `color-scheme` on `<html>` so native UI (scrollbars, form controls) matches. Default `true`. */
+  /**
+   * Set `color-scheme` on `<html>` so native UI matches
+   * @default true
+   */
   enableColorScheme?: boolean
-  /** Storage key for the persisted choice. Default `'theme'`. */
+  /**
+   * `localStorage` key for the persisted choice
+   * @default 'theme'
+   */
   storageKey?: string
-  /** Theme used before a choice is stored. Default `enableSystem ? 'system' : 'light'`. */
+  /** Theme used before a choice is stored */
   defaultTheme?: string
-  /** Map a theme name to a custom class applied on `<html>`. */
+  /** Map a theme name to a custom class applied on `<html>` */
   value?: Record<string, string>
-  /** CSP nonce forwarded to the inline no-flash script. */
+  /** CSP nonce forwarded to the inline script */
   nonce?: string
-  /** Extra props for the inline `<script>` element. */
+  /** Extra props for the inline `<script>` */
   scriptProps?: React.ScriptHTMLAttributes<HTMLScriptElement>
 }
 

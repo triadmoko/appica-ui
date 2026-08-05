@@ -33,9 +33,25 @@ function useComboboxContext() {
 type BaseComboboxRootProps = React.ComponentProps<typeof BaseCombobox.Root>
 
 interface ComboboxProps extends BaseComboboxRootProps {
+  /**
+   * Input height, popup radius, and item sizing.
+   * @default 'md'
+   */
   size?: ComboboxSize
+  /**
+   * Input appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: ComboboxVariant
+  /**
+   * Render a clear button inside the input when a value is present.
+   * @default false
+   */
   clearable?: boolean
+  /**
+   * Render a chevron button that toggles the popup.
+   * @default true
+   */
   icon?: boolean
 }
 
@@ -69,7 +85,9 @@ const ICON_SIZE: Record<ComboboxSize, string> = {
 }
 
 interface ComboboxInputProps extends Omit<React.ComponentProps<typeof BaseCombobox.Input>, 'size'> {
+  /** Adornment rendered before the field, inside the input frame. */
   startSlot?: React.ReactNode
+  /** Adornment rendered after the field, before the controls. */
   endSlot?: React.ReactNode
 }
 
@@ -107,7 +125,9 @@ function ComboboxInput({ className, startSlot, endSlot, placeholder, ...props }:
 }
 
 interface ComboboxChipsProps extends React.ComponentProps<typeof BaseCombobox.InputGroup> {
+  /** Placeholder for the inline text field. */
   placeholder?: string
+  /** Props forwarded to the inner text `input`. */
   inputProps?: Omit<React.ComponentProps<typeof BaseCombobox.Input>, 'placeholder'>
 }
 
@@ -185,7 +205,9 @@ function ComboboxToggleButton() {
 }
 
 interface ComboboxTriggerProps extends React.ComponentProps<typeof BaseCombobox.Trigger> {
+  /** Adornment before the value, inside the trigger frame. */
   startSlot?: React.ReactNode
+  /** Adornment after the value, before the chevron. */
   endSlot?: React.ReactNode
 }
 
@@ -339,7 +361,9 @@ function ComboboxContent({ className, children, ...props }: ComboboxContentProps
 }
 
 interface ComboboxListProps<T = any> extends Omit<React.ComponentProps<typeof BaseCombobox.List>, 'children'> {
+  /** Items per row in grid mode (defaults to 2 when `grid` is set). */
   cols?: number
+  /** A render function over the filtered items, or static `ComboboxItem`s. */
   children?: React.ReactNode | ((item: T, index: number) => React.ReactNode)
 }
 

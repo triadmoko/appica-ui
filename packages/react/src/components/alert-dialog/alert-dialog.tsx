@@ -24,6 +24,10 @@ type AlertDialogContentProps = ModalContentProps<
   React.ComponentProps<typeof BaseAlertDialog.Backdrop>,
   React.ComponentProps<typeof BaseAlertDialog.Viewport>
 > & {
+  /**
+   * Render the dimmed, blurred backdrop behind the popup.
+   * @default true
+   */
   backdrop?: boolean
 }
 

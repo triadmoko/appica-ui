@@ -4,6 +4,10 @@ import { cn } from '../../utils'
 type SkeletonEffect = 'shimmer' | 'pulse' | 'none'
 
 interface SkeletonProps extends React.ComponentProps<'div'> {
+  /**
+   * Animation played while the placeholder is visible. All effects honor `prefers-reduced-motion`.
+   * @default 'shimmer'
+   */
   effect?: SkeletonEffect
 }
 

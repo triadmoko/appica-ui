@@ -3,6 +3,10 @@ import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group'
 import { cn } from '../../utils'
 
 interface RadioGroupProps extends React.ComponentProps<typeof BaseRadioGroup> {
+  /**
+   * Lay options out in a row or column; sets which arrow keys move selection.
+   * @default 'vertical'
+   */
   orientation?: 'horizontal' | 'vertical'
 }
 
