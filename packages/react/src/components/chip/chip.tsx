@@ -5,7 +5,7 @@ import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 import { buttonVariants } from '../button/button-variants'
 

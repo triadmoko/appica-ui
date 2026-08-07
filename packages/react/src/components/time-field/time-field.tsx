@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { type VariantProps } from 'class-variance-authority'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { inputVariants } from '../input/input-variants'
 
 type TimeFieldVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { PreviewCard as BasePreviewCard } from '@base-ui/react/preview-card'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 
 type PreviewCardProps = React.ComponentProps<typeof BasePreviewCard.Root>
 

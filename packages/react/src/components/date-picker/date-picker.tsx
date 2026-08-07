@@ -9,7 +9,7 @@ import { Input, inputVariants } from '../input'
 import { Popover, PopoverContent, PopoverTrigger, type PopoverContentProps } from '../popover/popover'
 import { buttonVariants } from '../button/button-variants'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type DatePickerSize = 'sm' | 'md' | 'lg'
 type DatePickerVariant = 'outline' | 'soft'

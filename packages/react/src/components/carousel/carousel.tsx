@@ -12,7 +12,7 @@ import ClassNames, { type ClassNamesOptionsType } from 'embla-carousel-class-nam
 import Fade, { type FadeOptionsType } from 'embla-carousel-fade'
 import { WheelGesturesPlugin, type WheelGesturesPluginOptions } from 'embla-carousel-wheel-gestures'
 import type { EmblaCarouselType, EmblaOptionsType, EmblaPluginType } from 'embla-carousel'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Field as BaseField } from '@base-ui/react/field'
 import { type VariantProps } from 'class-variance-authority'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 import { inputVariants } from '../input/input-variants'
 
 type BaseControlProps = React.ComponentProps<typeof BaseField.Control>

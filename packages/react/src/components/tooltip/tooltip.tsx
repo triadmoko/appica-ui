@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 
 type TooltipProviderProps = React.ComponentProps<typeof BaseTooltip.Provider>
 

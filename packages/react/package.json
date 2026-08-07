@@ -127,6 +127,31 @@
       "import": "./dist/components/collapsible/collapsible.js",
       "default": "./dist/components/collapsible/collapsible.js"
     },
+    "./color-area": {
+      "types": "./dist/components/color-area/color-area.d.ts",
+      "import": "./dist/components/color-area/color-area.js",
+      "default": "./dist/components/color-area/color-area.js"
+    },
+    "./color-picker": {
+      "types": "./dist/components/color-picker/color-picker.d.ts",
+      "import": "./dist/components/color-picker/color-picker.js",
+      "default": "./dist/components/color-picker/color-picker.js"
+    },
+    "./color-slider": {
+      "types": "./dist/components/color-slider/color-slider.d.ts",
+      "import": "./dist/components/color-slider/color-slider.js",
+      "default": "./dist/components/color-slider/color-slider.js"
+    },
+    "./color-swatch": {
+      "types": "./dist/components/color-swatch/color-swatch.d.ts",
+      "import": "./dist/components/color-swatch/color-swatch.js",
+      "default": "./dist/components/color-swatch/color-swatch.js"
+    },
+    "./color-swatch-picker": {
+      "types": "./dist/components/color-swatch-picker/color-swatch-picker.d.ts",
+      "import": "./dist/components/color-swatch-picker/color-swatch-picker.js",
+      "default": "./dist/components/color-swatch-picker/color-swatch-picker.js"
+    },
     "./combobox": {
       "types": "./dist/components/combobox/combobox.d.ts",
       "import": "./dist/components/combobox/combobox.js",
@@ -366,6 +391,11 @@
       "types": "./dist/components/tooltip/tooltip.d.ts",
       "import": "./dist/components/tooltip/tooltip.js",
       "default": "./dist/components/tooltip/tooltip.js"
+    },
+    "./color": {
+      "types": "./dist/lib/color.d.ts",
+      "import": "./dist/lib/color.js",
+      "default": "./dist/lib/color.js"
     },
     "./hooks/use-direction": {
       "types": "./dist/hooks/use-direction.d.ts",

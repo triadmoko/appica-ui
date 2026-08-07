@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Tabs as BaseTabs } from '@base-ui/react/tabs'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type TabsVariant = 'pill' | 'line'
 type TabsSize = 'sm' | 'md' | 'lg'

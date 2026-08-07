@@ -4,7 +4,7 @@ import * as React from 'react'
 import { format as formatDate, formatISO, getDaysInMonth, isValid } from 'date-fns'
 import { type VariantProps } from 'class-variance-authority'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 import { inputVariants } from '../input/input-variants'
 

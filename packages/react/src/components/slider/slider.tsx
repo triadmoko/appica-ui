@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Slider as BaseSlider } from '@base-ui/react/slider'
 import { AnimatePresence, LazyMotion, domAnimation, m, useAnimate } from 'motion/react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 

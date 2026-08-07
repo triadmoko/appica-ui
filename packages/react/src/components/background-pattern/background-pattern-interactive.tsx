@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 import { PatternLayer, patternSpotlight, type BackgroundPatternVariant } from './background-pattern-shared'
 

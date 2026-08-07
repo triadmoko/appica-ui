@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 const thumbnailVariants = cva(
   "relative inline-flex size-[1em] shrink-0 items-center justify-center overflow-hidden [&_svg:not([class*='size-'])]:size-[0.5em]",

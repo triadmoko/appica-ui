@@ -11,7 +11,7 @@ import {
 } from 'react-day-picker'
 import { buttonVariants } from '../button/button-variants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select/select'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type CalendarSize = 'sm' | 'md' | 'lg'
 

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox'
 import { LazyMotion, domAnimation, m, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 
 const SQUISH_TRANSITION = {
   duration: 0.3,

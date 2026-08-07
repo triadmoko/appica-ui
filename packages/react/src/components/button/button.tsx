@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Button as BaseButton } from '@base-ui/react/button'
 import { type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { ButtonGroupContext } from '../button-group/button-group-context'
 import { buttonVariants } from './button-variants'
 

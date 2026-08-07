@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 import { useDismissible } from '../../hooks/use-dismissible'
 

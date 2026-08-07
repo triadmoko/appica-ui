@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { inputVariants } from '../input/input-variants'
 import { buttonVariants } from '../button/button-variants'
 

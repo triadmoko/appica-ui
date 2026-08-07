@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 
 type ContextMenuSize = 'sm' | 'md' | 'lg'

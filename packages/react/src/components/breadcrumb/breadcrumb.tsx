@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 
 type BreadcrumbProps = React.ComponentPropsWithoutRef<'nav'>
 

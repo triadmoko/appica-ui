@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Meter as BaseMeter } from '@base-ui/react/meter'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type MeterStatus = 'optimum' | 'suboptimum' | 'invalid'
 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 // Server-safe stand-in for Base UI's `useRender`, which is a hook and would
 // make Card a client component. Element form only, so it crosses the RSC boundary.

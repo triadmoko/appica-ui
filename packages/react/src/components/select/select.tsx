@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { Select as BaseSelect } from '@base-ui/react/select'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { inputVariants } from '../input/input-variants'
 
 type SelectSize = 'sm' | 'md' | 'lg'

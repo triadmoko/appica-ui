@@ -1,5 +1,5 @@
 import { ToggleGroup as BaseToggleGroup } from '@base-ui/react/toggle-group'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface ToggleGroupProps extends BaseToggleGroup.Props {}
 

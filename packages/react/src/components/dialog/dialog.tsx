@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Dialog as BaseDialog } from '@base-ui/react/dialog'
-import { cn } from '../../utils'
-import { type ModalContentProps, splitModalProps } from '../../modal'
+import { cn } from '../../internal/utils'
+import { type ModalContentProps, splitModalProps } from '../../internal/modal'
 import { buttonVariants } from '../button/button-variants'
 
 type DialogProps = React.ComponentProps<typeof BaseDialog.Root>

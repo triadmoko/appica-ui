@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type SkeletonEffect = 'shimmer' | 'pulse' | 'none'
 

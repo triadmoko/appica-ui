@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu'
 import { useDirection } from '../../hooks/use-direction'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 
 type NavigationMenuVariant = 'pill' | 'line'

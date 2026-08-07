@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { PatternLayer, patternCell, patternTint, type BackgroundPatternVariant } from './background-pattern-shared'
 import { BackgroundPatternInteractive } from './background-pattern-interactive'
 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type TableSize = 'sm' | 'md' | 'lg'
 type TableBorderStyle = 'solid' | 'dashed' | 'none'

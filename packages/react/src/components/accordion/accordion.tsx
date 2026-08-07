@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Accordion as BaseAccordion } from '@base-ui/react/accordion'
 import { cva } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type AccordionVariant = 'default' | 'alt' | 'flush'
 type AccordionIcon = 'chevron' | 'plus' | false

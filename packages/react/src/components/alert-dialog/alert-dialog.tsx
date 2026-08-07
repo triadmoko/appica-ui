@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AlertDialog as BaseAlertDialog } from '@base-ui/react/alert-dialog'
-import { cn } from '../../utils'
-import { type ModalContentProps, splitModalProps } from '../../modal'
+import { cn } from '../../internal/utils'
+import { type ModalContentProps, splitModalProps } from '../../internal/modal'
 
 type AlertDialogProps = React.ComponentProps<typeof BaseAlertDialog.Root>
 

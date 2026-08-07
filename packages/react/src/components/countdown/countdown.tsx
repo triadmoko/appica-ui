@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { LazyMotion, domAnimation, m } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface CountdownParts {
   days: number

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Fieldset as BaseFieldset } from '@base-ui/react/fieldset'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type FieldsetProps = React.ComponentProps<typeof BaseFieldset.Root>
 

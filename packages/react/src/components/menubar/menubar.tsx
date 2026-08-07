@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Menubar as BaseMenubar } from '@base-ui/react/menubar'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 import {
   DropdownMenu,

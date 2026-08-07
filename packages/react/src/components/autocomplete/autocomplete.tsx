@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { inputVariants } from '../input/input-variants'
 
 type AutocompleteSize = 'sm' | 'md' | 'lg'

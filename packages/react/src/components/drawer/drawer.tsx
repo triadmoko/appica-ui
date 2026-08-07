@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer'
-import { cn } from '../../utils'
-import { type ModalContentProps, splitModalProps } from '../../modal'
+import { cn } from '../../internal/utils'
+import { type ModalContentProps, splitModalProps } from '../../internal/modal'
 import { buttonVariants } from '../button/button-variants'
 
 type DrawerSide = 'top' | 'bottom' | 'left' | 'right'

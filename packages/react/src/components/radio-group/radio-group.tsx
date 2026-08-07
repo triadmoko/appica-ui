@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface RadioGroupProps extends React.ComponentProps<typeof BaseRadioGroup> {
   /**

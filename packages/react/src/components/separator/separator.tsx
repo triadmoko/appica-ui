@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Separator as BaseSeparator } from '@base-ui/react/separator'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type SeparatorVariant = 'solid' | 'dashed' | 'dotted' | 'double' | 'gradient' | 'wave' | 'zigzag'
 

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { animate, LazyMotion, domAnimation, m, useMotionValue, useTransform } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type SpinnerVariant = 'circular' | 'dots' | 'sparkle'
 

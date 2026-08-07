@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type GradientGlowBlur = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 type GradientGlowTrigger = 'hover' | 'press'

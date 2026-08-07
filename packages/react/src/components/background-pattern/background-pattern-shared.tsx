@@ -1,4 +1,4 @@
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type BackgroundPatternVariant = 'dots' | 'grid' | 'dashed-grid' | 'hexagons'
 

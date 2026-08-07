@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Toast as BaseToast } from '@base-ui/react/toast'
 import { type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 import { buttonVariants } from '../button/button-variants'
 

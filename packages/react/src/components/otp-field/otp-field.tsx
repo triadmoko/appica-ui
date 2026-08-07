@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { OTPField as BaseOTPField } from '@base-ui/react/otp-field'
 import { type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { inputVariants } from '../input/input-variants'
 
 type OTPFieldVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>

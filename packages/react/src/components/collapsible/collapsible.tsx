@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Collapsible as BaseCollapsible } from '@base-ui/react/collapsible'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type CollapsibleProps = React.ComponentProps<typeof BaseCollapsible.Root>
 

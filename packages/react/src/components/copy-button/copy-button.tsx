@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { Button, type ButtonProps } from '../button/button'
 
 const CHECK_PATH = 'M4.3 12.55 L9.25 17.5 L19.7 6.5'

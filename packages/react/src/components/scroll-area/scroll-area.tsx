@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScrollArea as BaseScrollArea } from '@base-ui/react/scroll-area'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both'
 type ScrollbarVisibility = 'always' | 'auto' | 'never'
