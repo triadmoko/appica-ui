@@ -77,6 +77,11 @@
       "import": "./dist/components/badge/badge.js",
       "default": "./dist/components/badge/badge.js"
     },
+    "./border-beam": {
+      "types": "./dist/components/border-beam/border-beam.d.ts",
+      "import": "./dist/components/border-beam/border-beam.js",
+      "default": "./dist/components/border-beam/border-beam.js"
+    },
     "./breadcrumb": {
       "types": "./dist/components/breadcrumb/breadcrumb.d.ts",
       "import": "./dist/components/breadcrumb/breadcrumb.js",
