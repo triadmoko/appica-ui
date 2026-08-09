@@ -525,12 +525,16 @@ function Carousel({
   )
 }
 
-type CarouselContentProps = React.ComponentPropsWithoutRef<'div'>
+interface CarouselContentProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Props for the scroll viewport, the element that clips the track. */
+  viewportProps?: React.ComponentPropsWithoutRef<'div'>
+}
 
-function CarouselContent({ className, children, ...rest }: CarouselContentProps) {
+function CarouselContent({ className, children, viewportProps, ...rest }: CarouselContentProps) {
   const { viewportRef, orientation, autoHeight } = useCarousel()
   return (
     <div
+      {...viewportProps}
       ref={viewportRef}
       data-slot="carousel-viewport"
       data-orientation={orientation}
@@ -538,6 +542,7 @@ function CarouselContent({ className, children, ...rest }: CarouselContentProps)
       className={cn(
         'overflow-hidden',
         autoHeight && 'motion-safe:transition-[height] motion-safe:duration-300 motion-safe:ease-out',
+        viewportProps?.className,
       )}
     >
       <div
@@ -575,6 +580,218 @@ function CarouselSlide({ className, ...rest }: CarouselSlideProps) {
       )}
       {...rest}
     />
+  )
+}
+
+interface CarouselThumbBox {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+function sameThumbBox(a: CarouselThumbBox | null, b: CarouselThumbBox) {
+  return a !== null && a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height
+}
+
+interface CarouselThumbsContextValue {
+  selectedIndex: number
+  select: (index: number) => void
+  light: boolean
+}
+
+const CarouselThumbsContext = React.createContext<CarouselThumbsContextValue | null>(null)
+const CarouselThumbIndexContext = React.createContext(0)
+
+function useCarouselThumbs(): CarouselThumbsContextValue {
+  const ctx = React.useContext(CarouselThumbsContext)
+  if (!ctx) {
+    throw new Error('<CarouselThumb> must be rendered inside <CarouselThumbs>')
+  }
+  return ctx
+}
+
+// Naming the slides keeps the indicator, which is a child of the track too, out
+// of the snap count.
+const CAROUSEL_THUMB_OPTIONS: CarouselOptions = { slides: ':scope > [data-slot=carousel-thumb]' }
+
+const CAROUSEL_THUMB_TRANSITION = cn(
+  'transition-[opacity,translate,scale] motion-reduce:transition-none',
+  'duration-[300ms,250ms,250ms]',
+  'ease-[ease-out,cubic-bezier(0.175,0.885,0.32,1.5),cubic-bezier(0.175,0.885,0.32,1.5)]',
+  'active:duration-[300ms,100ms,100ms] active:ease-[ease-out,ease-in-out,ease-in-out]',
+)
+
+interface CarouselThumbsProps extends Omit<
+  React.ComponentPropsWithoutRef<'div'>,
+  'draggable' | 'onSelect' | 'onScroll'
+> {
+  /**
+   * Lay the thumbnails out in a row or a column. Independent of the carousel's own axis.
+   * @default 'horizontal'
+   */
+  orientation?: CarouselOrientation
+  /**
+   * Light-on-dark styling for use over imagery.
+   * @default false
+   */
+  light?: boolean
+}
+
+function CarouselThumbs({
+  orientation = 'horizontal',
+  light: lightProp,
+  className,
+  children,
+  ...rest
+}: CarouselThumbsProps) {
+  const { selectedIndex, scrollTo, light: ctxLight } = useCarousel()
+  const light = lightProp ?? ctxLight
+  const [api, setApi] = React.useState<CarouselApi>()
+  const [box, setBox] = React.useState<CarouselThumbBox | null>(null)
+  const vertical = orientation === 'vertical'
+
+  // No dependency list: any render can add, remove or resize a thumbnail. Offsets
+  // are relative to the track, which is what Embla translates, so scrolling the
+  // rail carries the indicator along without a re-measure.
+  React.useEffect(() => {
+    const thumb = api?.slideNodes()[selectedIndex]
+    const track = api?.containerNode()
+
+    const measure = () => {
+      if (!thumb || !track) return setBox(null)
+      // Layout offsets, never rects: the thumbnail scales and shifts under the
+      // press, and a rect would catch it mid-animation. The track's transform
+      // makes it the offset parent in most engines; where it doesn't, the
+      // thumbnail is measured from further up and the track's own offset comes
+      // back off.
+      const nested = thumb.offsetParent === track
+      const next = {
+        x: thumb.offsetLeft - (nested ? 0 : track.offsetLeft),
+        y: thumb.offsetTop - (nested ? 0 : track.offsetTop),
+        width: thumb.offsetWidth,
+        height: thumb.offsetHeight,
+      }
+      setBox((previous) => (sameThumbBox(previous, next) ? previous : next))
+    }
+
+    measure()
+    if (!thumb || !track || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(measure)
+    observer.observe(thumb)
+    return () => observer.disconnect()
+  })
+
+  React.useEffect(() => {
+    const thumb = api?.slideNodes()[selectedIndex]
+    const viewport = api?.rootNode()
+    if (!thumb || !viewport) return
+    const slide = thumb.getBoundingClientRect()
+    const frame = viewport.getBoundingClientRect()
+    const visible = vertical
+      ? slide.top >= frame.top - 1 && slide.bottom <= frame.bottom + 1
+      : slide.left >= frame.left - 1 && slide.right <= frame.right + 1
+    if (!visible) api?.goTo(selectedIndex)
+  }, [api, selectedIndex, vertical])
+
+  const context = React.useMemo<CarouselThumbsContextValue>(
+    () => ({ selectedIndex, select: scrollTo, light }),
+    [selectedIndex, scrollTo, light],
+  )
+
+  return (
+    <CarouselThumbsContext.Provider value={context}>
+      <Carousel
+        orientation={orientation}
+        align="start"
+        // One snap per thumbnail even when several share a view, so a snap index
+        // means the same thing on both carousels.
+        containScroll="keepSnaps"
+        options={CAROUSEL_THUMB_OPTIONS}
+        setApi={setApi}
+        light={light}
+        role="group"
+        aria-roledescription={undefined}
+        aria-label="Choose slide to display"
+        data-slot="carousel-thumbs"
+        className={cn(vertical ? 'shrink-0' : 'w-full', className)}
+        {...rest}
+      >
+        <CarouselContent
+          viewportProps={{
+            // Bleed, given back as padding, so focus rings aren't clipped.
+            className: cn('-m-0.5 p-0.5', vertical && 'h-[calc(100%+(--spacing(1)))]'),
+          }}
+          // The track must stay unpositioned: Embla measures it and its slides
+          // with `offsetLeft`, so they have to share an offset parent.
+          className={cn('gap-2', vertical ? 'mt-0' : 'ms-0')}
+        >
+          {React.Children.map(children, (child, index) => (
+            <CarouselThumbIndexContext.Provider value={index}>{child}</CarouselThumbIndexContext.Provider>
+          ))}
+
+          {box ? (
+            <span
+              aria-hidden="true"
+              data-slot="carousel-thumbs-indicator"
+              className={cn(
+                // Anchored to the track by its transform, so it rides the scroll.
+                'pointer-events-none absolute top-0 left-0 rounded-lg border',
+                light ? 'border-white' : 'border-border-inverse',
+                'motion-safe:transition-[translate,width,height] motion-safe:duration-250',
+              )}
+              style={{ translate: `${box.x}px ${box.y}px`, width: box.width, height: box.height }}
+            />
+          ) : null}
+        </CarouselContent>
+      </Carousel>
+    </CarouselThumbsContext.Provider>
+  )
+}
+
+interface CarouselThumbProps extends React.ComponentPropsWithoutRef<'button'> {
+  /** Slide this thumbnail selects. Defaults to its position among the thumbnails. */
+  index?: number
+}
+
+function CarouselThumb({ index: indexProp, className, children, onClick, ...rest }: CarouselThumbProps) {
+  const { selectedIndex, select, light } = useCarouselThumbs()
+  const position = React.useContext(CarouselThumbIndexContext)
+  const index = indexProp ?? position
+  const active = index === selectedIndex
+
+  return (
+    <button
+      type="button"
+      aria-label={`Go to slide ${index + 1}`}
+      {...rest}
+      data-slot="carousel-thumb"
+      data-active={active || undefined}
+      aria-current={active ? 'true' : undefined}
+      onClick={(event) => {
+        onClick?.(event)
+        if (!event.defaultPrevented) select(index)
+      }}
+      className={cn(
+        'block w-18 shrink-0 grow-0 transform-gpu cursor-pointer rounded-lg border p-1',
+        light ? 'outline-ring-light border-white/25 bg-white/10 backdrop-blur-md' : 'bg-background outline-ring',
+        'focus-visible:outline-2',
+        CAROUSEL_THUMB_TRANSITION,
+        'active:translate-y-px active:scale-[0.97]',
+        !active && 'opacity-65 hover:opacity-100',
+        className,
+      )}
+    >
+      <span
+        data-slot="carousel-thumb-media"
+        className={cn(
+          'relative block aspect-square w-full overflow-hidden rounded-md',
+          light ? 'bg-white/10' : 'bg-background-muted',
+        )}
+      >
+        {children}
+      </span>
+    </button>
   )
 }
 
@@ -1054,6 +1271,8 @@ export {
   Carousel,
   CarouselContent,
   CarouselSlide,
+  CarouselThumbs,
+  CarouselThumb,
   CarouselPrev,
   CarouselNext,
   CarouselPagination,
@@ -1065,6 +1284,8 @@ export type {
   CarouselProps,
   CarouselContentProps,
   CarouselSlideProps,
+  CarouselThumbsProps,
+  CarouselThumbProps,
   CarouselPrevProps,
   CarouselNextProps,
   CarouselPaginationProps,
