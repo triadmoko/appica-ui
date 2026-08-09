@@ -64,7 +64,7 @@ const ICON_SIZE: Record<DropdownMenuSize, string> = {
 
 function popupClassName(size: DropdownMenuSize, className?: string) {
   return cn(
-    'max-h-(--available-height) w-(--anchor-width) bg-background border-border-overlay flex flex-col border shadow-2xl outline-none py-2',
+    'max-h-(--available-height) w-(--anchor-width) bg-background border-border-overlay flex flex-col border shadow-2xl outline-none',
     POPUP_SIZE[size],
     'origin-(--transform-origin)',
     'motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
@@ -97,7 +97,7 @@ function DropdownMenuContent({ className, children, ...props }: DropdownMenuCont
         className={cn('isolate z-50', positioner.className as string | undefined)}
       >
         <BaseMenu.Popup data-slot="dropdown-menu-content" className={popupClassName(size, className)} {...popup}>
-          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2">{children}</div>
+          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto p-2">{children}</div>
         </BaseMenu.Popup>
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
@@ -267,7 +267,7 @@ function DropdownMenuSubContent({ className, children, ...props }: DropdownMenuS
         className={cn('isolate z-50', positioner.className as string | undefined)}
       >
         <BaseMenu.Popup data-slot="dropdown-menu-sub-content" className={popupClassName(size, className)} {...popup}>
-          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2">{children}</div>
+          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto p-2">{children}</div>
         </BaseMenu.Popup>
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
