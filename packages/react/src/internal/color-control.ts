@@ -35,7 +35,7 @@ export const colorControlRootClasses = `outline-ring relative isolate touch-none
  * the dashed outline that replaces it when disabled. Both live on this overlay rather
  * than the root: a border on the root would shrink the padding box the thumb is
  * positioned against, nudging it a pixel the moment the control is disabled. The
- * border colour is inert without a width, so only the width and style are scoped.
+ * border color is inert without a width, so only the width and style are scoped.
  */
 export const colorControlSurfaceClasses =
   'ring-border border-border-strong pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset group-data-disabled/color-control:border group-data-disabled/color-control:border-dashed group-data-disabled/color-control:ring-0'
@@ -43,7 +43,7 @@ export const colorControlSurfaceClasses =
 /**
  * The thumb, minus positioning. Its own position is deliberately not transitioned -
  * easing it toward the pointer reads as lag. Only the press scale animates, and
- * `translate` and `scale` are separate properties, so centring the thumb and scaling
+ * `translate` and `scale` are separate properties, so centering the thumb and scaling
  * it never contend for `transform`.
  *
  * The white rim carries a faint dark ring on each side, so it stays legible over any

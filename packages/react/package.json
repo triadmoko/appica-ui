@@ -297,6 +297,11 @@
       "import": "./dist/components/radio-group/radio-group.js",
       "default": "./dist/components/radio-group/radio-group.js"
     },
+    "./rating": {
+      "types": "./dist/components/rating/rating.d.ts",
+      "import": "./dist/components/rating/rating.js",
+      "default": "./dist/components/rating/rating.js"
+    },
     "./scroll-area": {
       "types": "./dist/components/scroll-area/scroll-area.d.ts",
       "import": "./dist/components/scroll-area/scroll-area.js",

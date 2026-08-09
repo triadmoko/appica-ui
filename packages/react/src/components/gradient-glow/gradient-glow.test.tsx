@@ -4,7 +4,7 @@ import { axe } from 'vitest-axe'
 import { GradientGlow } from './gradient-glow'
 
 describe('GradientGlow', () => {
-  it('renders its children inside a labelled wrapper', () => {
+  it('renders its children inside a labeled wrapper', () => {
     render(
       <GradientGlow>
         <span>Content</span>

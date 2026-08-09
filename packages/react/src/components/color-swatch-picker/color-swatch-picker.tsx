@@ -66,7 +66,7 @@ function sameBox(a: Indicator | null, b: Indicator) {
  * already in. Rows are whatever shares an `offsetTop`, since the wrapping is the
  * browser's to decide.
  */
-function rowNeighbour(items: HTMLElement[], from: number, step: 1 | -1) {
+function rowNeighbor(items: HTMLElement[], from: number, step: 1 | -1) {
   const origin = items[from]!
   const beyond = items.filter((item) =>
     step > 0 ? item.offsetTop > origin.offsetTop : item.offsetTop < origin.offsetTop,
@@ -207,11 +207,11 @@ function ColorSwatchPicker({
               : event.key === 'ArrowDown'
                 ? stack
                   ? current + 1
-                  : rowNeighbour(items, current, 1)
+                  : rowNeighbor(items, current, 1)
                 : event.key === 'ArrowUp'
                   ? stack
                     ? current - 1
-                    : rowNeighbour(items, current, -1)
+                    : rowNeighbor(items, current, -1)
                   : NaN
     if (Number.isNaN(next)) return
 

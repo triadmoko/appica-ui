@@ -128,7 +128,7 @@ interface ColorPickerProps extends Omit<
    */
   alpha?: boolean
   /**
-   * Add a screen colour-sampling button to the default panel. It renders only where the
+   * Add a screen color-sampling button to the default panel. It renders only where the
    * browser supports the EyeDropper API, so there is no dead control on Firefox or Safari.
    * @default false
    */

@@ -43,7 +43,7 @@ describe('ColorSwatch', () => {
     expect(screen.getByRole('img')).toHaveAccessibleName('vivid blue')
   })
 
-  it('describes greys and the extremes without reaching for a hue', () => {
+  it('describes grays and the extremes without reaching for a hue', () => {
     const { rerender } = renderSwatch({ color: '#000000' })
     expect(swatch()).toHaveAccessibleName('black')
 

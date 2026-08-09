@@ -20,7 +20,7 @@ function inputs() {
 }
 
 describe('ColorArea', () => {
-  it('exposes one range input per axis, labelled by channel', () => {
+  it('exposes one range input per axis, labeled by channel', () => {
     render(<ColorArea defaultValue="hsb(0, 100%, 100%)" xChannel="saturation" yChannel="brightness" />)
     const [x, y] = inputs()
 
@@ -38,7 +38,7 @@ describe('ColorArea', () => {
     expect(inputs()[1]).toHaveValue('50')
   })
 
-  it('honours an explicit colorSpace over the space of the value', () => {
+  it('honors an explicit colorSpace over the space of the value', () => {
     render(<ColorArea defaultValue="#ff0000" colorSpace="hsb" xChannel="saturation" yChannel="brightness" />)
     expect(screen.getByRole('group')).toHaveAttribute('data-space', 'hsb')
     expect(inputs()[0]).toHaveValue('100')

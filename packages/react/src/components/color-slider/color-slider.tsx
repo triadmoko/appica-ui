@@ -162,7 +162,7 @@ function ColorSlider({
   const latestRef = React.useRef<Color>(color)
   latestRef.current = color
 
-  // How far the thumb's centre stays off each end: half a thumb, plus the clearance
+  // How far the thumb's center stays off each end: half a thumb, plus the clearance
   // it already has across the track, so it sits inside by the same margin all round.
   // Measured rather than assumed, since `thumbProps` can resize it.
   React.useEffect(() => {

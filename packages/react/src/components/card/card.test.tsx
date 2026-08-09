@@ -82,7 +82,7 @@ describe('Card', () => {
     expect(screen.getByRole('article')).toHaveAttribute('data-slot', 'card')
   })
 
-  it('renders the title as h3 by default and honours the render escape hatch', () => {
+  it('renders the title as h3 by default and honors the render escape hatch', () => {
     const { unmount } = render(<CardTitle>{TITLE}</CardTitle>)
     expect(screen.getByRole('heading', { level: 3, name: TITLE })).toBeInTheDocument()
     unmount()

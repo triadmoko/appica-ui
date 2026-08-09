@@ -1,5 +1,5 @@
 // Color model shared by the color components (ColorArea, ColorSlider, ColorSwatch,
-// ColorSwatchPicker, ColorPicker). A Color is a plain, serialisable object
+// ColorSwatchPicker, ColorPicker). A Color is a plain, serializable object
 // rather than a class instance, so it can cross the RSC boundary and survive
 // `structuredClone` - a class would not.
 //
@@ -245,7 +245,7 @@ function rgbToOklch(color: RgbColor): OklchColor {
     lightness: L * 100,
     chroma,
     // Hue is meaningless at zero chroma and float noise there swings wildly, so pin
-    // it to keep round trips through grey stable.
+    // it to keep round trips through gray stable.
     hue: chroma < 1e-6 ? 0 : mod360((Math.atan2(b, a) * 180) / Math.PI),
     alpha: color.alpha,
   }
@@ -431,7 +431,7 @@ function hexPair(value: number) {
 }
 
 /**
- * Serialises `color` to a CSS string. `'css'` picks the shortest form the browser
+ * Serializes `color` to a CSS string. `'css'` picks the shortest form the browser
  * understands for the color's own space, which is what you want for a `background`.
  */
 export function formatColor(color: Color, format: ColorFormat | 'css' = 'css'): string {

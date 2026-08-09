@@ -78,7 +78,7 @@ describe('Toggle', () => {
     expect(onPressedChange).not.toHaveBeenCalled()
   })
 
-  it('honours controlled pressed prop', async () => {
+  it('honors controlled pressed prop', async () => {
     const user = userEvent.setup()
     const onPressedChange = vi.fn()
     render(

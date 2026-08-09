@@ -61,7 +61,7 @@ describe('AlertDialog', () => {
     expect(screen.queryByText('Everything in this project will be removed.')).toBeNull()
   })
 
-  it('opens on trigger click and exposes a labelled alertdialog', async () => {
+  it('opens on trigger click and exposes a labeled alertdialog', async () => {
     const user = userEvent.setup()
     renderAlertDialog()
 

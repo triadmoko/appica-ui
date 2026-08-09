@@ -64,7 +64,7 @@ describe('Dialog', () => {
     expect(screen.queryByText('Body content')).toBeNull()
   })
 
-  it('opens on trigger click and exposes a labelled dialog', async () => {
+  it('opens on trigger click and exposes a labeled dialog', async () => {
     const user = userEvent.setup()
     renderDialog()
 

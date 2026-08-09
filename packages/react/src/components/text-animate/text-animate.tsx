@@ -257,7 +257,7 @@ interface TextAnimateProps extends Omit<React.ComponentProps<'span'>, 'children'
    */
   delay?: number
   /**
-   * How offset each unit's window is from its neighbour's, `0 → 1`. `0` = all together; `1` = fully sequential.
+   * How offset each unit's window is from its neighbor's, `0 → 1`. `0` = all together; `1` = fully sequential.
    * @default preset's value
    */
   stagger?: number

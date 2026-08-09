@@ -26,7 +26,7 @@ interface BorderBeamProps extends React.ComponentProps<'div'> {
    */
   speed?: number
   /**
-   * Seconds before the first lap starts. Negative values start the beam mid-lap, which is how you desynchronise a
+   * Seconds before the first lap starts. Negative values start the beam mid-lap, which is how you desynchronize a
    * group of cards.
    * @default 0
    */

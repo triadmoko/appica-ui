@@ -33,8 +33,15 @@ then reinstall in appica-dev (`pnpm install --force` there if the version didn't
 prop JSDoc, code comments, docs prose, and commit messages. Typographic dashes
 read as machine-written, and a sentence leaning on one usually wants a comma, a
 colon, or a full stop instead. A parenthetical aside takes brackets, not a pair
-of dashes. Full rules:
-[packages/react/AGENTS.md](packages/react/AGENTS.md#writing-style).
+of dashes.
+
+**Use American English spelling everywhere, in the same places.** `color`,
+`behavior`, `center`/`centered`, `labeled`, `honors`, `gray`, `neighbor`,
+`canceled`, `-ize` over `-ise`. The public API is already American, so British
+prose beside it reads as a mismatch. (`aria-labelledby` is a DOM attribute, not
+a misspelling.)
+
+Full rules: [packages/react/AGENTS.md](packages/react/AGENTS.md#writing-style).
 
 ## Prop comments are the published API reference
 

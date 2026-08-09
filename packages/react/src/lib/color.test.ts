@@ -51,7 +51,7 @@ describe('parseColor', () => {
     })
   })
 
-  it('normalises hue outside 0-360', () => {
+  it('normalizes hue outside 0-360', () => {
     expect(getChannelValue(parseColor('hsl(-30, 50%, 40%)'), 'hue')).toBe(330)
     expect(getChannelValue(parseColor('hsl(390, 50%, 40%)'), 'hue')).toBe(30)
   })
@@ -104,7 +104,7 @@ describe('convertColor', () => {
     expect(getChannelValue(convertColor(parseColor('#000000'), 'oklch'), 'lightness')).toBeCloseTo(0, 1)
   })
 
-  it('pins hue to zero for greys, so round-trips stay stable', () => {
+  it('pins hue to zero for grays, so round-trips stay stable', () => {
     expect(getChannelValue(convertColor(parseColor('#808080'), 'oklch'), 'hue')).toBe(0)
   })
 
@@ -171,7 +171,7 @@ describe('channels', () => {
 describe('out-of-gamut oklch', () => {
   it('converts the way a browser paints it, by clipping', () => {
     // Chrome clips oklch() per channel rather than reducing chroma, so matching it
-    // keeps a picked colour identical to the one the emitted string renders as.
+    // keeps a picked color identical to the one the emitted string renders as.
     const clipped = convertColor(parseColor('oklch(85% 0.25 30)'), 'rgb')
     expect(formatColor(clipped, 'rgb')).toBe('rgb(255, 124, 98)')
   })

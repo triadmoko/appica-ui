@@ -36,7 +36,7 @@ const thumb = () => document.querySelector('[data-slot="color-slider-thumb"]') a
 const stopCount = () => (track().style.backgroundImage.match(/rgba?\(/g) ?? []).length
 
 describe('ColorSlider', () => {
-  it('exposes the channel as a labelled range input', () => {
+  it('exposes the channel as a labeled range input', () => {
     renderSlider({ channel: 'hue', defaultValue: 'hsb(120, 50%, 50%)' })
     expect(slider()).toHaveAttribute('aria-label', 'Hue')
     expect(slider()).toHaveAttribute('min', '0')

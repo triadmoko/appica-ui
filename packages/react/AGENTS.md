@@ -54,6 +54,16 @@ messages, and these guides.
 - A single hyphen joining a clause to its explanation is fine in moderation.
   Two in one sentence is one too many.
 - Ranges use a hyphen too: `0-100`, not `0–100`.
+- **Use American English spelling.** `color`, `behavior`, `center`/`centered`,
+  `labeled`/`labeling`, `honors`, `gray`, `neighbor`, `canceled`, `-ize`
+  (`normalize`, `customize`, `serialize`, `organize`), `traveling`, `artifact`.
+  Never the British form. The public API is already American (`color`,
+  `colorSpace`, `Color`, `ColorArea`), so a British comment sitting next to it
+  reads as a mismatch - and prop JSDoc ships to the website, where the two
+  spellings would appear on the same page. It bites hardest in prose that isn't
+  a prop name: test titles ("honours controlled value"), internal identifiers
+  (`rowNeighbour`), and inline comments. `aria-labelledby` is a DOM attribute,
+  not a spelling error - leave it alone.
 
 The one exception is `-` as the "no value" placeholder in a docs table cell,
 which is a symbol rather than punctuation.
