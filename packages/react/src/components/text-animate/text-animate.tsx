@@ -26,15 +26,40 @@ type TextAnimateEffect = (
   content?: React.ReactNode
 }
 
+type TextAnimateContainerEffect = (
+  progress: number,
+  ctx: { reduced: boolean },
+) => {
+  style?: React.CSSProperties
+  className?: string
+}
+
 interface PresetConfig {
   fn: TextAnimateEffect
   by: TextAnimateSegment
   stagger: number
   continuous: boolean
+  /**
+   * Styles the wrapper around every unit rather than the units themselves, for effects that span the
+   * whole string. Lets `by` stay orthogonal: the units can be split any way and the effect is unchanged.
+   */
+  container?: TextAnimateContainerEffect
 }
 
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#%&@$?/<>*'
 const SCRAMBLE_STEPS = 10
+
+const SHIMMER_SPREAD = 'var(--text-shimmer-spread, calc(3ch + 40px))'
+const SHIMMER_BASE = 'var(--text-shimmer-base, color-mix(in oklab, currentColor 38%, transparent))'
+const SHIMMER_GLARE = 'var(--text-shimmer-glare, currentColor)'
+const SHIMMER_MID = `color-mix(in oklab, ${SHIMMER_GLARE}, ${SHIMMER_BASE} 50%)`
+const SHIMMER_GRADIENT =
+  `linear-gradient(calc(90deg + var(--text-shimmer-angle, 20deg)),` +
+  ` ${SHIMMER_BASE} calc(50% - ${SHIMMER_SPREAD}),` +
+  ` ${SHIMMER_MID} calc(50% - ${SHIMMER_SPREAD} * 0.5),` +
+  ` ${SHIMMER_GLARE} 50%,` +
+  ` ${SHIMMER_MID} calc(50% + ${SHIMMER_SPREAD} * 0.5),` +
+  ` ${SHIMMER_BASE} calc(50% + ${SHIMMER_SPREAD}))`
 
 const presets: Record<TextAnimateEffectName, PresetConfig> = {
   typewriter: {
@@ -143,15 +168,26 @@ const presets: Record<TextAnimateEffectName, PresetConfig> = {
   },
 
   shimmer: {
-    by: 'char',
+    by: 'line',
     stagger: 0,
     continuous: true,
-    fn: (_p, ctx) => {
-      if (ctx.reduced || ctx.text.trim() === '') return {}
-      const band = 4
-      const head = ctx.globalProgress * (ctx.total + band) - band
-      const lit = Math.max(0, 1 - Math.abs(ctx.index - head) / band)
-      return { style: { opacity: 0.4 + 0.6 * lit } }
+    fn: () => ({}),
+    container: (p, { reduced }) => {
+      if (reduced) return {}
+      return {
+        style: {
+          display: 'inline-block',
+          backgroundImage: SHIMMER_GRADIENT,
+          backgroundRepeat: 'no-repeat',
+          // Wider than the box by a full band on each side, so both ends of the sweep park the
+          // glare off-screen and wrapping the driver from 1 back to 0 is invisible.
+          backgroundSize: `calc(200% + ${SHIMMER_SPREAD} * 2) 100%`,
+          backgroundPosition: `${((1 - p) * 100).toFixed(3)}% 0`,
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        },
+      }
     },
   },
 }
@@ -332,11 +368,12 @@ function TextAnimate({
 
   const unitProps = { total, by: segment, stagger: resolvedStagger, globalProgress, reduced, effect: effectFn }
   const multiline = lines.length > 1
+  const container = preset?.container?.(globalProgress, { reduced })
 
   return (
     <span ref={containerRef} data-slot="text-animate" className={cn('inline-block', className)} {...props}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true" suppressHydrationWarning>
+      <span aria-hidden="true" suppressHydrationWarning className={container?.className} style={container?.style}>
         {lines.map((line, li) => {
           const lineStyle = multiline ? ({ display: 'block' } as const) : undefined
 
