@@ -48,6 +48,32 @@ Import the design tokens after Tailwind in your global stylesheet, and add a `@s
 >
 > `@source` takes a path or glob **relative to the stylesheet that contains it**, not a bare package name - `@source '@appica/ui-react'` does not resolve and silently scans nothing. Count the `../` needed to reach `node_modules` from your CSS file: a stylesheet one level deep (`app/globals.css`, `src/index.css`) needs a single `../`; a deeper one (`src/styles/app.css`) needs `../../`. This matches Tailwind's own [`@source` documentation](https://tailwindcss.com/docs/functions-and-directives#source-directive), whose example is `@source '../node_modules/@my-company/ui-lib';`.
 
+## Without Tailwind
+
+Appica UI is built on Tailwind, and the source-scanning setup above is the recommended path. If your project doesn't use Tailwind, skip that step and import the prebuilt stylesheet instead - a single self-contained file with every component's styles and the full token system compiled in:
+
+```css
+@import '@appica/ui-react/css';
+```
+
+No bundler? Link it straight from a CDN (pin a version for cache stability):
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@appica/ui-react@latest/appica.css" />
+```
+
+Tailwind stays an optional peer dependency, so nothing installs it on your behalf when you take this path. Design tokens remain CSS variables, so theming still works the same way - redefine the variable after the import:
+
+```css
+:root {
+  --primary: oklch(60% 0.25 150);
+}
+```
+
+> **Don't load both.**
+>
+> The prebuilt file bundles Tailwind's Preflight reset, and only the token variables (colors, fonts, radii, shadows) stay overridable - structural utilities are frozen at publish time. If you already run Tailwind, use [Configure Tailwind](#configure-tailwind) instead, or you'll ship the reset and utilities twice.
+
 ## Add the provider
 
 Wrap your app in `ThemeProvider` to enable theming and dark mode with no flash of the wrong theme:

@@ -18,7 +18,7 @@
 //   - <namespace>/<name>/index.{ts,tsx}         (folder, compound aggregator)
 //   - <namespace>/<name>.{ts,tsx}               (flat file)
 //
-// Static "exports" entries (".", "./styles.css", "./package.json") are
+// Static "exports" entries (".", "./styles.css", "./css", "./package.json") are
 // preserved. The barrel uses `export * from '...'` so each entry file
 // owns its public surface - anything exported there leaks into the barrel.
 //
@@ -116,6 +116,7 @@ function buildExports(namespaces) {
     }
   }
   exports['./styles.css'] = './styles.css'
+  exports['./css'] = './appica.css'
   exports['./package.json'] = './package.json'
   return exports
 }
