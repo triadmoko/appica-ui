@@ -461,7 +461,8 @@
     "dist",
     "src",
     "styles.css",
-    "appica.css"
+    "appica.css",
+    "agent-rules.md"
   ],
   "scripts": {
     "sync-exports": "node scripts/sync-exports.mjs",
