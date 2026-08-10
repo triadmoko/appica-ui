@@ -39,10 +39,14 @@ Import the design tokens after Tailwind in your global stylesheet, and add a `@s
 @import 'tailwindcss';
 @import '@appica/ui-react/styles.css';
 
-@source '@appica/ui-react';
+@source '../node_modules/@appica/ui-react/dist';
 ```
 
-Without `@source`, Tailwind skips `node_modules` and the components render unstyled. On Tailwind < 4.2, use a relative path instead: `@source '../node_modules/@appica/ui-react/dist'`.
+> **Don't skip `@source` - and give it a real path.**
+>
+> Tailwind ignores `node_modules` by default. Without the `@source` directive it won't generate the utility classes used inside the compiled components, and they'll render unstyled.
+>
+> `@source` takes a path or glob **relative to the stylesheet that contains it**, not a bare package name - `@source '@appica/ui-react'` does not resolve and silently scans nothing. Count the `../` needed to reach `node_modules` from your CSS file: a stylesheet one level deep (`app/globals.css`, `src/index.css`) needs a single `../`; a deeper one (`src/styles/app.css`) needs `../../`. This matches Tailwind's own [`@source` documentation](https://tailwindcss.com/docs/functions-and-directives#source-directive), whose example is `@source '../node_modules/@my-company/ui-lib';`.
 
 ## Add the provider
 

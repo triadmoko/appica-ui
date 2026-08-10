@@ -10,8 +10,6 @@ This monorepo contains framework-specific packages living under `packages/`. Eac
 | ------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | <img src=".github/assets/react.svg" width="35" alt="React" /> | `@appica/ui-react` | [![npm](https://img.shields.io/npm/v/@appica/ui-react)](https://www.npmjs.com/package/@appica/ui-react) | [Docs](https://appica.dev/ui/docs/react/installation) · [Source](packages/react) |
 
-More variants are planned - vanilla HTML, Vue and more.
-
 ## Documentation
 
 Full documentation, component demos, and theming guides live at [appica.dev/ui](https://appica.dev/ui).
