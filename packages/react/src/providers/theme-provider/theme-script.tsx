@@ -1,5 +1,5 @@
 // Server-safe: a pure inline-script generator plus a <script> component.
-// No 'use client' — `getThemeScript` can be called in any environment (Vite
+// No 'use client' - `getThemeScript` can be called in any environment (Vite
 // main entry, Astro `is:inline`, etc.) and `ThemeScript` can render in a
 // Server Component <head>.
 
@@ -51,7 +51,7 @@ function themeScript(
           : stored
       updateDOM(resolved)
     } catch (e) {
-      // storage unavailable — leave the default
+      // storage unavailable - leave the default
     }
   }
 }

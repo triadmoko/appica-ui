@@ -4,7 +4,7 @@ import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 
 const backgroundLayer = [
   'before:pointer-events-none',
@@ -120,7 +120,19 @@ type BadgeState = {
   size: VariantProps<typeof badgeVariants>['size']
 }
 
-interface BadgeProps extends useRender.ComponentProps<'span', BadgeState>, VariantProps<typeof badgeVariants> {}
+interface BadgeProps
+  extends useRender.ComponentProps<'span', BadgeState>, Omit<VariantProps<typeof badgeVariants>, 'variant' | 'size'> {
+  /**
+   * Color scheme.
+   * @default 'primary'
+   */
+  variant?: VariantProps<typeof badgeVariants>['variant']
+  /**
+   * Scale. The `icon-*` sizes render a square badge for a lone icon.
+   * @default 'md'
+   */
+  size?: VariantProps<typeof badgeVariants>['size']
+}
 
 function Badge({ className, variant, size, render, ...props }: BadgeProps) {
   const renderedProps = React.isValidElement<Record<string, unknown>>(render) ? render.props : undefined

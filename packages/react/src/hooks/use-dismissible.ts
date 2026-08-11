@@ -4,12 +4,16 @@ import { useCallback, useMemo } from 'react'
 import { useStorage, type StorageBackend } from './use-local-storage'
 
 export interface UseDismissibleOptions {
+  /** Which Web Storage area the dismissal is persisted to. */
   storage?: StorageBackend
 }
 
 export interface UseDismissibleReturn {
+  /** Whether the surface should show (`true` until dismissed) */
   open: boolean
+  /** Mark it dismissed and persist that */
   dismiss: () => void
+  /** Clear the dismissal so it shows again */
   reset: () => void
 }
 

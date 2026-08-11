@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 
 type BreadcrumbProps = React.ComponentPropsWithoutRef<'nav'>
 
@@ -52,7 +52,15 @@ type BreadcrumbLinkState = {
 }
 
 interface BreadcrumbLinkProps extends useRender.ComponentProps<'a', BreadcrumbLinkState> {
+  /**
+   * Mark the current page. Renders a non-interactive `<span>` with `aria-current="page"`.
+   * @default false
+   */
   active?: boolean
+  /**
+   * Make the link non-interactive and dimmed.
+   * @default false
+   */
   disabled?: boolean
 }
 

@@ -71,13 +71,13 @@ describe('Checkbox', () => {
     expect(onCheckedChange).not.toHaveBeenCalled()
   })
 
-  it('honours indeterminate prop', () => {
+  it('honors indeterminate prop', () => {
     render(<Checkbox indeterminate aria-label="Mixed" />)
     const cb = screen.getByRole('checkbox')
     expect(cb).toHaveAttribute('aria-checked', 'mixed')
   })
 
-  it('honours controlled checked prop', async () => {
+  it('honors controlled checked prop', async () => {
     const user = userEvent.setup()
     const onCheckedChange = vi.fn()
     render(<Checkbox checked={false} aria-label="Controlled" onCheckedChange={onCheckedChange} />)

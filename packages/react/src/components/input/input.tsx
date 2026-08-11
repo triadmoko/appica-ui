@@ -3,20 +3,40 @@
 import * as React from 'react'
 import { Input as BaseInput } from '@base-ui/react/input'
 import { type VariantProps } from 'class-variance-authority'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 import { inputVariants } from './input-variants'
 
 type InputVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
 type InputSize = NonNullable<VariantProps<typeof inputVariants>['size']>
 
 interface InputProps extends Omit<React.ComponentProps<typeof BaseInput>, 'size'> {
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: InputVariant
+  /**
+   * Scales height, padding, and text. Named `inputSize` to avoid the native `size` attribute.
+   * @default 'md'
+   */
   inputSize?: InputSize
+  /**
+   * Show a clear (✕) button once the field has a value.
+   * @default false
+   */
   clearable?: boolean
+  /** Adornment rendered before the field, inside the frame. */
   startSlot?: React.ReactNode
+  /** Adornment rendered after the field, inside the frame. */
   endSlot?: React.ReactNode
+  /** Called when the clear button is pressed. */
   onClear?: () => void
-  inputProps?: Omit<React.ComponentProps<typeof BaseInput>, 'size'>
+  /**
+   * Props for the inner `<input>` (its own `className`, handlers, the native `size`
+   * attribute, …). `size` here is the character count the control is intrinsically wide,
+   * not the scale - that is `inputSize`.
+   */
+  inputProps?: React.ComponentProps<typeof BaseInput>
 }
 
 function setNativeValue(input: HTMLInputElement, value: string) {
@@ -78,7 +98,7 @@ function Input({
       {...(invalid ? { 'data-invalid': '' } : {})}
     >
       {startSlot && (
-        <div data-slot="input-start" className="-ms-1 shrink-0">
+        <div data-slot="input-start" className="-ms-1 flex shrink-0 items-center">
           {startSlot}
         </div>
       )}
@@ -108,7 +128,7 @@ function Input({
         </button>
       )}
       {endSlot && (
-        <div data-slot="input-end" className="-me-1 shrink-0">
+        <div data-slot="input-end" className="-me-1 flex shrink-0 items-center">
           {endSlot}
         </div>
       )}

@@ -19,17 +19,23 @@ function renderAlertDialog({
   title = 'Delete project',
   description = 'This action cannot be undone.',
   backdrop,
+  frame,
   contentClassName,
 }: {
   title?: string
   description?: string
   backdrop?: boolean
+  frame?: boolean
   contentClassName?: string
 } = {}) {
   return render(
     <AlertDialog>
       <AlertDialogTrigger render={<Button variant="destructive">Delete</Button>} />
-      <AlertDialogContent className={contentClassName} {...(backdrop !== undefined ? { backdrop } : {})}>
+      <AlertDialogContent
+        className={contentClassName}
+        {...(backdrop !== undefined ? { backdrop } : {})}
+        {...(frame !== undefined ? { frame } : {})}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
@@ -55,7 +61,7 @@ describe('AlertDialog', () => {
     expect(screen.queryByText('Everything in this project will be removed.')).toBeNull()
   })
 
-  it('opens on trigger click and exposes a labelled alertdialog', async () => {
+  it('opens on trigger click and exposes a labeled alertdialog', async () => {
     const user = userEvent.setup()
     renderAlertDialog()
 
@@ -101,6 +107,32 @@ describe('AlertDialog', () => {
     await screen.findByRole('alertdialog')
 
     expect(document.querySelector('[data-slot="alert-dialog-backdrop"]')).toBeNull()
+  })
+
+  it('frames the popup by default and drops the frame when frame is false', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderAlertDialog()
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    await screen.findByRole('alertdialog')
+    expect(document.querySelector('[data-slot="alert-dialog-popup"]')).toHaveAttribute('data-frame')
+
+    unmount()
+    renderAlertDialog({ frame: false })
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    await screen.findByRole('alertdialog')
+    expect(document.querySelector('[data-slot="alert-dialog-popup"]')).not.toHaveAttribute('data-frame')
+  })
+
+  it('drops the frame when the backdrop is off, even if frame is set', async () => {
+    const user = userEvent.setup()
+    renderAlertDialog({ backdrop: false, frame: true })
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    await screen.findByRole('alertdialog')
+
+    expect(document.querySelector('[data-slot="alert-dialog-popup"]')).not.toHaveAttribute('data-frame')
   })
 
   it('does not close on an outside click (requires an explicit choice)', async () => {

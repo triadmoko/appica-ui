@@ -4,7 +4,7 @@ import * as React from 'react'
 import { format as formatDate, formatISO, getDaysInMonth, isValid } from 'date-fns'
 import { type VariantProps } from 'class-variance-authority'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 import { inputVariants } from '../input/input-variants'
 
@@ -27,19 +27,54 @@ interface LiteralNode {
 type FormatNode = SegmentNode | LiteralNode
 
 interface DateFieldProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'defaultValue' | 'onChange'> {
+  /** Controlled value. Pair with `onValueChange`. */
   value?: Date | null
+  /** Uncontrolled initial value. */
   defaultValue?: Date | null
+  /** Fires with a `Date` when complete, or `null` when cleared. */
   onValueChange?: (date: Date | null) => void
+  /**
+   * date-fns token string defining the segments and separators.
+   * @default 'MM/dd/yyyy'
+   */
   format?: string
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: DateFieldVariant
+  /**
+   * Height, padding, and text scale.
+   * @default 'md'
+   */
   size?: DateFieldSize
+  /** Content pinned to the start edge. */
   startSlot?: React.ReactNode
+  /** Content pinned to the end edge. */
   endSlot?: React.ReactNode
+  /**
+   * Blocks interaction and removes the segments from the tab order.
+   * @default false
+   */
   disabled?: boolean
+  /**
+   * Segments stay focusable and readable but can't be edited.
+   * @default false
+   */
   readOnly?: boolean
+  /**
+   * Marks the hidden form input as required (needs `name`).
+   * @default false
+   */
   required?: boolean
+  /** Renders a hidden `<input>` with the ISO date for form submission. */
   name?: string
+  /**
+   * Drop the input appearance - for composing inside another field (used by `DatePicker`).
+   * @default false
+   */
   unstyled?: boolean
+  /** Ref to the underlying element. */
   ref?: React.Ref<HTMLDivElement>
 }
 

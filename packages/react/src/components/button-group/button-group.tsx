@@ -1,15 +1,25 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { ButtonGroupContext, type ButtonGroupVariant, type ButtonGroupSize } from './button-group-context'
 
 const OUTLINED_VARIANTS = new Set<ButtonGroupVariant>(['primary-outline', 'outline', 'light'])
 
 interface ButtonGroupProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Visual style applied to every child `Button`. Inherited unless a button sets its own `variant`. */
   variant?: ButtonGroupVariant
+  /** Height/padding applied to every child `Button`. Inherited unless a button sets its own `size`. */
   size?: ButtonGroupSize
+  /**
+   * Disables every child `Button`. A child can't re-enable itself; the group's `disabled` wins.
+   * @default false
+   */
   disabled?: boolean
+  /**
+   * Lay the buttons out in a row or a column; controls which corners are rounded.
+   * @default 'horizontal'
+   */
   orientation?: 'horizontal' | 'vertical'
 }
 

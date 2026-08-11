@@ -5,7 +5,7 @@ import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 import { buttonVariants } from '../button/button-variants'
 
@@ -38,13 +38,42 @@ interface ChipGroupContextValue {
 const ChipGroupContext = React.createContext<ChipGroupContextValue | null>(null)
 
 interface ChipProps extends Omit<useRender.ComponentProps<'button', ChipState>, 'render'> {
+  /**
+   * Visual style, from the shared [`Button`](/ui/components/react/button) palette. Inherited from `ChipGroup`.
+   * @default 'soft'
+   */
   variant?: ChipVariant
+  /**
+   * Height, padding, text, and icon size. Inherited from `ChipGroup`.
+   * @default 'md'
+   */
   size?: ChipSize
+  /** Replace the underlying element (e.g. an `<a>`), or compose it with another component. */
   render?: useRender.ComponentProps<'button', ChipState>['render']
+  /**
+   * Render a close button; clicking the chip dismisses it with an exit animation.
+   * @default false
+   */
   dismissible?: boolean
+  /**
+   * Controlled visibility for a **dismissible** chip - pair with `onOpenChange` to own dismissal in your own state.
+   * (For a non-dismissible chip, render it conditionally instead.)
+   */
   open?: boolean
+  /**
+   * The **intent** signal - fires with `false` the moment a dismiss is requested. Use it with `open` for controlled
+   * mode: update your state here.
+   */
   onOpenChange?: (open: boolean) => void
+  /**
+   * The **completion** signal - fires once the exit animation finishes. Use it in uncontrolled mode to drop the chip
+   * from state after it's animated out.
+   */
   onDismiss?: () => void
+  /**
+   * Accessible label for the dismiss action (rendered as `sr-only` text).
+   * @default 'Dismiss'
+   */
   closeLabel?: string
 }
 
@@ -186,8 +215,11 @@ interface ChipGroupHandle {
 }
 
 interface ChipGroupProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Exposes `clearAll()`, which dismisses every `dismissible` child. */
   ref?: React.Ref<ChipGroupHandle>
+  /** Default `variant` for every child chip; a chip may override it. */
   variant?: ChipVariant
+  /** Default `size` for every child chip; a chip may override it. */
   size?: ChipSize
 }
 

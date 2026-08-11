@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { LazyMotion, domAnimation, m } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface CountdownParts {
   days: number
@@ -37,10 +37,18 @@ function getParts(total: number): CountdownParts {
 }
 
 interface CountdownProps extends Omit<React.ComponentProps<'div'>, 'children'> {
+  /** Absolute instant to count down to (a `Date`, epoch-ms, or date string). */
   targetDate?: Date | number | string
+  /** Relative length in **seconds** from mount. Ignored when `targetDate` is set. */
   duration?: number
+  /**
+   * Tick interval in milliseconds.
+   * @default 1000
+   */
   interval?: number
+  /** Fired once when the countdown reaches zero. */
   onComplete?: () => void
+  /** Segments and labels, or a render-prop receiving `{ days, hours, minutes, seconds, total, isComplete }`. */
   children?: React.ReactNode | ((parts: CountdownParts) => React.ReactNode)
 }
 
@@ -138,8 +146,14 @@ function DigitRoller({ digit, reduced }: { digit: number; reduced: boolean }) {
 }
 
 interface CountdownSegmentProps extends Omit<React.ComponentProps<'span'>, 'children'> {
+  /** Which unit to read from the parent `Countdown`. */
   unit?: 'days' | 'hours' | 'minutes' | 'seconds'
+  /** Render this number directly instead of reading context (standalone display). */
   value?: number
+  /**
+   * Minimum digit count; the value is zero-padded to this width.
+   * @default 2
+   */
   minDigits?: number
 }
 

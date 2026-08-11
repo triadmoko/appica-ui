@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Field as BaseField } from '@base-ui/react/field'
 import { type VariantProps } from 'class-variance-authority'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 import { inputVariants } from '../input/input-variants'
 
 type BaseControlProps = React.ComponentProps<typeof BaseField.Control>
@@ -12,11 +12,26 @@ type TextareaVariant = NonNullable<VariantProps<typeof inputVariants>['variant']
 type TextareaSize = NonNullable<VariantProps<typeof inputVariants>['size']>
 
 interface TextareaProps extends Omit<React.ComponentProps<'textarea'>, 'size'> {
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: TextareaVariant
+  /**
+   * Scales padding and text. Named `inputSize` to avoid colliding with native attributes.
+   * @default 'md'
+   */
   inputSize?: TextareaSize
+  /**
+   * Show a clear (✕) button once the field has a value.
+   * @default false
+   */
   clearable?: boolean
+  /** Adornment rendered before the field, aligned to the first line. */
   startSlot?: React.ReactNode
+  /** Adornment rendered after the field, aligned to the first line. */
   endSlot?: React.ReactNode
+  /** Called when the clear button is pressed. */
   onClear?: () => void
 }
 

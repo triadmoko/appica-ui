@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 import { navigationLinkVariants } from './navigation-link-variants'
 import {
   useNavigationContext,
@@ -19,12 +19,34 @@ type NavigationLinkState = {
 }
 
 interface NavigationLinkProps extends useRender.ComponentProps<'a', NavigationLinkState> {
+  /**
+   * Override the root's variant for this link.
+   * @default root
+   */
   variant?: NavigationVariant
+  /**
+   * Override the root's size for this link.
+   * @default root
+   */
   size?: NavigationSize
+  /**
+   * Override the root's orientation for this link.
+   * @default root
+   */
   orientation?: NavigationOrientation
+  /** Force the active state, overriding `activeLink`. */
   active?: boolean
+  /**
+   * Dim the link and remove it from the tab order.
+   * @default false
+   */
   disabled?: boolean
+  /** Matched against the root's `activeLink` to mark this link current. */
   value?: Exclude<NavigationActiveLink, null>
+  /**
+   * Custom marker for the `indicator` variant.
+   * @default chevron
+   */
   indicator?: React.ReactNode
 }
 

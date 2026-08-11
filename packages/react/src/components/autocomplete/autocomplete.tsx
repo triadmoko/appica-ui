@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { Autocomplete as BaseAutocomplete } from '@base-ui/react/autocomplete'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { inputVariants } from '../input/input-variants'
 
 type AutocompleteSize = 'sm' | 'md' | 'lg'
@@ -30,9 +30,25 @@ function useAutocompleteContext() {
 type BaseAutocompleteRootProps = React.ComponentProps<typeof BaseAutocomplete.Root>
 
 interface AutocompleteProps extends BaseAutocompleteRootProps {
+  /**
+   * Input height, popup radius, and item sizing.
+   * @default 'md'
+   */
   size?: AutocompleteSize
+  /**
+   * Input appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: AutocompleteVariant
+  /**
+   * Render a clear button inside the input when a value is present.
+   * @default false
+   */
   clearable?: boolean
+  /**
+   * Render a chevron button that toggles the popup.
+   * @default false
+   */
   icon?: boolean
 }
 
@@ -65,7 +81,9 @@ const ICON_SIZE: Record<AutocompleteSize, string> = {
 }
 
 interface AutocompleteInputProps extends Omit<React.ComponentProps<typeof BaseAutocomplete.Input>, 'size'> {
+  /** Adornment rendered before the field, inside the input frame. */
   startSlot?: React.ReactNode
+  /** Adornment rendered after the field, inside the input frame. */
   endSlot?: React.ReactNode
 }
 
@@ -202,7 +220,9 @@ function AutocompleteContent({ className, children, ...props }: AutocompleteCont
 }
 
 interface AutocompleteListProps<T = any> extends Omit<React.ComponentProps<typeof BaseAutocomplete.List>, 'children'> {
+  /** Items per row in grid mode (defaults to 2 when `grid` is set). */
   cols?: number
+  /** A render function over the filtered items, or static `AutocompleteItem`s. */
   children?: React.ReactNode | ((item: T, index: number) => React.ReactNode)
 }
 

@@ -305,7 +305,7 @@ describe('Autocomplete', () => {
       )
     }
 
-    it('forwards grid to Base UI Root — popup uses the grid role', async () => {
+    it('forwards grid to Base UI Root - popup uses the grid role', async () => {
       const user = setupUser()
       renderGrid()
       await user.click(screen.getByRole('button', { name: 'Toggle popup' }))

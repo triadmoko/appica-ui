@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type KbdSize = 'sm' | 'md' | 'lg'
 
@@ -10,6 +10,10 @@ const SIZE_CLASSES: Record<KbdSize, string> = {
 }
 
 interface KbdProps extends React.ComponentProps<'kbd'> {
+  /**
+   * Height, padding, and text scale. Inherited from a `KbdGroup`.
+   * @default 'md'
+   */
   size?: KbdSize
 }
 
@@ -29,6 +33,10 @@ function Kbd({ className, size = 'md', ...props }: KbdProps) {
 }
 
 interface KbdGroupProps extends React.ComponentProps<'span'> {
+  /**
+   * Default size applied to each child `Kbd` that doesn't set its own.
+   * @default 'md'
+   */
   size?: KbdSize
 }
 

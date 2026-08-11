@@ -2,7 +2,7 @@ import tseslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
 
 // Focused lint: the React Hooks rules (incl. the react-compiler rule) that `tsc`
-// can't catch. Deliberately not the full JS/TS style recommended set — Prettier
+// can't catch. Deliberately not the full JS/TS style recommended set - Prettier
 // owns formatting and `typecheck` owns types.
 export default tseslint.config(
   { ignores: ['dist/**', 'node_modules/**', '*.config.mjs', 'scripts/**', '**/*.test.{ts,tsx}', 'src/test/**'] },

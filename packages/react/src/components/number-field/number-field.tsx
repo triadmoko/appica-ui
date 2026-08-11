@@ -4,7 +4,7 @@ import * as React from 'react'
 import { NumberField as BaseNumberField, type NumberFieldRoot } from '@base-ui/react/number-field'
 import { type VariantProps } from 'class-variance-authority'
 import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
 import { buttonVariants } from '../button/button-variants'
 import { inputVariants } from '../input/input-variants'
@@ -84,10 +84,24 @@ function AnimatedNumber({ value, direction }: { value: string; direction: AnimDi
 }
 
 interface NumberFieldProps extends Omit<React.ComponentProps<typeof BaseNumberField.Root>, 'className'> {
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: NumberFieldVariant
+  /**
+   * Scales field width, steppers, and text.
+   * @default 'md'
+   */
   size?: NumberFieldSize
+  /** Extra classes on the field root, merged via `tailwind-merge`. */
   className?: string
+  /**
+   * Placeholder text shown when empty.
+   * @default ' '
+   */
   placeholder?: string
+  /** Props forwarded to the inner `<input>` (`name`, `onChange`, `aria-*`, `className`, …). */
   inputProps?: React.ComponentProps<typeof BaseNumberField.Input>
 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScrollArea as BaseScrollArea } from '@base-ui/react/scroll-area'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type ScrollAreaOrientation = 'vertical' | 'horizontal' | 'both'
 type ScrollbarVisibility = 'always' | 'auto' | 'never'
@@ -18,9 +18,22 @@ const SCROLLBAR_AUTO_CLASSES = cn(
 )
 
 interface ScrollAreaProps extends React.ComponentProps<typeof BaseScrollArea.Root> {
+  /**
+   * Which axis (or axes) gets a scrollbar. `both` also renders the corner.
+   * @default 'vertical'
+   */
   orientation?: ScrollAreaOrientation
+  /**
+   * Fade the content at scrollable edges via a CSS mask.
+   * @default false
+   */
   scrollShadow?: boolean
+  /**
+   * `auto` reveals the bar on hover/scroll; `never` hides it while keeping content scrollable.
+   * @default 'always'
+   */
   scrollbarVisibility?: ScrollbarVisibility
+  /** Props forwarded to the inner scroll viewport - `ref`, `onScroll`, `className`, etc. */
   viewportProps?: Omit<React.ComponentProps<typeof BaseScrollArea.Viewport>, 'children'>
 }
 

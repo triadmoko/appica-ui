@@ -179,7 +179,7 @@ describe('Sparkline', () => {
     const chart = screen.getByRole('img')
     stubRect(chart, 100)
 
-    // A touch tap fires pointerdown without a preceding move — it must activate immediately.
+    // A touch tap fires pointerdown without a preceding move - it must activate immediately.
     fireEvent.pointerDown(chart, { clientX: 100, pointerType: 'touch' })
     expect(onActiveChange).toHaveBeenLastCalledWith({ index: 5, value: 12, label: undefined })
 

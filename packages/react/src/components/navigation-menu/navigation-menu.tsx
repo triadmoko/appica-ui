@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { NavigationMenu as BaseNavigationMenu } from '@base-ui/react/navigation-menu'
 import { useDirection } from '../../hooks/use-direction'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 
 type NavigationMenuVariant = 'pill' | 'line'
@@ -35,12 +35,40 @@ const NavigationMenuContentContext = React.createContext(false)
 type BaseRootProps = React.ComponentProps<typeof BaseNavigationMenu.Root>
 
 interface NavigationMenuProps extends BaseRootProps {
+  /**
+   * Trigger appearance - hover/active pill, or an animated underline.
+   * @default 'pill'
+   */
   variant?: NavigationMenuVariant
+  /**
+   * Scales triggers, popup radius, and link padding.
+   * @default 'md'
+   */
   size?: NavigationMenuSize
+  /**
+   * The open/close indicator shown by each `NavigationMenuIcon`.
+   * @default 'chevron'
+   */
   icon?: NavigationMenuIconKind
+  /**
+   * Render a dimmed, blurred backdrop behind the open panel.
+   * @default false
+   */
   backdrop?: boolean
+  /**
+   * Auto-render the portalled positioner + popup. Set `false` to render your own.
+   * @default true
+   */
   viewport?: boolean
+  /**
+   * Animate the popup's size and position between items.
+   * @default true
+   */
   morph?: boolean
+  /**
+   * Gap between the trigger and the auto-rendered popup.
+   * @default 6
+   */
   sideOffset?: number
 }
 
@@ -138,6 +166,10 @@ const ICON_SIZE: Record<NavigationMenuSize, string> = {
 }
 
 type NavigationMenuIconProps = Omit<React.ComponentProps<typeof BaseNavigationMenu.Icon>, 'children'> & {
+  /**
+   * Override the indicator for this trigger.
+   * @default root
+   */
   icon?: NavigationMenuIconKind
 }
 
@@ -241,6 +273,7 @@ type PositionerPicks = Pick<
 type PortalPicks = Pick<React.ComponentProps<typeof BaseNavigationMenu.Portal>, 'container'>
 
 interface NavigationMenuPositionerProps extends PositionerPicks, PortalPicks {
+  /** Extra classes, merged via `tailwind-merge`. */
   className?: string
 }
 

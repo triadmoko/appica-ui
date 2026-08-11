@@ -4,7 +4,7 @@ import { axe } from 'vitest-axe'
 import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarImage } from './avatar'
 
 // jsdom does not actually load images. Base UI Avatar uses a pre-loader that
-// listens for `load`/`error` on a probe Image — without this stub the Image
+// listens for `load`/`error` on a probe Image - without this stub the Image
 // never transitions out of "loading", and Avatar.Image is never mounted.
 const ORIGINAL_SRC_DESCRIPTOR = Object.getOwnPropertyDescriptor(window.Image.prototype, 'src')
 beforeAll(() => {
@@ -139,7 +139,7 @@ describe('Avatar', () => {
   })
 
   it('lifts src from the render element so Base UI mounts without redeclaring it', async () => {
-    // No `src` on AvatarImage — only on the render element. The wrapper should
+    // No `src` on AvatarImage - only on the render element. The wrapper should
     // lift it across so Base UI's pre-loader fires and the cloned element mounts.
     render(
       <Avatar>

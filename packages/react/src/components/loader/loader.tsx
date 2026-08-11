@@ -3,12 +3,20 @@
 import * as React from 'react'
 import { LazyMotion, domAnimation, m } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type LoaderVariant = 'bar' | 'dots'
 
 interface LoaderProps extends Omit<React.ComponentProps<'span'>, 'children'> {
+  /**
+   * The animated shape.
+   * @default 'bar'
+   */
   variant?: LoaderVariant
+  /**
+   * Inherit the surrounding text color (`currentColor`) instead of the primary accent.
+   * @default false
+   */
   currentColor?: boolean
 }
 

@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { ContextMenu as BaseContextMenu } from '@base-ui/react/context-menu'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 
 type ContextMenuSize = 'sm' | 'md' | 'lg'
@@ -27,6 +27,10 @@ function useContextMenuContext() {
 type BaseRootProps = React.ComponentProps<typeof BaseContextMenu.Root>
 
 interface ContextMenuProps extends BaseRootProps {
+  /**
+   * Scales the popup radius, item padding, and icon size.
+   * @default 'md'
+   */
   size?: ContextMenuSize
 }
 
@@ -60,7 +64,7 @@ const ICON_SIZE: Record<ContextMenuSize, string> = {
 
 function popupClassName(size: ContextMenuSize, className?: string) {
   return cn(
-    'max-h-(--available-height) bg-background border-border-overlay flex flex-col border shadow-2xl outline-none py-2',
+    'max-h-(--available-height) bg-background border-border-overlay flex flex-col border shadow-2xl outline-none',
     POPUP_SIZE[size],
     'origin-(--transform-origin)',
     'motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
@@ -77,6 +81,7 @@ type ContextMenuFloatingProps = FloatingContentProps<
 
 type ContextMenuContentProps = Omit<React.ComponentProps<typeof BaseContextMenu.Popup>, 'className'> &
   ContextMenuFloatingProps & {
+    /** Extra classes on the popup. */
     className?: string
   }
 
@@ -92,7 +97,7 @@ function ContextMenuContent({ className, children, ...props }: ContextMenuConten
         className={cn('isolate z-50', positioner.className as string | undefined)}
       >
         <BaseContextMenu.Popup data-slot="context-menu-content" className={popupClassName(size, className)} {...popup}>
-          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2">{children}</div>
+          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto p-2">{children}</div>
         </BaseContextMenu.Popup>
       </BaseContextMenu.Positioner>
     </BaseContextMenu.Portal>
@@ -245,6 +250,7 @@ function ContextMenuSubTrigger({ className, children, ...props }: ContextMenuSub
 
 type ContextMenuSubContentProps = Omit<React.ComponentProps<typeof BaseContextMenu.Popup>, 'className'> &
   ContextMenuFloatingProps & {
+    /** Extra classes on the submenu popup. */
     className?: string
   }
 
@@ -265,7 +271,7 @@ function ContextMenuSubContent({ className, children, ...props }: ContextMenuSub
           className={popupClassName(size, cn('w-(--anchor-width)', className))}
           {...popup}
         >
-          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto px-2">{children}</div>
+          <div className="flex flex-col gap-0.5 overflow-x-hidden overflow-y-auto p-2">{children}</div>
         </BaseContextMenu.Popup>
       </BaseContextMenu.Positioner>
     </BaseContextMenu.Portal>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Progress as BaseProgress } from '@base-ui/react/progress'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type ProgressVariant = 'bar' | 'circular'
 
@@ -8,10 +8,27 @@ type ProgressLabelProps = BaseProgress.Label.Props
 type ProgressValueProps = BaseProgress.Value.Props
 
 interface ProgressProps extends Omit<BaseProgress.Root.Props, 'value'> {
+  /**
+   * Horizontal track or SVG ring.
+   * @default 'bar'
+   */
   variant?: ProgressVariant
+  /**
+   * Diameter of the ring in pixels (`circular` only).
+   * @default 56
+   */
   size?: number
+  /**
+   * Track weight in pixels. Defaults to `6` for `bar`, `4` for `circular`.
+   * @default 6` / `4
+   */
   thickness?: number
+  /**
+   * Any CSS color for the fill (e.g. `var(--success-emphasis)`).
+   * @default primary token
+   */
   indicatorColor?: string
+  /** Current value, from `min` to `max`. Pass `null` for an indeterminate state. */
   value?: number | null
 }
 

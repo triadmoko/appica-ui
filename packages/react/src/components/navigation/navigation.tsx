@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import {
   NavigationContext,
   useNavigationContext,
@@ -12,14 +12,34 @@ import {
 } from './navigation-context'
 
 type NavigationBaseProps = Omit<React.ComponentPropsWithoutRef<'nav'>, 'aria-orientation'> & {
+  /**
+   * Scales link text, padding, and icons.
+   * @default 'md'
+   */
   size?: NavigationSize
+  /**
+   * The `value` of the current link. Stamps the match with `aria-current="page"`.
+   * @default null
+   */
   activeLink?: NavigationActiveLink
 }
 
+// `orientation` discriminates the union, so both branches repeat the same prop
+// docs - TypeScript surfaces whichever branch the consumer's usage narrows to.
 type NavigationProps = NavigationBaseProps &
   (
-    | { orientation?: 'horizontal'; variant?: Extract<NavigationVariant, 'pill' | 'line'> }
-    | { orientation: 'vertical'; variant?: Extract<NavigationVariant, 'pill' | 'line' | 'indicator'> }
+    | {
+        /** Lay the links out as a row or a column. @default 'horizontal' */
+        orientation?: 'horizontal'
+        /** Active/hover styling. `indicator` is vertical-only. @default 'pill' */
+        variant?: Extract<NavigationVariant, 'pill' | 'line'>
+      }
+    | {
+        /** Lay the links out as a row or a column. @default 'horizontal' */
+        orientation: 'vertical'
+        /** Active/hover styling. `indicator` is vertical-only. @default 'pill' */
+        variant?: Extract<NavigationVariant, 'pill' | 'line' | 'indicator'>
+      }
   )
 
 function Navigation({

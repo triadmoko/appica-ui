@@ -1,16 +1,14 @@
 [![Appica UI](.github/assets/appica-ui-root.jpg)](https://appica.dev/ui)
 
-Beautiful, accessible UI designed by humans for the modern web — 60+ themeable components for AI-powered apps, SaaS dashboards, e-commerce sites, and scalable design systems. Polished interactions, dark mode, and full theming out of the box.
+Beautiful, accessible UI designed by humans for the modern web - 70+ themeable components for AI-powered apps, SaaS dashboards, e-commerce sites, and scalable design systems. Polished interactions, dark mode, and full theming out of the box.
 
 This monorepo contains framework-specific packages living under `packages/`. Each package is published to npm independently.
 
 ## Packages
 
-|                                                               | Package            | Version                                                                                                 | Links                                                                            |
-| ------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| <img src=".github/assets/react.svg" width="35" alt="React" /> | `@appica/ui-react` | [![npm](https://img.shields.io/npm/v/@appica/ui-react)](https://www.npmjs.com/package/@appica/ui-react) | [Docs](https://appica.dev/ui/docs/react/installation) · [Source](packages/react) |
-
-More variants are planned — vanilla HTML, Vue and more.
+|                                                               | Package            | Version                                                                                                 | Links                                                                                                                       |
+| ------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| <img src=".github/assets/react.svg" width="35" alt="React" /> | `@appica/ui-react` | [![npm](https://img.shields.io/npm/v/@appica/ui-react)](https://www.npmjs.com/package/@appica/ui-react) | [Docs](https://appica.dev/ui/docs/react/installation) · [Changelog](packages/react/CHANGELOG.md) · [Source](packages/react) |
 
 ## Documentation
 
@@ -18,7 +16,7 @@ Full documentation, component demos, and theming guides live at [appica.dev/ui](
 
 ## Figma design file
 
-Every component is also available as a [free Figma design file](https://www.figma.com/community/file/1657080448204231925) — variants, sizes, and states mirrored one-to-one with the code, built on the same design tokens. Design and develop from a single source of truth.
+Every component is also available as a [free Figma design file](https://www.figma.com/community/file/1657080448204231925) - variants, sizes, and states mirrored one-to-one with the code, built on the same design tokens. Design and develop from a single source of truth.
 
 ## Stay updated
 

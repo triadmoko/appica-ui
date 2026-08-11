@@ -1,8 +1,12 @@
 import * as React from 'react'
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface RadioGroupProps extends React.ComponentProps<typeof BaseRadioGroup> {
+  /**
+   * Lay options out in a row or column; sets which arrow keys move selection.
+   * @default 'vertical'
+   */
   orientation?: 'horizontal' | 'vertical'
 }
 

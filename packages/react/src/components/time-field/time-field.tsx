@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { type VariantProps } from 'class-variance-authority'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { inputVariants } from '../input/input-variants'
 
 type TimeFieldVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
@@ -25,19 +25,54 @@ interface LiteralNode {
 type FormatNode = SegmentNode | LiteralNode
 
 interface TimeFieldProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'defaultValue' | 'onChange'> {
+  /** Controlled value, a 24-hour `"HH:mm[:ss]"` string. Pair with `onValueChange`. */
   value?: string | null
+  /** Uncontrolled initial value. */
   defaultValue?: string | null
+  /** Fires with the time string when complete, or `null` when cleared. */
   onValueChange?: (time: string | null) => void
+  /**
+   * date-fns token string - `H`/`HH`, `h`/`hh`, `m`/`mm`, `s`/`ss`, `a`.
+   * @default 'HH:mm'
+   */
   format?: string
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: TimeFieldVariant
+  /**
+   * Height, padding, and text scale.
+   * @default 'md'
+   */
   size?: TimeFieldSize
+  /** Content pinned to the start edge. */
   startSlot?: React.ReactNode
+  /** Content pinned to the end edge. */
   endSlot?: React.ReactNode
+  /**
+   * Blocks interaction and removes the segments from the tab order.
+   * @default false
+   */
   disabled?: boolean
+  /**
+   * Segments stay focusable and readable but can't be edited.
+   * @default false
+   */
   readOnly?: boolean
+  /**
+   * Marks the hidden form input as required (needs `name`).
+   * @default false
+   */
   required?: boolean
+  /** Renders a hidden `<input>` with the time value for form submission. */
   name?: string
+  /**
+   * Drop the input appearance - for composing inside another field (used by `DatePicker`).
+   * @default false
+   */
   unstyled?: boolean
+  /** Ref to the underlying element. */
   ref?: React.Ref<HTMLDivElement>
 }
 

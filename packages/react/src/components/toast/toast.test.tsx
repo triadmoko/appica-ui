@@ -42,7 +42,7 @@ function renderToasterSandbox({
   position?: ToastPosition
   progress?: boolean
 }) {
-  // Spread props only when defined — passing an explicit `undefined`
+  // Spread props only when defined - passing an explicit `undefined`
   // violates exactOptionalPropertyTypes (enabled in the root tsconfig).
   const toasterProps = {
     ...(position !== undefined ? { position } : {}),

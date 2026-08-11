@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type TableSize = 'sm' | 'md' | 'lg'
 type TableBorderStyle = 'solid' | 'dashed' | 'none'
@@ -58,10 +58,30 @@ const rowHoverClasses =
   '[&>tbody>tr]:transition-colors [&>tbody>tr]:duration-200 motion-reduce:[&>tbody>tr]:transition-none [&>tbody>tr:hover]:bg-background-subtle'
 
 interface TableProps extends React.ComponentPropsWithoutRef<'table'> {
+  /**
+   * Cell padding, corner radius, and text scale.
+   * @default 'md'
+   */
   size?: TableSize
+  /**
+   * Style of the cell separators.
+   * @default 'solid'
+   */
   borderStyle?: TableBorderStyle
+  /**
+   * Tint alternating rows.
+   * @default false
+   */
   stripedRows?: boolean
+  /**
+   * Tint alternating columns.
+   * @default false
+   */
   stripedColumns?: boolean
+  /**
+   * Tint a row on pointer hover.
+   * @default false
+   */
   hoverableRows?: boolean
 }
 
@@ -96,6 +116,10 @@ function Table({
 }
 
 interface TableCaptionProps extends React.ComponentPropsWithoutRef<'caption'> {
+  /**
+   * Render the caption above or below the table.
+   * @default 'bottom'
+   */
   position?: 'top' | 'bottom'
 }
 
@@ -126,6 +150,10 @@ function TableBody({ className, ...props }: TableBodyProps) {
 }
 
 interface TableRowProps extends React.ComponentPropsWithoutRef<'tr'> {
+  /**
+   * Apply the persistent highlight background (`data-highlighted`).
+   * @default false
+   */
   highlighted?: boolean
 }
 

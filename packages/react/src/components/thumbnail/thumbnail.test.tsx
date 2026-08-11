@@ -4,7 +4,7 @@ import { axe } from 'vitest-axe'
 import { Thumbnail } from './thumbnail'
 
 // jsdom does not actually load images. Base UI Avatar uses a pre-loader that
-// listens for `load`/`error` on a probe Image — without this stub the probe
+// listens for `load`/`error` on a probe Image - without this stub the probe
 // never resolves and the underlying <img> never mounts.
 const ORIGINAL_SRC_DESCRIPTOR = Object.getOwnPropertyDescriptor(window.Image.prototype, 'src')
 beforeAll(() => {

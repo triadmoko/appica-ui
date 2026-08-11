@@ -1,8 +1,12 @@
 import * as React from 'react'
 import { CheckboxGroup as BaseCheckboxGroup } from '@base-ui/react/checkbox-group'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface CheckboxGroupProps extends React.ComponentProps<typeof BaseCheckboxGroup> {
+  /**
+   * Stack the boxes in a column, or wrap them into a row.
+   * @default 'vertical'
+   */
   orientation?: 'horizontal' | 'vertical'
 }
 

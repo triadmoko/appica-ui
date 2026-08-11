@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Field as BaseField } from '@base-ui/react/field'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type FieldProps = React.ComponentProps<typeof BaseField.Root>
 

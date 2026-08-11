@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Meter as BaseMeter } from '@base-ui/react/meter'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type MeterStatus = 'optimum' | 'suboptimum' | 'invalid'
 
@@ -31,9 +31,13 @@ function useMeterContext() {
 }
 
 interface MeterProps extends BaseMeter.Root.Props {
+  /** Upper edge of the "low" zone. Enables status coloring. */
   low?: number
+  /** Lower edge of the "high" zone. Enables status coloring. */
   high?: number
+  /** The ideal value; the zone it lands in becomes the green "optimum" zone. Enables status coloring. */
   optimum?: number
+  /** Override the indicator background class per status (and the no-threshold `default`). */
   statusClassNames?: MeterStatusClassNames
 }
 

@@ -43,8 +43,8 @@ function getStore(backend: StorageBackend): Storage | null {
   }
 }
 
-// A single `storage` listener shared by every hook instance — installed at the
-// first subscriber, removed at zero — dispatching through the registries above.
+// A single `storage` listener shared by every hook instance - installed at the
+// first subscriber, removed at zero - dispatching through the registries above.
 let globalListenerCount = 0
 
 function handleGlobalStorage(e: StorageEvent) {
@@ -105,7 +105,7 @@ export function useStorage<T>(
   deserializeRef.current = options.deserializer
 
   const read = useCallback((): T => {
-    // An empty key means "no persistence" — behave like storage is unavailable
+    // An empty key means "no persistence" - behave like storage is unavailable
     // instead of touching `getItem('')` and registering a listener.
     if (!key) return defaultRef.current
     const store = getStore(backend)

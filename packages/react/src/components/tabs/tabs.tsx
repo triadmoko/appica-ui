@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Tabs as BaseTabs } from '@base-ui/react/tabs'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type TabsVariant = 'pill' | 'line'
 type TabsSize = 'sm' | 'md' | 'lg'
@@ -163,8 +163,20 @@ const tabsContentClasses =
 type BaseTabsRootProps = React.ComponentProps<typeof BaseTabs.Root>
 
 interface TabsProps extends BaseTabsRootProps {
+  /**
+   * Visual style, shared with the list and triggers via context.
+   * @default 'pill'
+   */
   variant?: TabsVariant
+  /**
+   * Trigger sizing, shared via context.
+   * @default 'md'
+   */
   size?: TabsSize
+  /**
+   * Layout axis and the direction arrow keys move focus. Exposed as `data-orientation`.
+   * @default 'horizontal'
+   */
   orientation?: TabsOrientation
 }
 
@@ -185,7 +197,18 @@ function Tabs({ variant = 'pill', size = 'md', orientation = 'horizontal', class
 
 type BaseTabsListProps = React.ComponentProps<typeof BaseTabs.List>
 
-interface TabsListProps extends BaseTabsListProps, VariantProps<typeof tabsListVariants> {}
+interface TabsListProps extends BaseTabsListProps, Omit<VariantProps<typeof tabsListVariants>, 'variant' | 'size'> {
+  /**
+   * Override the root's variant for this list.
+   * @default context
+   */
+  variant?: VariantProps<typeof tabsListVariants>['variant']
+  /**
+   * Override the root's size for this list.
+   * @default context
+   */
+  size?: VariantProps<typeof tabsListVariants>['size']
+}
 
 function TabsList({ variant: variantProp, size: sizeProp, className, children, ...rest }: TabsListProps) {
   const ctx = useTabsContext()
@@ -212,7 +235,15 @@ function TabsList({ variant: variantProp, size: sizeProp, className, children, .
 type BaseTabsTabProps = React.ComponentProps<typeof BaseTabs.Tab>
 
 interface TabsTriggerProps extends BaseTabsTabProps {
+  /**
+   * Override the variant for this trigger.
+   * @default context
+   */
   variant?: TabsVariant
+  /**
+   * Override the size; `icon-*` makes a square, label-less trigger.
+   * @default context
+   */
   size?: TabsTriggerSize
 }
 

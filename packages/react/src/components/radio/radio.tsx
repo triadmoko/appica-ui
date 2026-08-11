@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Radio as BaseRadio } from '@base-ui/react/radio'
 import { LazyMotion, domAnimation, m, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 
 const SQUISH_TRANSITION = {
   duration: 0.3,

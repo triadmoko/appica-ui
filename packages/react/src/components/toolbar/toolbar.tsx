@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Toolbar as BaseToolbar } from '@base-ui/react/toolbar'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 interface ToolbarProps extends React.ComponentProps<typeof BaseToolbar.Root> {}
 

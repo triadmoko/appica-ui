@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Separator as BaseSeparator } from '@base-ui/react/separator'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type SeparatorVariant = 'solid' | 'dashed' | 'dotted' | 'double' | 'gradient' | 'wave' | 'zigzag'
 
@@ -69,6 +69,10 @@ function DecorativePattern({ variant, horizontal }: { variant: SeparatorVariant;
 }
 
 type SeparatorProps = React.ComponentProps<typeof BaseSeparator> & {
+  /**
+   * Line style. `gradient`, `wave`, `zigzag`, and `dotted` are decorative.
+   * @default 'solid'
+   */
   variant?: SeparatorVariant
 }
 

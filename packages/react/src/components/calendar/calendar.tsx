@@ -11,7 +11,7 @@ import {
 } from 'react-day-picker'
 import { buttonVariants } from '../button/button-variants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select/select'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type CalendarSize = 'sm' | 'md' | 'lg'
 
@@ -20,7 +20,12 @@ type DayPickerProps = React.ComponentProps<typeof DayPicker>
 type DistributiveOmit<T, K extends keyof never> = T extends unknown ? Omit<T, K> : never
 
 interface CalendarExtensions {
+  /**
+   * Cell size and text scale (Appica extension).
+   * @default 'md'
+   */
   size?: CalendarSize
+  /** Extra classes on the root, merged via `tailwind-merge`. */
   className?: string
 }
 

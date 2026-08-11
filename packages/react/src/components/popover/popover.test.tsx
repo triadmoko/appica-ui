@@ -48,7 +48,7 @@ describe('Popover', () => {
       </Popover>,
     )
     // Never opened, yet present in the DOM (hidden) so a consumer's animated
-    // content doesn't re-mount — and re-animate — on every open.
+    // content doesn't re-mount - and re-animate - on every open.
     expect(document.querySelector('[data-slot="popover-content"]')).not.toBeNull()
     expect(screen.getByText('Always in the DOM')).toBeInTheDocument()
   })

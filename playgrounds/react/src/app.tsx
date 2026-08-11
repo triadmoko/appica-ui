@@ -9,7 +9,7 @@ export function App() {
         <div>
           <h1 className="text-foreground-intense text-3xl font-semibold">Appica UI Playground</h1>
           <p className="text-foreground-muted mt-1 text-sm">
-            Scratch page for developing components — edit <code>packages/react/src</code> and it hot-reloads.
+            Scratch page for developing components - edit <code>packages/react/src</code> and it hot-reloads.
           </p>
         </div>
         <Button

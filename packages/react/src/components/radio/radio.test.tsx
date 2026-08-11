@@ -104,7 +104,7 @@ describe('Radio', () => {
     expect(onValueChange).not.toHaveBeenCalled()
   })
 
-  it('honours controlled value', async () => {
+  it('honors controlled value', async () => {
     const user = userEvent.setup()
     const onValueChange = vi.fn()
     render(

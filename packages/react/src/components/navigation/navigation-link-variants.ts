@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 const base = [
   'relative inline-flex items-center gap-1.5 transform-gpu cursor-pointer font-medium outline-none',

@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Menubar as BaseMenubar } from '@base-ui/react/menubar'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { navigationLinkVariants } from '../navigation/navigation-link-variants'
 import {
   DropdownMenu,
@@ -44,7 +44,15 @@ function useMenubarContext() {
 type BaseMenubarRootProps = React.ComponentProps<typeof BaseMenubar>
 
 interface MenubarProps extends BaseMenubarRootProps {
+  /**
+   * Trigger appearance - hover/active pill, or an animated underline.
+   * @default 'pill'
+   */
   variant?: MenubarVariant
+  /**
+   * Scales the triggers, popups, and items together.
+   * @default 'md'
+   */
   size?: MenubarSize
 }
 

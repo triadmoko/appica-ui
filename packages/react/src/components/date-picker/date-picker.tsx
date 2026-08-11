@@ -9,7 +9,7 @@ import { Input, inputVariants } from '../input'
 import { Popover, PopoverContent, PopoverTrigger, type PopoverContentProps } from '../popover/popover'
 import { buttonVariants } from '../button/button-variants'
 import { useFieldRootContext } from '@base-ui/react/internals/field-root-context'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 type DatePickerSize = 'sm' | 'md' | 'lg'
 type DatePickerVariant = 'outline' | 'soft'
@@ -32,32 +32,117 @@ type CalendarPassthrough = DistributiveOmit<
 >
 
 type DatePickerBase = CalendarPassthrough & {
+  /**
+   * Height, padding, and calendar cell scale.
+   * @default 'md'
+   */
   size?: DatePickerSize
+  /**
+   * Field appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: DatePickerVariant
+  /**
+   * date-fns format for the date field(s).
+   * @default 'MM/dd/yyyy'
+   */
   dateFormat?: string
+  /**
+   * date-fns format for the time field(s).
+   * @default 'HH:mm:ss'
+   */
   timeFormat?: string
+  /**
+   * Show a clear button (multiple mode).
+   * @default false
+   */
   clearable?: boolean
+  /** Content pinned to the start edge. */
   startSlot?: React.ReactNode
+  /** Content pinned to the end edge. */
   endSlot?: React.ReactNode
+  /**
+   * Disable the whole control.
+   * @default false
+   */
   disabled?: boolean
+  /** Dates that can't be selected in the calendar. */
   disabledDates?: Matcher | Matcher[]
+  /**
+   * Make the typeable fields read-only.
+   * @default false
+   */
   readOnly?: boolean
+  /**
+   * Mark the form field as required.
+   * @default false
+   */
   required?: boolean
+  /**
+   * Hidden input name for form submission. `range` mode emits `name[from]` / `name[to]`; with `showTime` the value is a
+   * full datetime.
+   */
   name?: string
+  /** Flag the field invalid - sets `data-invalid` for styling + conveys it to assistive tech. */
   'aria-invalid'?: boolean
+  /** Classes on the root wrapper - use for footprint/layout (e.g. `max-w-60`). Merged via `tailwind-merge`. */
   className?: string
+  /**
+   * Classes on the inner field box - use to override field styling (border, radius, background). Merged via
+   * `tailwind-merge`.
+   */
   inputClassName?: string
+  /**
+   * Separator between the range's two fields.
+   * @default '–'
+   */
   rangeSeparator?: React.ReactNode
+  /** Controlled open state. Pair with `onOpenChange`. */
   open?: boolean
+  /**
+   * Uncontrolled initial open state.
+   * @default false
+   */
   defaultOpen?: boolean
+  /** Fires when the popover opens or closes. */
   onOpenChange?: (open: boolean) => void
+  /**
+   * Preferred popover side.
+   * @default 'bottom'
+   */
   side?: 'top' | 'bottom' | 'left' | 'right'
+  /**
+   * Popover alignment.
+   * @default 'end'
+   */
   align?: 'start' | 'center' | 'end'
+  /**
+   * Gap between the field and the popover.
+   * @default 6
+   */
   sideOffset?: number
+  /** Escape hatch forwarded to the inner `PopoverContent` (collision props, `className`, …). */
   popoverProps?: Partial<PopoverContentProps>
+  /**
+   * Override auto-close. By default only single mode closes on pick; range and multiple stay open (dismiss on
+   * outside-click/Escape).
+   * @default auto
+   */
   closeOnSelect?: boolean
+  /**
+   * Add a `TimeField` (single/range modes).
+   * @default false
+   */
   showTime?: boolean
+  /**
+   * Icon for the popover trigger button.
+   * @default calendar icon
+   */
   triggerIcon?: React.ReactNode
+  /**
+   * Accessible label for the trigger button.
+   * @default 'Open calendar'
+   */
   triggerAriaLabel?: string
 }
 
@@ -75,11 +160,20 @@ type DatePickerProps =
       onValueChange?: (v: DateRange | undefined) => void
     })
   | (DatePickerBase & {
+      /**
+       * Selection behavior; determines the `value` shape.
+       * @default 'single'
+       */
       mode: 'multiple'
+      /** Controlled value; shape matches `mode`. Pair with `onValueChange`. */
       value?: Date[] | undefined
+      /** Uncontrolled initial value. */
       defaultValue?: Date[] | undefined
+      /** Fires when the selection changes; the argument shape matches `mode`. */
       onValueChange?: (v: Date[] | undefined) => void
+      /** Placeholder for the multiple-mode summary field. */
       placeholder?: string
+      /** Customize the multiple-mode summary text. */
       formatValue?: (value: Date[] | undefined) => string
     })
 

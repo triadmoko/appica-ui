@@ -71,7 +71,7 @@ describe('Switch', () => {
     expect(onCheckedChange).not.toHaveBeenCalled()
   })
 
-  it('honours controlled checked prop', async () => {
+  it('honors controlled checked prop', async () => {
     const user = userEvent.setup()
     const onCheckedChange = vi.fn()
     render(<Switch checked={false} aria-label="Controlled" onCheckedChange={onCheckedChange} />)

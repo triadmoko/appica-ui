@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { useDirection } from '../../hooks/use-direction'
 
 type SparklineVariant = 'line' | 'area' | 'column'
@@ -32,11 +32,20 @@ function useSparkline(): SparklineContextValue {
 }
 
 interface SparklineProps extends Omit<React.ComponentProps<'div'>, 'onChange'> {
+  /** **Required.** The series to plot. */
   data: number[]
+  /** Per-point labels (e.g. dates), surfaced in the tooltip and to `SparklineLabel`. */
   labels?: string[]
+  /**
+   * Accent for the line, fill, indicator, and tooltip swatch. Any CSS color.
+   * @default var(--primary)
+   */
   color?: string
+  /** Formatting for displayed values (`SparklineValue`, tooltip). */
   format?: Intl.NumberFormatOptions
+  /** Locale used by `Intl.NumberFormat`. */
   locale?: Intl.LocalesArgument
+  /** Fires when the hovered point changes; `null` on pointer leave. */
   onActiveChange?: (point: SparklinePoint | null) => void
 }
 
@@ -95,14 +104,47 @@ function Sparkline({
 }
 
 interface SparklineChartProps extends Omit<React.ComponentProps<'div'>, 'children'> {
+  /**
+   * The layout.
+   * @default 'line'
+   */
   variant?: SparklineVariant
+  /**
+   * Line smoothing from `0` (straight) to `1` (fully rounded). Line/area only.
+   * @default 0.5
+   */
   curve?: number
+  /**
+   * **`line` only.** Add a gradient fill from the line to the bottom edge. Area is always filled.
+   * @default false
+   */
   fill?: boolean
+  /**
+   * The pivot the fill/bars grow from; values below it render below. Area and column.
+   * @default 0
+   */
   baseline?: number
+  /**
+   * Chart height, in pixels.
+   * @default 48
+   */
   height?: number
+  /**
+   * Line thickness, in pixels. Line/area only.
+   * @default 2
+   */
   strokeWidth?: number
+  /**
+   * Show the hover indicator (dot + guide, or the active-column highlight).
+   * @default true
+   */
   indicator?: boolean
+  /**
+   * Float a tooltip at the hovered point.
+   * @default false
+   */
   tooltip?: boolean
+  /** Render custom tooltip content instead of the default swatch + value. Implies `tooltip`. */
   renderTooltip?: (point: SparklinePoint) => React.ReactNode
 }
 
@@ -352,6 +394,7 @@ function SparklineChart({
 }
 
 type SparklineValueProps = Omit<React.ComponentProps<'span'>, 'children'> & {
+  /** Render function to fully customize the displayed text. Omit for the number. */
   children?: (formatted: string, value: number) => React.ReactNode
 }
 
@@ -372,6 +415,7 @@ function SparklineValue({ className, children, ...props }: SparklineValueProps) 
 }
 
 type SparklineLabelProps = Omit<React.ComponentProps<'span'>, 'children'> & {
+  /** Render function to customize the displayed text. Omit for the raw label. */
   children?: (label: string, point: SparklinePoint) => React.ReactNode
 }
 

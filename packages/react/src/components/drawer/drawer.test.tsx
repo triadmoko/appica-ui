@@ -21,6 +21,7 @@ function renderDrawer({
   description = 'Update your details below.',
   closeButton,
   backdrop,
+  frame,
   contentClassName,
 }: {
   side?: 'top' | 'bottom' | 'left' | 'right'
@@ -28,6 +29,7 @@ function renderDrawer({
   description?: string
   closeButton?: boolean
   backdrop?: boolean
+  frame?: boolean
   contentClassName?: string
 } = {}) {
   return render(
@@ -37,6 +39,7 @@ function renderDrawer({
         className={contentClassName}
         {...(closeButton !== undefined ? { closeButton } : {})}
         {...(backdrop !== undefined ? { backdrop } : {})}
+        {...(frame !== undefined ? { frame } : {})}
       >
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
@@ -63,7 +66,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('Body content')).toBeNull()
   })
 
-  it('opens on trigger click and exposes a labelled dialog', async () => {
+  it('opens on trigger click and exposes a labeled dialog', async () => {
     const user = userEvent.setup()
     renderDrawer()
 
@@ -165,6 +168,34 @@ describe('Drawer', () => {
 
     // Outermost drawer keeps its backdrop; the nested one auto-omits it.
     expect(document.querySelectorAll('[data-slot="drawer-backdrop"]')).toHaveLength(1)
+    // The frame needs a backdrop, so only the outermost drawer is framed.
+    expect(document.querySelectorAll('[data-slot="drawer-popup"][data-frame]')).toHaveLength(1)
+  })
+
+  it('frames the popup by default and drops the frame when frame is false', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderDrawer()
+
+    await user.click(screen.getByRole('button', { name: 'Open drawer' }))
+    await screen.findByRole('dialog')
+    expect(document.querySelector('[data-slot="drawer-popup"]')).toHaveAttribute('data-frame')
+
+    unmount()
+    renderDrawer({ frame: false })
+
+    await user.click(screen.getByRole('button', { name: 'Open drawer' }))
+    await screen.findByRole('dialog')
+    expect(document.querySelector('[data-slot="drawer-popup"]')).not.toHaveAttribute('data-frame')
+  })
+
+  it('drops the frame when the backdrop is off, even if frame is set', async () => {
+    const user = userEvent.setup()
+    renderDrawer({ backdrop: false, frame: true })
+
+    await user.click(screen.getByRole('button', { name: 'Open drawer' }))
+    await screen.findByRole('dialog')
+
+    expect(document.querySelector('[data-slot="drawer-popup"]')).not.toHaveAttribute('data-frame')
   })
 
   it('positions on the requested side', async () => {

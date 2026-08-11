@@ -1,6 +1,6 @@
 {
   "name": "@appica/ui-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Appica UI components library for React applications",
   "license": "MIT",
   "author": "Appica UI",
@@ -31,7 +31,8 @@
   },
   "type": "module",
   "sideEffects": [
-    "./styles.css"
+    "./styles.css",
+    "./appica.css"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -77,6 +78,11 @@
       "import": "./dist/components/badge/badge.js",
       "default": "./dist/components/badge/badge.js"
     },
+    "./border-beam": {
+      "types": "./dist/components/border-beam/border-beam.d.ts",
+      "import": "./dist/components/border-beam/border-beam.js",
+      "default": "./dist/components/border-beam/border-beam.js"
+    },
     "./breadcrumb": {
       "types": "./dist/components/breadcrumb/breadcrumb.d.ts",
       "import": "./dist/components/breadcrumb/breadcrumb.js",
@@ -96,6 +102,11 @@
       "types": "./dist/components/calendar/calendar.d.ts",
       "import": "./dist/components/calendar/calendar.js",
       "default": "./dist/components/calendar/calendar.js"
+    },
+    "./card": {
+      "types": "./dist/components/card/card.d.ts",
+      "import": "./dist/components/card/card.js",
+      "default": "./dist/components/card/card.js"
     },
     "./carousel": {
       "types": "./dist/components/carousel/carousel.d.ts",
@@ -121,6 +132,31 @@
       "types": "./dist/components/collapsible/collapsible.d.ts",
       "import": "./dist/components/collapsible/collapsible.js",
       "default": "./dist/components/collapsible/collapsible.js"
+    },
+    "./color-area": {
+      "types": "./dist/components/color-area/color-area.d.ts",
+      "import": "./dist/components/color-area/color-area.js",
+      "default": "./dist/components/color-area/color-area.js"
+    },
+    "./color-picker": {
+      "types": "./dist/components/color-picker/color-picker.d.ts",
+      "import": "./dist/components/color-picker/color-picker.js",
+      "default": "./dist/components/color-picker/color-picker.js"
+    },
+    "./color-slider": {
+      "types": "./dist/components/color-slider/color-slider.d.ts",
+      "import": "./dist/components/color-slider/color-slider.js",
+      "default": "./dist/components/color-slider/color-slider.js"
+    },
+    "./color-swatch": {
+      "types": "./dist/components/color-swatch/color-swatch.d.ts",
+      "import": "./dist/components/color-swatch/color-swatch.js",
+      "default": "./dist/components/color-swatch/color-swatch.js"
+    },
+    "./color-swatch-picker": {
+      "types": "./dist/components/color-swatch-picker/color-swatch-picker.d.ts",
+      "import": "./dist/components/color-swatch-picker/color-swatch-picker.js",
+      "default": "./dist/components/color-swatch-picker/color-swatch-picker.js"
     },
     "./combobox": {
       "types": "./dist/components/combobox/combobox.d.ts",
@@ -262,6 +298,11 @@
       "import": "./dist/components/radio-group/radio-group.js",
       "default": "./dist/components/radio-group/radio-group.js"
     },
+    "./rating": {
+      "types": "./dist/components/rating/rating.d.ts",
+      "import": "./dist/components/rating/rating.js",
+      "default": "./dist/components/rating/rating.js"
+    },
     "./scroll-area": {
       "types": "./dist/components/scroll-area/scroll-area.d.ts",
       "import": "./dist/components/scroll-area/scroll-area.js",
@@ -362,6 +403,11 @@
       "import": "./dist/components/tooltip/tooltip.js",
       "default": "./dist/components/tooltip/tooltip.js"
     },
+    "./color": {
+      "types": "./dist/lib/color.d.ts",
+      "import": "./dist/lib/color.js",
+      "default": "./dist/lib/color.js"
+    },
     "./hooks/use-direction": {
       "types": "./dist/hooks/use-direction.d.ts",
       "import": "./dist/hooks/use-direction.js",
@@ -408,19 +454,24 @@
       "default": "./dist/providers/theme-provider/index.js"
     },
     "./styles.css": "./styles.css",
+    "./css": "./appica.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "src",
-    "styles.css"
+    "styles.css",
+    "appica.css",
+    "agent-rules.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "sync-exports": "node scripts/sync-exports.mjs",
     "prebuild": "pnpm sync-exports",
     "prepack": "pnpm sync-exports",
     "prepublishOnly": "pnpm run build && pnpm run test",
-    "build": "pnpm clean && tsc -p tsconfig.build.json && rollup -c rollup.config.mjs",
+    "build": "pnpm clean && tsc -p tsconfig.build.json && rollup -c rollup.config.mjs && pnpm build:css",
+    "build:css": "node scripts/build-css.mjs",
     "dev": "rollup -c rollup.config.mjs --watch",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
@@ -428,10 +479,10 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist appica.css"
   },
   "dependencies": {
-    "@base-ui/react": "^1.6.0",
+    "@base-ui/react": "^1.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
@@ -444,25 +495,29 @@
     "embla-carousel-fade": "9.0.0-rc02",
     "embla-carousel-react": "9.0.0-rc02",
     "embla-carousel-wheel-gestures": "9.0.0-rc01",
-    "motion": "^12.42.2",
+    "motion": "^13.0.0",
     "react-day-picker": "^10.0.1",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@testing-library/user-event": "^14.6.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
     "@vitest/coverage-v8": "^4.1.10",
-    "axe-core": "^4.12.1",
-    "jsdom": "^29.1.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "rollup": "^4.62.2",
+    "axe-core": "^4.13.0",
+    "jsdom": "^30.0.1",
+    "postcss": "^8.5.26",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "rollup": "^4.62.4",
     "rollup-plugin-esbuild": "^6.2.1",
     "rollup-preserve-directives": "^1.1.3",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10",
     "vitest-axe": "^0.1.0"
@@ -475,6 +530,9 @@
   },
   "peerDependenciesMeta": {
     "@types/react": {
+      "optional": true
+    },
+    "tailwindcss": {
       "optional": true
     }
   }

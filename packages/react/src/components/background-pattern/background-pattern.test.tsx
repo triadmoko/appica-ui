@@ -4,7 +4,7 @@ import { axe } from 'vitest-axe'
 import { BackgroundPattern } from './background-pattern'
 
 describe('BackgroundPattern', () => {
-  it('renders its children inside a labelled wrapper', () => {
+  it('renders its children inside a labeled wrapper', () => {
     render(
       <BackgroundPattern>
         <span>Content</span>

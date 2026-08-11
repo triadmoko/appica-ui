@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { Button, type ButtonProps } from '../button/button'
 
 const CHECK_PATH = 'M4.3 12.55 L9.25 17.5 L19.7 6.5'
@@ -48,11 +48,26 @@ async function copyTextToClipboard(text: string): Promise<void> {
 }
 
 interface CopyButtonProps extends Omit<ButtonProps, 'value' | 'onCopy'> {
+  /** **Required.** What to copy: a string, an element ref (its value/textContent), or a (possibly async) getter. */
   value: CopyButtonValue
+  /**
+   * How long (ms) the copied state lasts before reverting.
+   * @default 2000
+   */
   timeout?: number
+  /**
+   * Accessible name (and tooltip via `title`) in the idle state.
+   * @default 'Copy'
+   */
   label?: string
+  /**
+   * Accessible name after a successful copy; a string child also swaps to this.
+   * @default 'Copied'
+   */
   copiedLabel?: string
+  /** Called with the copied text on success. */
   onCopy?: (value: string) => void
+  /** Called if reading the value or writing to the clipboard fails. */
   onCopyError?: (error: unknown) => void
 }
 

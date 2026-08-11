@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 const thumbnailVariants = cva(
   "relative inline-flex size-[1em] shrink-0 items-center justify-center overflow-hidden [&_svg:not([class*='size-'])]:size-[0.5em]",
@@ -43,13 +43,33 @@ type ThumbnailVariant = NonNullable<VariantProps<typeof thumbnailVariants>['vari
 type BaseImageProps = React.ComponentProps<typeof BaseAvatar.Image>
 
 interface ThumbnailProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'size' | 'children'> {
+  /**
+   * Image tile, or a colored icon tile.
+   * @default 'image'
+   */
   variant?: ThumbnailVariant
+  /**
+   * Rounded square or full circle.
+   * @default 'rounded'
+   */
   shape?: ThumbnailShape
+  /**
+   * A preset scale, or a pixel number for an exact size.
+   * @default 'md'
+   */
   size?: ThumbnailPresetSize | number
+  /** Image URL (image variant). Lifted from `render` when omitted. */
   src?: string
+  /**
+   * Alternative text describing the image. Defaults to `""` (decorative) when omitted.
+   * @default ''
+   */
   alt?: string
+  /** Swap the `<img>` for another element - e.g. a Next.js `<Image>`. */
   render?: BaseImageProps['render']
+  /** Fires as the image moves through its loading lifecycle. */
   onLoadingStatusChange?: BaseImageProps['onLoadingStatusChange']
+  /** The icon to frame (icon variants). */
   children?: React.ReactNode
 }
 

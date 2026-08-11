@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Popover as BasePopover } from '@base-ui/react/popover'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 
 type PopoverProps = React.ComponentProps<typeof BasePopover.Root>
 
@@ -23,6 +23,10 @@ type PopoverContentProps = React.ComponentProps<typeof BasePopover.Popup> &
     React.ComponentProps<typeof BasePopover.Positioner>,
     React.ComponentProps<typeof BasePopover.Portal>
   > & {
+    /**
+     * Render the pointer and the thicker anchored border.
+     * @default true
+     */
     arrow?: boolean
   }
 

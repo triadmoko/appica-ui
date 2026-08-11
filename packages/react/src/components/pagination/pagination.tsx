@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
-import { cn, focusableProps } from '../../utils'
+import { cn, focusableProps } from '../../internal/utils'
 import { buttonVariants } from '../button/button-variants'
 
 type PaginationVariant = 'outline' | 'soft'
@@ -25,7 +25,15 @@ function usePaginationContext() {
 }
 
 interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
+  /**
+   * Link style, shared with every link via context.
+   * @default 'outline'
+   */
   variant?: PaginationVariant
+  /**
+   * Link sizing, shared via context.
+   * @default 'md'
+   */
   size?: PaginationSize
 }
 
@@ -65,7 +73,15 @@ type PaginationLinkState = {
 }
 
 interface PaginationLinkProps extends useRender.ComponentProps<'a', PaginationLinkState> {
+  /**
+   * Mark the current page. Renders a non-interactive, filled link with `aria-current="page"`.
+   * @default false
+   */
   active?: boolean
+  /**
+   * Make the link non-interactive and dimmed (`aria-disabled`); used for out-of-range controls.
+   * @default false
+   */
   disabled?: boolean
 }
 

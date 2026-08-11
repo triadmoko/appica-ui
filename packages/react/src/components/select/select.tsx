@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { Select as BaseSelect } from '@base-ui/react/select'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 import { inputVariants } from '../input/input-variants'
 
 type SelectSize = 'sm' | 'md' | 'lg'
@@ -33,8 +33,20 @@ function useSelectContext() {
 type BaseSelectRootProps = React.ComponentProps<typeof BaseSelect.Root>
 
 interface SelectProps extends BaseSelectRootProps {
+  /**
+   * Trigger height, popup radius, and item sizing.
+   * @default 'md'
+   */
   size?: SelectSize
+  /**
+   * Trigger appearance - bordered or filled.
+   * @default 'outline'
+   */
   variant?: SelectVariant
+  /**
+   * Overlay the selected item over the trigger on open. **Set `false` when using a `startSlot`.**
+   * @default true
+   */
   alignItemWithTrigger?: boolean
 }
 
@@ -106,8 +118,14 @@ const ICON_SIZE: Record<SelectSize, string> = {
 }
 
 interface SelectTriggerProps extends React.ComponentProps<typeof BaseSelect.Trigger> {
+  /**
+   * Render a clear button inside the trigger when a value is present.
+   * @default false
+   */
   clearable?: boolean
+  /** Adornment before the value. Pair with `alignItemWithTrigger={false}`. */
   startSlot?: React.ReactNode
+  /** Adornment after the value, before the chevron. */
   endSlot?: React.ReactNode
 }
 
@@ -221,6 +239,7 @@ type SelectContentProps = React.ComponentProps<typeof BaseSelect.Popup> &
     React.ComponentProps<typeof BaseSelect.Positioner>,
     React.ComponentProps<typeof BaseSelect.Portal>
   > & {
+    /** Per-popup override of the root's alignment setting. */
     alignItemWithTrigger?: boolean
   }
 

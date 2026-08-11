@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { Drawer as BaseDrawer } from '@base-ui/react/drawer'
-import { cn } from '../../utils'
-import { type ModalContentProps, splitModalProps } from '../../modal'
+import { cn } from '../../internal/utils'
+import { type ModalContentProps, splitModalProps } from '../../internal/modal'
 import { buttonVariants } from '../button/button-variants'
 
 type DrawerSide = 'top' | 'bottom' | 'left' | 'right'
@@ -20,6 +20,10 @@ const DrawerDepthContext = React.createContext(0)
 const DrawerSnapContext = React.createContext(false)
 
 interface DrawerProps extends Omit<React.ComponentProps<typeof BaseDrawer.Root>, 'swipeDirection'> {
+  /**
+   * The edge the drawer slides in from.
+   * @default 'bottom'
+   */
   side?: DrawerSide
 }
 
@@ -164,9 +168,25 @@ type DrawerContentProps = ModalContentProps<
   React.ComponentProps<typeof BaseDrawer.Backdrop>,
   React.ComponentProps<typeof BaseDrawer.Viewport>
 > & {
+  /**
+   * Render the × button in the corner.
+   * @default true
+   */
   closeButton?: boolean
+  /**
+   * Accessible label for the close button.
+   * @default 'Close'
+   */
   closeLabel?: string
+  /** Render the dimmed backdrop. Defaults to `true` at the top level, off when nested. */
   backdrop?: boolean
+  /**
+   * Wrap the panel in a translucent glass frame. Turned off, the drawer is a plain solid
+   * card and the handle sits inside it, the way a nested drawer looks. Needs `backdrop`:
+   * without one the panel is always solid.
+   * @default true
+   */
+  frame?: boolean
 }
 
 function DrawerContent({
@@ -175,6 +195,7 @@ function DrawerContent({
   closeButton = true,
   closeLabel = 'Close',
   backdrop,
+  frame = true,
   backdropProps,
   viewportProps,
   ...props
@@ -184,6 +205,10 @@ function DrawerContent({
   const hasSnap = React.useContext(DrawerSnapContext)
   const forceBackdrop = backdropProps?.forceRender === true
   const showBackdrop = forceBackdrop || (backdrop ?? depth <= 1)
+  // The frame is a rim of blurred page around the panel, so it only reads against the
+  // backdrop. Without one - a nested drawer, or `backdrop={false}` - it collapses to a
+  // plain solid card with the handle inside.
+  const showFrame = frame && showBackdrop
   const snapSide = hasSnap && (side === 'bottom' || side === 'top') ? side : null
   const { portal, popup } = splitModalProps(props)
 
@@ -214,18 +239,23 @@ function DrawerContent({
       >
         <BaseDrawer.Popup
           data-slot="drawer-popup"
+          {...(showFrame ? { 'data-frame': '' } : {})}
           className={cn(
             'relative flex min-h-0 flex-col rounded-2xl border',
             snapSide
               ? cn(
-                  'bg-background border-border-overlay before:bg-background-strong data-expanded:p-1.5',
-                  'data-expanded:before:bg-background data-expanded:border-white/15 data-expanded:bg-white/10 data-expanded:shadow-none data-expanded:backdrop-blur-sm',
+                  'bg-background border-border-overlay before:bg-background-strong',
+                  showFrame &&
+                    cn(
+                      'data-expanded:before:bg-background data-expanded:border-white/15 data-expanded:p-1.5',
+                      'data-expanded:bg-white/10 data-expanded:shadow-none data-expanded:backdrop-blur-sm',
+                    ),
                 )
-              : showBackdrop
+              : showFrame
                 ? 'before:bg-background border-white/15 bg-white/10 p-1.5 backdrop-blur-sm'
                 : 'bg-background border-border-overlay before:bg-background-strong',
             'isolate outline-none',
-            (hasSnap || !showBackdrop) && SHADOW_SIDE[side],
+            (hasSnap || !showFrame) && SHADOW_SIDE[side],
             FRAME_PAD_SIDE[side],
             HANDLE_SIDE[side],
             'motion-safe:transition-[transform,height] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
@@ -250,7 +280,7 @@ function DrawerContent({
             data-slot="drawer-content"
             className={cn(
               'relative flex min-h-0 flex-col not-has-[>[data-slot=drawer-footer]]:pb-6 not-has-[>[data-slot=drawer-header]]:pt-6 [&>[data-slot=drawer-header]+[data-slot=drawer-footer]]:pt-0',
-              showBackdrop || snapSide
+              showFrame || snapSide
                 ? 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]'
                 : CONTENT_RECLAIM_SIDE[side],
               snapSide ? 'h-[calc(100dvh-1.5rem-var(--snap-offset,0))]' : 'flex-1',

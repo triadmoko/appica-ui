@@ -5,7 +5,7 @@ import { Switch as BaseSwitch } from '@base-ui/react/switch'
 import { LazyMotion, domAnimation, m, useAnimate } from 'motion/react'
 import { useDirection } from '../../hooks/use-direction'
 import { useReducedMotion } from '../../hooks/use-reduced-motion'
-import { cn, useComposedRefs } from '../../utils'
+import { cn, useComposedRefs } from '../../internal/utils'
 
 const switchSizes = {
   sm: {
@@ -112,6 +112,10 @@ function SwitchThumb({
 }
 
 interface SwitchProps extends React.ComponentProps<typeof BaseSwitch.Root> {
+  /**
+   * Scales the track and thumb together.
+   * @default 'md'
+   */
   size?: SwitchSize
 }
 

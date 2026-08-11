@@ -59,7 +59,7 @@ describe('Tooltip', () => {
     await user.hover(screen.getByRole('button', { name: 'Hover' }))
 
     await screen.findByText('Add to library')
-    // Popup is portaled — query at document level.
+    // Popup is portaled - query at document level.
     const arrow = document.querySelector('[data-slot="tooltip-arrow"]') as HTMLElement | null
     expect(arrow).not.toBeNull()
     expect(arrow!.className).toContain('size-2.5')

@@ -6,7 +6,7 @@ import { axe } from 'vitest-axe'
 import { CopyButton } from './copy-button'
 
 // userEvent.setup() installs its own navigator.clipboard stub, so the spy
-// must be created after setup() — a beforeEach mock would get replaced.
+// must be created after setup() - a beforeEach mock would get replaced.
 function setup() {
   const user = userEvent.setup()
   const writeText = vi.spyOn(navigator.clipboard, 'writeText')

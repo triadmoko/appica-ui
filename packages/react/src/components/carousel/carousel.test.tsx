@@ -91,6 +91,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselSlide,
+  CarouselThumbs,
+  CarouselThumb,
   CarouselPrev,
   CarouselNext,
   CarouselPagination,
@@ -99,7 +101,11 @@ import {
   useLinkedCarousels,
   type CarouselApi,
   type CarouselProps,
+  type CarouselThumbsProps,
 } from './carousel'
+
+// eslint-disable-next-line import/first
+import useEmblaCarousel from 'embla-carousel-react'
 
 // eslint-disable-next-line import/first
 import { renderHook } from '@testing-library/react'
@@ -128,6 +134,8 @@ beforeEach(() => {
   stubApi.slidesInView.mockReturnValue([0])
   stubApi.scrollProgress.mockReturnValue(0)
   stubApi.plugins.mockReturnValue({})
+  stubApi.slideNodes.mockReturnValue([])
+  stubApi.containerNode.mockReturnValue(undefined)
 })
 
 describe('Carousel', () => {
@@ -349,6 +357,133 @@ describe('CarouselPagination', () => {
   })
 })
 
+describe('CarouselThumbs / CarouselThumb', () => {
+  function WithThumbs(props?: Partial<CarouselThumbsProps>) {
+    return (
+      <Carousel>
+        <CarouselContent>
+          <CarouselSlide>Slide 1</CarouselSlide>
+          <CarouselSlide>Slide 2</CarouselSlide>
+          <CarouselSlide>Slide 3</CarouselSlide>
+        </CarouselContent>
+        <CarouselThumbs {...props}>
+          <CarouselThumb>
+            <img src="/1.jpg" alt="" />
+          </CarouselThumb>
+          <CarouselThumb>
+            <img src="/2.jpg" alt="" />
+          </CarouselThumb>
+          <CarouselThumb>
+            <img src="/3.jpg" alt="" />
+          </CarouselThumb>
+        </CarouselThumbs>
+      </Carousel>
+    )
+  }
+
+  it('renders a labeled rail of thumbnails, one per slide', () => {
+    const { container } = render(<WithThumbs />)
+    const rail = container.querySelector('[data-slot="carousel-thumbs"]') as HTMLElement
+    expect(rail).not.toBeNull()
+    expect(rail.getAttribute('role')).toBe('group')
+    expect(rail.getAttribute('aria-label')).toBe('Choose slide to display')
+    expect(rail.getAttribute('aria-roledescription')).toBeNull()
+    expect(rail.querySelectorAll('[data-slot="carousel-thumb"]')).toHaveLength(3)
+    expect(screen.getByRole('button', { name: 'Go to slide 2' })).toBeInTheDocument()
+  })
+
+  it('marks the thumbnail of the selected slide as current', () => {
+    const { container } = render(<WithThumbs />)
+    const thumbs = container.querySelectorAll('[data-slot="carousel-thumb"]')
+    expect(thumbs[0]).toHaveAttribute('data-active')
+    expect(thumbs[0]).toHaveAttribute('aria-current', 'true')
+    expect(thumbs[1]).not.toHaveAttribute('data-active')
+  })
+
+  it('navigates the carousel to the clicked thumbnail', async () => {
+    const user = userEvent.setup()
+    render(<WithThumbs />)
+    await user.click(screen.getByRole('button', { name: 'Go to slide 3' }))
+    expect(stubApi.goTo).toHaveBeenCalledWith(2)
+  })
+
+  it('honors an explicit index over the thumbnail position', async () => {
+    const user = userEvent.setup()
+    render(
+      <Carousel>
+        <CarouselContent>
+          <CarouselSlide>Slide 1</CarouselSlide>
+        </CarouselContent>
+        <CarouselThumbs>
+          <CarouselThumb index={5}>Five</CarouselThumb>
+        </CarouselThumbs>
+      </Carousel>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Go to slide 6' }))
+    expect(stubApi.goTo).toHaveBeenCalledWith(5)
+  })
+
+  it('fires the consumer onClick alongside the internal navigation', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    render(
+      <Carousel>
+        <CarouselContent>
+          <CarouselSlide>Slide 1</CarouselSlide>
+        </CarouselContent>
+        <CarouselThumbs>
+          <CarouselThumb onClick={onClick}>One</CarouselThumb>
+        </CarouselThumbs>
+      </Carousel>,
+    )
+    await user.click(screen.getByRole('button', { name: 'Go to slide 1' }))
+    expect(onClick).toHaveBeenCalled()
+    expect(stubApi.goTo).toHaveBeenCalledWith(0)
+  })
+
+  it('lays the rail out on the vertical axis when asked', () => {
+    const { container } = render(<WithThumbs orientation="vertical" />)
+    const rail = container.querySelector('[data-slot="carousel-thumbs"]') as HTMLElement
+    expect(rail.getAttribute('data-orientation')).toBe('vertical')
+    const track = rail.querySelector('[data-slot="carousel-content"]') as HTMLElement
+    expect(track.getAttribute('data-orientation')).toBe('vertical')
+  })
+
+  it('applies the light variant to the thumbnails and the indicator', () => {
+    const { container } = render(<WithThumbs light />)
+    const thumb = container.querySelector('[data-slot="carousel-thumb"]') as HTMLElement
+    expect(thumb.className).toMatch(/border-white/)
+  })
+
+  it('draws the indicator over the selected thumbnail once the engine reports its slides', () => {
+    const { container, rerender } = render(<WithThumbs />)
+    expect(container.querySelector('[data-slot="carousel-thumbs-indicator"]')).toBeNull()
+
+    const rail = container.querySelector('[data-slot="carousel-thumbs"]') as HTMLElement
+    const thumbs = Array.from(rail.querySelectorAll<HTMLElement>('[data-slot="carousel-thumb"]'))
+    stubApi.slideNodes.mockReturnValue(thumbs)
+    stubApi.containerNode.mockReturnValue(rail.querySelector('[data-slot="carousel-content"]'))
+    rerender(<WithThumbs />)
+
+    const indicator = container.querySelector('[data-slot="carousel-thumbs-indicator"]') as HTMLElement
+    expect(indicator).not.toBeNull()
+    expect(indicator.style.translate).toBe('0px 0px')
+  })
+
+  it('excludes the indicator from the rail snap count', () => {
+    render(<WithThumbs />)
+    const options = (useEmblaCarousel as unknown as ReturnType<typeof vi.fn>).mock.calls.at(-1)?.[0]
+    expect(options.slides).toBe(':scope > [data-slot=carousel-thumb]')
+    expect(options.containScroll).toBe('keepSnaps')
+  })
+
+  it('throws when a thumbnail is used outside CarouselThumbs', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    expect(() => render(<CarouselThumb>Orphan</CarouselThumb>)).toThrow(/CarouselThumb/)
+    spy.mockRestore()
+  })
+})
+
 describe('CarouselProgress', () => {
   it('renders a progress bar with data-source="scroll" when no autoplay', () => {
     const { container } = render(
@@ -488,6 +623,26 @@ describe('useLinkedCarousels', () => {
 describe('a11y', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Basic />)
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('has no accessibility violations with a thumbnail rail', async () => {
+    const { container } = render(
+      <Carousel>
+        <CarouselContent>
+          <CarouselSlide>Slide 1</CarouselSlide>
+          <CarouselSlide>Slide 2</CarouselSlide>
+        </CarouselContent>
+        <CarouselThumbs>
+          <CarouselThumb>
+            <img src="/1.jpg" alt="" />
+          </CarouselThumb>
+          <CarouselThumb>
+            <img src="/2.jpg" alt="" />
+          </CarouselThumb>
+        </CarouselThumbs>
+      </Carousel>,
+    )
     expect(await axe(container)).toHaveNoViolations()
   })
 })

@@ -497,13 +497,17 @@
 }
 
 @utility animate-gradient-glow {
-  animation: gradient-glow var(--gradient-glow-duration, 4s) linear infinite;
+  animation-name: gradient-glow;
+  animation-duration: var(--gradient-glow-duration, 4s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 @utility animate-gradient-glow-aura {
-  animation:
-    gradient-glow var(--gradient-glow-duration, 4s) linear infinite,
-    gradient-glow-pulse var(--gradient-glow-duration, 4s) ease-in-out infinite;
+  animation-name: gradient-glow, gradient-glow-pulse;
+  animation-duration: var(--gradient-glow-duration, 4s);
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
 }
 
 @keyframes gradient-glow {
@@ -519,5 +523,25 @@
   }
   50% {
     transform: scale(1.03);
+  }
+}
+
+@property --border-beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@utility animate-border-beam {
+  animation-name: border-beam;
+  animation-duration: var(--border-beam-duration, 5s);
+  animation-delay: var(--border-beam-delay, 0s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes border-beam {
+  to {
+    --border-beam-angle: 360deg;
   }
 }

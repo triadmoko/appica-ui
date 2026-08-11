@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 const avatarVariants = cva(
   "relative flex size-[1em] shrink-0 items-center justify-center bg-background-strong text-center font-medium text-foreground-emphasis [&_svg:not([class*='size-'])]:size-[0.5em]",
@@ -28,7 +28,15 @@ type AvatarPresetSize = NonNullable<VariantProps<typeof avatarVariants>['size']>
 type AvatarShape = NonNullable<VariantProps<typeof avatarVariants>['shape']>
 
 interface AvatarProps extends Omit<React.ComponentProps<typeof BaseAvatar.Root>, 'size'> {
+  /**
+   * Full circle or rounded square.
+   * @default 'circle'
+   */
   shape?: AvatarShape
+  /**
+   * A preset scale, or a pixel number for an exact size.
+   * @default 'md'
+   */
   size?: AvatarPresetSize | number
 }
 
@@ -85,6 +93,10 @@ function AvatarFallback({ className, ...props }: AvatarFallbackProps) {
 }
 
 interface AvatarBadgeProps extends React.ComponentPropsWithoutRef<'span'> {
+  /**
+   * Add a pulsing ping behind the dot (skipped under reduced motion).
+   * @default false
+   */
   animate?: boolean
 }
 
@@ -107,6 +119,10 @@ function AvatarBadge({ animate = false, className, ...props }: AvatarBadgeProps)
 }
 
 interface AvatarGroupProps extends React.ComponentPropsWithoutRef<'div'>, Pick<AvatarProps, 'size' | 'shape'> {
+  /**
+   * Stack the avatars in a row or a column.
+   * @default 'horizontal'
+   */
   orientation?: 'horizontal' | 'vertical'
 }
 

@@ -77,7 +77,7 @@ describe('Tabs', () => {
     expect(screen.getByText('Panel Two')).toBeVisible()
   })
 
-  it('honours defaultValue', () => {
+  it('honors defaultValue', () => {
     render(<Demo defaultValue="three" />)
     expect(screen.getByRole('tab', { name: 'Three' })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByText('Panel Three')).toBeVisible()

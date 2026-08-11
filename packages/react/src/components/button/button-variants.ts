@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 
 const backgroundLayer = [
   'before:pointer-events-none',

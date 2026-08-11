@@ -70,7 +70,7 @@ describe('Slider', () => {
     await user.keyboard('{ArrowRight}')
 
     expect(onValueChange).toHaveBeenCalled()
-    // Parent never updates — value stays at 30.
+    // Parent never updates - value stays at 30.
     expect(thumb).toHaveAttribute('aria-valuenow', '30')
   })
 

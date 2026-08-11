@@ -1,20 +1,28 @@
 import * as React from 'react'
-import { cn } from '../../utils'
+import { cn } from '../../internal/utils'
 import { PatternLayer, patternCell, patternTint, type BackgroundPatternVariant } from './background-pattern-shared'
 import { BackgroundPatternInteractive } from './background-pattern-interactive'
 
 type SpotlightConfig = { size?: number | string; persistent?: boolean }
 
 interface BackgroundPatternProps extends React.ComponentProps<'div'> {
+  /**
+   * Pattern texture painted behind the content.
+   * @default 'dots'
+   */
   variant?: BackgroundPatternVariant
+  /**
+   * Cursor-following highlight. `true` for a 200px fading highlight; a number/length sizes it; an object with
+   * `persistent: true` keeps it always on.
+   * @default false
+   */
   spotlight?: boolean | number | string | SpotlightConfig
+  /** Cell size in px; overrides the per-variant default (dots 14, grid/dashed-grid 28, hexagons 40). */
   cellSize?: number
   /**
-   * Where the spotlight reads pointer movement from.
-   * - `'self'` (default): tracks only while the cursor is over this element or
-   *   its children — for the wrapping-children layout.
-   * - `'window'`: tracks pointer movement anywhere — for a pattern positioned
-   *   `fixed`/`absolute` behind unrelated content.
+   * Where the spotlight reads pointer movement. `'self'` tracks over this element; `'window'` tracks anywhere - for a
+   * pattern positioned behind unrelated content.
+   * @default 'self'
    */
   track?: 'self' | 'window'
 }

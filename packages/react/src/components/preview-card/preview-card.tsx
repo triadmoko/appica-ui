@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { PreviewCard as BasePreviewCard } from '@base-ui/react/preview-card'
-import { cn } from '../../utils'
-import { type FloatingContentProps, splitFloatingProps } from '../../floating'
+import { cn } from '../../internal/utils'
+import { type FloatingContentProps, splitFloatingProps } from '../../internal/floating'
 
 type PreviewCardProps = React.ComponentProps<typeof BasePreviewCard.Root>
 
@@ -23,6 +23,10 @@ type PreviewCardContentProps = React.ComponentProps<typeof BasePreviewCard.Popup
     React.ComponentProps<typeof BasePreviewCard.Positioner>,
     React.ComponentProps<typeof BasePreviewCard.Portal>
   > & {
+    /**
+     * Render the pointer and the thicker anchored border.
+     * @default true
+     */
     arrow?: boolean
   }
 
