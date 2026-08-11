@@ -1,6 +1,6 @@
 [![Appica UI](.github/assets/appica-ui-root.jpg)](https://appica.dev/ui)
 
-Beautiful, accessible UI designed by humans for the modern web - 60+ themeable components for AI-powered apps, SaaS dashboards, e-commerce sites, and scalable design systems. Polished interactions, dark mode, and full theming out of the box.
+Beautiful, accessible UI designed by humans for the modern web - 70+ themeable components for AI-powered apps, SaaS dashboards, e-commerce sites, and scalable design systems. Polished interactions, dark mode, and full theming out of the box.
 
 This monorepo contains framework-specific packages living under `packages/`. Each package is published to npm independently.
 

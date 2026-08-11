@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-blue)](https://www.typescriptlang.org/)
 [![Figma](https://img.shields.io/badge/Figma-design_file-F24E1E?logo=figma&logoColor=white)](https://www.figma.com/community/file/1657080448204231925)
 
-A modern React component library - 60+ accessible, themeable components built on [Base UI](https://base-ui.com) primitives, animated with [Motion](https://motion.dev), and styled with Tailwind CSS v4 design tokens.
+A modern React component library - 70+ accessible, themeable components built on [Base UI](https://base-ui.com) primitives, animated with [Motion](https://motion.dev), and styled with Tailwind CSS v4 design tokens.
 
 **[Documentation](https://appica.dev/ui) · [Installation guide](https://appica.dev/ui/docs/react/installation) · [Components](https://appica.dev/ui/components/react/button)**
 
