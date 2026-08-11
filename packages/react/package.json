@@ -462,7 +462,8 @@
     "src",
     "styles.css",
     "appica.css",
-    "agent-rules.md"
+    "agent-rules.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "sync-exports": "node scripts/sync-exports.mjs",

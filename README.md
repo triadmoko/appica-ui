@@ -6,9 +6,9 @@ This monorepo contains framework-specific packages living under `packages/`. Eac
 
 ## Packages
 
-|                                                               | Package            | Version                                                                                                 | Links                                                                            |
-| ------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| <img src=".github/assets/react.svg" width="35" alt="React" /> | `@appica/ui-react` | [![npm](https://img.shields.io/npm/v/@appica/ui-react)](https://www.npmjs.com/package/@appica/ui-react) | [Docs](https://appica.dev/ui/docs/react/installation) · [Source](packages/react) |
+|                                                               | Package            | Version                                                                                                 | Links                                                                                                                       |
+| ------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| <img src=".github/assets/react.svg" width="35" alt="React" /> | `@appica/ui-react` | [![npm](https://img.shields.io/npm/v/@appica/ui-react)](https://www.npmjs.com/package/@appica/ui-react) | [Docs](https://appica.dev/ui/docs/react/installation) · [Changelog](packages/react/CHANGELOG.md) · [Source](packages/react) |
 
 ## Documentation
 

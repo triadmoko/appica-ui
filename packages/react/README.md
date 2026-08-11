@@ -114,6 +114,10 @@ Every documentation page is served as clean markdown at `<url>.md` - fetch `http
 
 If you are a human setting up a project: paste those rules into your own `AGENTS.md` so your agent loads them every session. See [Set up your coding agent](https://appica.dev/ui/docs/react/agents) for a copy-paste block.
 
+## Changelog
+
+What changed in each release is in [`CHANGELOG.md`](./CHANGELOG.md), next to this file, and on [appica.dev/ui/changelog](https://appica.dev/ui/changelog) alongside the documentation and Figma updates that shipped with it.
+
 ## Figma design file
 
 Every component is also available as a free [Figma design file](https://www.figma.com/community/file/1657080448204231925) - variants, sizes, and states mirrored one-to-one with the code, built on the same design tokens. Design and develop from a single source of truth.
