@@ -1,0 +1,263 @@
+{
+  "name": "@appica/ui-svelte",
+  "version": "1.1.0",
+  "description": "Appica UI components library for Svelte applications",
+  "license": "MIT",
+  "author": "Appica UI",
+  "homepage": "https://appica.dev/ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appica-dev/appica-ui.git",
+    "directory": "packages/svelte"
+  },
+  "bugs": {
+    "url": "https://github.com/appica-dev/appica-ui/issues"
+  },
+  "keywords": [
+    "svelte",
+    "components",
+    "ui",
+    "component-library",
+    "design-system",
+    "tailwindcss",
+    "accessible"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "./styles.css",
+    "./appica.css"
+  ],
+  "svelte": "./dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./alert": {
+      "types": "./dist/components/alert/index.d.ts",
+      "svelte": "./dist/components/alert/index.js",
+      "default": "./dist/components/alert/index.js"
+    },
+    "./avatar": {
+      "types": "./dist/components/avatar/index.d.ts",
+      "svelte": "./dist/components/avatar/index.js",
+      "default": "./dist/components/avatar/index.js"
+    },
+    "./background-pattern": {
+      "types": "./dist/components/background-pattern/index.d.ts",
+      "svelte": "./dist/components/background-pattern/index.js",
+      "default": "./dist/components/background-pattern/index.js"
+    },
+    "./badge": {
+      "types": "./dist/components/badge/index.d.ts",
+      "svelte": "./dist/components/badge/index.js",
+      "default": "./dist/components/badge/index.js"
+    },
+    "./button": {
+      "types": "./dist/components/button/index.d.ts",
+      "svelte": "./dist/components/button/index.js",
+      "default": "./dist/components/button/index.js"
+    },
+    "./card": {
+      "types": "./dist/components/card/index.d.ts",
+      "svelte": "./dist/components/card/index.js",
+      "default": "./dist/components/card/index.js"
+    },
+    "./chip": {
+      "types": "./dist/components/chip/index.d.ts",
+      "svelte": "./dist/components/chip/index.js",
+      "default": "./dist/components/chip/index.js"
+    },
+    "./copy-button": {
+      "types": "./dist/components/copy-button/index.d.ts",
+      "svelte": "./dist/components/copy-button/index.js",
+      "default": "./dist/components/copy-button/index.js"
+    },
+    "./countdown": {
+      "types": "./dist/components/countdown/index.d.ts",
+      "svelte": "./dist/components/countdown/index.js",
+      "default": "./dist/components/countdown/index.js"
+    },
+    "./fieldset": {
+      "types": "./dist/components/fieldset/index.d.ts",
+      "svelte": "./dist/components/fieldset/index.js",
+      "default": "./dist/components/fieldset/index.js"
+    },
+    "./gradient-glow": {
+      "types": "./dist/components/gradient-glow/index.d.ts",
+      "svelte": "./dist/components/gradient-glow/index.js",
+      "default": "./dist/components/gradient-glow/index.js"
+    },
+    "./input": {
+      "types": "./dist/components/input/index.d.ts",
+      "svelte": "./dist/components/input/index.js",
+      "default": "./dist/components/input/index.js"
+    },
+    "./kbd": {
+      "types": "./dist/components/kbd/index.d.ts",
+      "svelte": "./dist/components/kbd/index.js",
+      "default": "./dist/components/kbd/index.js"
+    },
+    "./loader": {
+      "types": "./dist/components/loader/index.d.ts",
+      "svelte": "./dist/components/loader/index.js",
+      "default": "./dist/components/loader/index.js"
+    },
+    "./meter": {
+      "types": "./dist/components/meter/index.d.ts",
+      "svelte": "./dist/components/meter/index.js",
+      "default": "./dist/components/meter/index.js"
+    },
+    "./pagination": {
+      "types": "./dist/components/pagination/index.d.ts",
+      "svelte": "./dist/components/pagination/index.js",
+      "default": "./dist/components/pagination/index.js"
+    },
+    "./progress": {
+      "types": "./dist/components/progress/index.d.ts",
+      "svelte": "./dist/components/progress/index.js",
+      "default": "./dist/components/progress/index.js"
+    },
+    "./separator": {
+      "types": "./dist/components/separator/index.d.ts",
+      "svelte": "./dist/components/separator/index.js",
+      "default": "./dist/components/separator/index.js"
+    },
+    "./skeleton": {
+      "types": "./dist/components/skeleton/index.d.ts",
+      "svelte": "./dist/components/skeleton/index.js",
+      "default": "./dist/components/skeleton/index.js"
+    },
+    "./spinner": {
+      "types": "./dist/components/spinner/index.d.ts",
+      "svelte": "./dist/components/spinner/index.js",
+      "default": "./dist/components/spinner/index.js"
+    },
+    "./table": {
+      "types": "./dist/components/table/index.d.ts",
+      "svelte": "./dist/components/table/index.js",
+      "default": "./dist/components/table/index.js"
+    },
+    "./textarea": {
+      "types": "./dist/components/textarea/index.d.ts",
+      "svelte": "./dist/components/textarea/index.js",
+      "default": "./dist/components/textarea/index.js"
+    },
+    "./thumbnail": {
+      "types": "./dist/components/thumbnail/index.d.ts",
+      "svelte": "./dist/components/thumbnail/index.js",
+      "default": "./dist/components/thumbnail/index.js"
+    },
+    "./hooks/use-dismissible": {
+      "types": "./dist/hooks/use-dismissible/index.d.ts",
+      "svelte": "./dist/hooks/use-dismissible/index.js",
+      "default": "./dist/hooks/use-dismissible/index.js"
+    },
+    "./hooks/use-local-storage": {
+      "types": "./dist/hooks/use-local-storage/index.d.ts",
+      "svelte": "./dist/hooks/use-local-storage/index.js",
+      "default": "./dist/hooks/use-local-storage/index.js"
+    },
+    "./hooks/use-media-query": {
+      "types": "./dist/hooks/use-media-query/index.d.ts",
+      "svelte": "./dist/hooks/use-media-query/index.js",
+      "default": "./dist/hooks/use-media-query/index.js"
+    },
+    "./hooks/use-reduced-motion": {
+      "types": "./dist/hooks/use-reduced-motion/index.d.ts",
+      "svelte": "./dist/hooks/use-reduced-motion/index.js",
+      "default": "./dist/hooks/use-reduced-motion/index.js"
+    },
+    "./hooks/use-theme": {
+      "types": "./dist/hooks/use-theme/index.d.ts",
+      "svelte": "./dist/hooks/use-theme/index.js",
+      "default": "./dist/hooks/use-theme/index.js"
+    },
+    "./providers/reduced-motion-provider": {
+      "types": "./dist/providers/reduced-motion-provider/index.d.ts",
+      "svelte": "./dist/providers/reduced-motion-provider/index.js",
+      "default": "./dist/providers/reduced-motion-provider/index.js"
+    },
+    "./providers/theme-provider": {
+      "types": "./dist/providers/theme-provider/index.d.ts",
+      "svelte": "./dist/providers/theme-provider/index.js",
+      "default": "./dist/providers/theme-provider/index.js"
+    },
+    "./styles.css": "./styles.css",
+    "./css": "./appica.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "styles.css",
+    "appica.css",
+    "CHANGELOG.md",
+    "!dist/**/*.test.*",
+    "!dist/**/*.test-host.*",
+    "!src/**/*.test.*",
+    "!src/**/*.test-host.*",
+    "!src/test/**"
+  ],
+  "scripts": {
+    "sync-exports": "node scripts/sync-exports.mjs",
+    "prebuild": "pnpm sync-exports",
+    "prepack": "pnpm sync-exports",
+    "prepublishOnly": "pnpm run build && pnpm run test",
+    "build": "pnpm clean && svelte-package --input src && pnpm build:prune && pnpm build:css",
+    "build:prune": "node scripts/prune-dist.mjs",
+    "build:css": "node scripts/build-css.mjs",
+    "dev": "svelte-package --input src --watch",
+    "lint": "eslint src",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist appica.css"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/svelte": "^5.3.1",
+    "@testing-library/user-event": "^14.6.3",
+    "axe-core": "^4.13.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-svelte": "^3.13.1",
+    "jsdom": "^30.0.1",
+    "postcss": "^8.5.26",
+    "svelte": "^5.46.0",
+    "svelte-check": "^4.3.4",
+    "svelte-eslint-parser": "^1.4.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0",
+    "vitest": "^4.1.10",
+    "vitest-axe": "^0.1.0"
+  },
+  "peerDependencies": {
+    "svelte": "^5.33.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
+    }
+  }
+}
