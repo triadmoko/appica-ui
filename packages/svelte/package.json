@@ -64,10 +64,25 @@
       "svelte": "./dist/components/badge/index.js",
       "default": "./dist/components/badge/index.js"
     },
+    "./border-beam": {
+      "types": "./dist/components/border-beam/index.d.ts",
+      "svelte": "./dist/components/border-beam/index.js",
+      "default": "./dist/components/border-beam/index.js"
+    },
+    "./breadcrumb": {
+      "types": "./dist/components/breadcrumb/index.d.ts",
+      "svelte": "./dist/components/breadcrumb/index.js",
+      "default": "./dist/components/breadcrumb/index.js"
+    },
     "./button": {
       "types": "./dist/components/button/index.d.ts",
       "svelte": "./dist/components/button/index.js",
       "default": "./dist/components/button/index.js"
+    },
+    "./button-group": {
+      "types": "./dist/components/button-group/index.d.ts",
+      "svelte": "./dist/components/button-group/index.js",
+      "default": "./dist/components/button-group/index.js"
     },
     "./card": {
       "types": "./dist/components/card/index.d.ts",
@@ -94,6 +109,11 @@
       "svelte": "./dist/components/fieldset/index.js",
       "default": "./dist/components/fieldset/index.js"
     },
+    "./form": {
+      "types": "./dist/components/form/index.d.ts",
+      "svelte": "./dist/components/form/index.js",
+      "default": "./dist/components/form/index.js"
+    },
     "./gradient-glow": {
       "types": "./dist/components/gradient-glow/index.d.ts",
       "svelte": "./dist/components/gradient-glow/index.js",
@@ -119,6 +139,11 @@
       "svelte": "./dist/components/meter/index.js",
       "default": "./dist/components/meter/index.js"
     },
+    "./navigation": {
+      "types": "./dist/components/navigation/index.d.ts",
+      "svelte": "./dist/components/navigation/index.js",
+      "default": "./dist/components/navigation/index.js"
+    },
     "./pagination": {
       "types": "./dist/components/pagination/index.d.ts",
       "svelte": "./dist/components/pagination/index.js",
@@ -128,6 +153,16 @@
       "types": "./dist/components/progress/index.d.ts",
       "svelte": "./dist/components/progress/index.js",
       "default": "./dist/components/progress/index.js"
+    },
+    "./rating": {
+      "types": "./dist/components/rating/index.d.ts",
+      "svelte": "./dist/components/rating/index.js",
+      "default": "./dist/components/rating/index.js"
+    },
+    "./scroll-area": {
+      "types": "./dist/components/scroll-area/index.d.ts",
+      "svelte": "./dist/components/scroll-area/index.js",
+      "default": "./dist/components/scroll-area/index.js"
     },
     "./separator": {
       "types": "./dist/components/separator/index.d.ts",
@@ -139,6 +174,11 @@
       "svelte": "./dist/components/skeleton/index.js",
       "default": "./dist/components/skeleton/index.js"
     },
+    "./sparkline": {
+      "types": "./dist/components/sparkline/index.d.ts",
+      "svelte": "./dist/components/sparkline/index.js",
+      "default": "./dist/components/sparkline/index.js"
+    },
     "./spinner": {
       "types": "./dist/components/spinner/index.d.ts",
       "svelte": "./dist/components/spinner/index.js",
@@ -149,6 +189,11 @@
       "svelte": "./dist/components/table/index.js",
       "default": "./dist/components/table/index.js"
     },
+    "./text-animate": {
+      "types": "./dist/components/text-animate/index.d.ts",
+      "svelte": "./dist/components/text-animate/index.js",
+      "default": "./dist/components/text-animate/index.js"
+    },
     "./textarea": {
       "types": "./dist/components/textarea/index.d.ts",
       "svelte": "./dist/components/textarea/index.js",
@@ -158,6 +203,16 @@
       "types": "./dist/components/thumbnail/index.d.ts",
       "svelte": "./dist/components/thumbnail/index.js",
       "default": "./dist/components/thumbnail/index.js"
+    },
+    "./toc": {
+      "types": "./dist/components/toc/index.d.ts",
+      "svelte": "./dist/components/toc/index.js",
+      "default": "./dist/components/toc/index.js"
+    },
+    "./toolbar": {
+      "types": "./dist/components/toolbar/index.d.ts",
+      "svelte": "./dist/components/toolbar/index.js",
+      "default": "./dist/components/toolbar/index.js"
     },
     "./hooks/use-dismissible": {
       "types": "./dist/hooks/use-dismissible/index.d.ts",

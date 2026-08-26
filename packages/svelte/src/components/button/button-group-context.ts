@@ -6,9 +6,9 @@ export type ButtonGroupVariant = NonNullable<VariantProps<typeof buttonVariants>
 export type ButtonGroupSize = NonNullable<VariantProps<typeof buttonVariants>['size']>
 
 export interface ButtonGroupContextValue {
-  variant?: ButtonGroupVariant
-  size?: ButtonGroupSize
-  disabled?: boolean
+  readonly variant?: ButtonGroupVariant
+  readonly size?: ButtonGroupSize
+  readonly disabled?: boolean
 }
 
 const KEY = Symbol('appica-button-group')

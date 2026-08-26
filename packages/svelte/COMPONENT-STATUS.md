@@ -13,10 +13,10 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `avatar` - Wave 1. Native `<img>` load/error (no Base UI). Group size/shape via context, not `cloneElement`.
 - [x] `background-pattern` - Wave 1. Native CSS masks; spotlight uses `{@attach}` + WAAPI fade (persistent under `useReducedMotion`).
 - [x] `badge` - Wave 1. `<span>` by default; `<a>` when `href` is set; `<button>` when `onclick` is set. No `child` snippet.
-- [ ] `border-beam` - React uses Motion; Svelte port TBD (`svelte/motion` or CSS)
-- [ ] `breadcrumb` - Wave 2
-- [x] `button` - Wave 1. Native `<button>`, or `<a>` when `href` is set. Exports `buttonVariants` for Wave 2 triggers. Optional ButtonGroup context is a no-op until Wave 2.
-- [ ] `button-group` - Wave 2
+- [x] `border-beam` - Wave 1. CSS `animate-border-beam`. Same `revealOn` / `pressScale` pattern as GradientGlow.
+- [x] `breadcrumb` - Wave 1. Native `nav` / `ol` / `li`. `el` on `BreadcrumbLink` (`a` / `button`); `active` renders a non-interactive `<span>`.
+- [x] `button` - Wave 1. Native `<button>`, or `<a>` when `href` is set. Exports `buttonVariants` for Wave 2 triggers. Inherits `variant` / `size` / `disabled` from `ButtonGroup` context.
+- [x] `button-group` - Wave 1. Context for child `Button` variant, size, and disabled. No bits-ui.
 - [ ] `calendar` - Wave 2
 - [x] `card` - Wave 1. Root tag via `el` (`div` / `article` / `li` / …), not `render` / `child`.
 - [ ] `carousel` - Wave 2
@@ -40,14 +40,14 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [ ] `dropdown-menu` - Wave 2: bits-ui
 - [ ] `field` - Wave 2: bits-ui (Input/Textarea skip Field context until then)
 - [x] `fieldset` - Wave 1. Native `<fieldset>` / `<legend>` (no bits-ui). `disabled` disables descendant controls.
-- [ ] `form`
+- [x] `form` - Wave 1. Native `<form>`. `errors` / `onClearErrors` live in context for Wave 2 Field.
 - [x] `gradient-glow` - Wave 1. Uses shared `animate-gradient-glow` utilities in `styles.css`.
 - [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. No Field context yet.
 - [x] `kbd` - Wave 1. Size via context on `KbdGroup`.
 - [x] `loader` - Wave 1. Bar / dots as CSS `@keyframes`, gated by `useReducedMotion` (no Motion).
 - [ ] `menubar` - Wave 2: bits-ui
 - [x] `meter` - Wave 1. Native ARIA `role="meter"` (no bits-ui). Threshold status classes on the indicator.
-- [ ] `navigation`
+- [x] `navigation` - Wave 1. Native `<nav>` / list / `el` on `NavigationLink` (`a` / `button`). No `render` / `child`.
 - [ ] `navigation-menu` - Wave 2: bits-ui
 - [ ] `number-field` - Wave 2
 - [ ] `otp-field` - Wave 2
@@ -57,26 +57,26 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `progress` - Wave 1. Native ARIA `role="progressbar"` (no bits-ui). Bar and circular variants.
 - [ ] `radio` - Wave 2: bits-ui
 - [ ] `radio-group` - Wave 2: bits-ui
-- [ ] `rating`
-- [ ] `scroll-area` - Wave 2
+- [x] `rating` - Wave 1. Radiogroup + CSS clip-path / scale (no Motion). RTL from closest `[dir]`. `bind:value`.
+- [x] `scroll-area` - Wave 1. Native overflow + overlay thumbs (no bits-ui). `scrollShadow` CSS vars from overflow.
 - [ ] `select` - Wave 2: bits-ui
 - [x] `separator` - Wave 1. SVG decorative variants (dotted / wave / zigzag) ported as-is.
 - [x] `skeleton` - Wave 1. Same `shimmer` / `pulse` / `none` classes as React.
 - [ ] `slider` - Wave 2: bits-ui
-- [ ] `sparkline`
+- [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL from closest `[dir]` (no DirectionProvider).
 - [x] `spinner` - Wave 1. Circular / dots / sparkle as CSS `@keyframes`, gated by `useReducedMotion`.
 - [ ] `switch` - Wave 2: bits-ui
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.
 - [ ] `tabs` - Wave 2: bits-ui
-- [ ] `text-animate` - React uses Motion; Svelte port TBD
+- [x] `text-animate` - Wave 1. rAF clock + `IntersectionObserver`. Required `text` prop (Svelte cannot tokenize string children). Presets match React.
 - [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`).
 - [x] `thumbnail` - Wave 1. Image vs icon variants; same size/shape scale as Avatar.
 - [ ] `time-field` - Wave 2
 - [ ] `toast` - Wave 2
-- [ ] `toc`
+- [x] `toc` - Wave 1. Native `<nav>` + `IntersectionObserver`. No `render` / `child`.
 - [ ] `toggle` - Wave 2: bits-ui
 - [ ] `toggle-group` - Wave 2: bits-ui
-- [ ] `toolbar` - Wave 2
+- [x] `toolbar` - Wave 1. Native `role="toolbar"` + roving tabindex (no bits-ui). Triggers take `class={buttonVariants(...)}`.
 - [ ] `tooltip` - Wave 2: bits-ui
 
 ## Lib

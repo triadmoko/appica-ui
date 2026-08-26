@@ -5,29 +5,43 @@
   import AvatarScreen from './screens/avatar-screen.svelte'
   import BackgroundPatternScreen from './screens/background-pattern-screen.svelte'
   import BadgeScreen from './screens/badge-screen.svelte'
+  import BorderBeamScreen from './screens/border-beam-screen.svelte'
+  import BreadcrumbScreen from './screens/breadcrumb-screen.svelte'
   import ButtonScreen from './screens/button-screen.svelte'
+  import ButtonGroupScreen from './screens/button-group-screen.svelte'
   import CardScreen from './screens/card-screen.svelte'
   import ChipScreen from './screens/chip-screen.svelte'
   import CopyButtonScreen from './screens/copy-button-screen.svelte'
   import CountdownScreen from './screens/countdown-screen.svelte'
   import FieldsetScreen from './screens/fieldset-screen.svelte'
+  import FormScreen from './screens/form-screen.svelte'
   import GradientGlowScreen from './screens/gradient-glow-screen.svelte'
   import InputScreen from './screens/input-screen.svelte'
   import KbdScreen from './screens/kbd-screen.svelte'
   import LoaderScreen from './screens/loader-screen.svelte'
   import MeterScreen from './screens/meter-screen.svelte'
+  import NavigationScreen from './screens/navigation-screen.svelte'
   import PaginationScreen from './screens/pagination-screen.svelte'
   import ProgressScreen from './screens/progress-screen.svelte'
+  import RatingScreen from './screens/rating-screen.svelte'
+  import ScrollAreaScreen from './screens/scroll-area-screen.svelte'
   import SeparatorScreen from './screens/separator-screen.svelte'
   import SkeletonScreen from './screens/skeleton-screen.svelte'
+  import SparklineScreen from './screens/sparkline-screen.svelte'
   import SpinnerScreen from './screens/spinner-screen.svelte'
   import TableScreen from './screens/table-screen.svelte'
+  import TextAnimateScreen from './screens/text-animate-screen.svelte'
   import TextareaScreen from './screens/textarea-screen.svelte'
   import ThumbnailScreen from './screens/thumbnail-screen.svelte'
+  import TocScreen from './screens/toc-screen.svelte'
+  import ToolbarScreen from './screens/toolbar-screen.svelte'
 
   const screens = [
     { id: 'button', label: 'Button' },
+    { id: 'button-group', label: 'ButtonGroup' },
     { id: 'badge', label: 'Badge' },
+    { id: 'border-beam', label: 'BorderBeam' },
+    { id: 'breadcrumb', label: 'Breadcrumb' },
     { id: 'alert', label: 'Alert' },
     { id: 'avatar', label: 'Avatar' },
     { id: 'background-pattern', label: 'BackgroundPattern' },
@@ -36,26 +50,37 @@
     { id: 'copy-button', label: 'CopyButton' },
     { id: 'countdown', label: 'Countdown' },
     { id: 'fieldset', label: 'Fieldset' },
+    { id: 'form', label: 'Form' },
     { id: 'gradient-glow', label: 'GradientGlow' },
     { id: 'input', label: 'Input' },
     { id: 'textarea', label: 'Textarea' },
     { id: 'kbd', label: 'Kbd' },
     { id: 'loader', label: 'Loader' },
     { id: 'meter', label: 'Meter' },
+    { id: 'navigation', label: 'Navigation' },
     { id: 'pagination', label: 'Pagination' },
     { id: 'progress', label: 'Progress' },
+    { id: 'rating', label: 'Rating' },
+    { id: 'scroll-area', label: 'ScrollArea' },
     { id: 'separator', label: 'Separator' },
     { id: 'skeleton', label: 'Skeleton' },
+    { id: 'sparkline', label: 'Sparkline' },
     { id: 'spinner', label: 'Spinner' },
     { id: 'table', label: 'Table' },
+    { id: 'text-animate', label: 'TextAnimate' },
     { id: 'thumbnail', label: 'Thumbnail' },
+    { id: 'toc', label: 'Toc' },
+    { id: 'toolbar', label: 'Toolbar' },
   ] as const
 
   type ScreenId = (typeof screens)[number]['id']
 
   const views: Record<ScreenId, Component> = {
     button: ButtonScreen,
+    'button-group': ButtonGroupScreen,
     badge: BadgeScreen,
+    'border-beam': BorderBeamScreen,
+    breadcrumb: BreadcrumbScreen,
     alert: AlertScreen,
     avatar: AvatarScreen,
     'background-pattern': BackgroundPatternScreen,
@@ -64,19 +89,27 @@
     'copy-button': CopyButtonScreen,
     countdown: CountdownScreen,
     fieldset: FieldsetScreen,
+    form: FormScreen,
     'gradient-glow': GradientGlowScreen,
     input: InputScreen,
     textarea: TextareaScreen,
     kbd: KbdScreen,
     loader: LoaderScreen,
     meter: MeterScreen,
+    navigation: NavigationScreen,
     pagination: PaginationScreen,
     progress: ProgressScreen,
+    rating: RatingScreen,
+    'scroll-area': ScrollAreaScreen,
     separator: SeparatorScreen,
     skeleton: SkeletonScreen,
+    sparkline: SparklineScreen,
     spinner: SpinnerScreen,
     table: TableScreen,
+    'text-animate': TextAnimateScreen,
     thumbnail: ThumbnailScreen,
+    toc: TocScreen,
+    toolbar: ToolbarScreen,
   }
 
   let screen: ScreenId = $state('button')
