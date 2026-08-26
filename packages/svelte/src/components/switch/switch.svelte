@@ -4,6 +4,7 @@
   import { Switch as BitsSwitch } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, commitBindableChange, invalidDataAttr } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { switchSizes, type SwitchSize } from './switch-sizes'
 
   type Props = HTMLButtonAttributes & {
@@ -36,8 +37,23 @@
     name,
     value,
     disabled,
+    id,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
     ...rest
   }: Props = $props()
+
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      name,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+    }),
+  )
 
   const reducedMotion = useReducedMotion()
   let inner = $state(false)
@@ -49,6 +65,7 @@
   })
 
   function handleCheckedChange(next: boolean) {
+    field?.clearFormError()
     commitBindableChange({
       next,
       bound: checked,
@@ -79,12 +96,15 @@
   data-slot="switch"
   class={classes}
   bind:checked={inner}
-  {disabled}
-  {name}
+  disabled={control.disabled}
+  name={control.name}
+  id={control.id}
+  aria-invalid={control.ariaInvalid}
+  aria-describedby={control.describedby}
   {value}
   onCheckedChange={handleCheckedChange}
   {...asBitsAttrs(rest)}
-  {...invalidDataAttr(rest['aria-invalid'])}
+  {...invalidDataAttr(control.ariaInvalid)}
 >
   {#snippet children({ checked: isChecked })}
     {@const reduced = reducedMotion.current}

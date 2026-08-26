@@ -55,11 +55,25 @@ if (typeof Element !== 'undefined' && typeof Element.prototype.animate !== 'func
   }
 }
 
+if (typeof Element !== 'undefined' && typeof Element.prototype.hasPointerCapture !== 'function') {
+  Element.prototype.hasPointerCapture = function hasPointerCapture() {
+    return false
+  }
+  Element.prototype.setPointerCapture = function setPointerCapture() {}
+  Element.prototype.releasePointerCapture = function releasePointerCapture() {}
+}
+
 if (typeof globalThis.ResizeObserver === 'undefined') {
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
     disconnect() {}
+  }
+}
+
+if (typeof Document !== 'undefined' && typeof Document.prototype.elementFromPoint !== 'function') {
+  Document.prototype.elementFromPoint = function elementFromPoint() {
+    return null
   }
 }
 

@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
   import { Popover as BitsPopover } from 'bits-ui'
+  import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
 
   type Props = {
@@ -9,19 +10,28 @@
     open?: boolean
     /** Fires when the open state changes. */
     onOpenChange?: (open: boolean) => void
+    /** Programmatic handle from `Popover.createHandle()`. */
+    handle?: OverlayHandle
     children?: Snippet
   }
 
-  let { open = $bindable(), onOpenChange, children }: Props = $props()
+  let { open = $bindable(), onOpenChange, handle, children }: Props = $props()
 
   let innerOpen = $state(false)
-  innerOpen = untrack(() => open ?? false)
+  innerOpen = untrack(() => handle?.open ?? open ?? false)
 
   $effect(() => {
-    if (open !== undefined) innerOpen = open
+    if (handle) innerOpen = handle.open
+    else if (open !== undefined) innerOpen = open
   })
 
   function handleOpenChange(next: boolean) {
+    if (handle) {
+      handle.open = next
+      innerOpen = handle.open
+      onOpenChange?.(next)
+      return
+    }
     commitBindableChange({
       next,
       bound: open,

@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte'
   import type { VariantProps } from 'class-variance-authority'
   import { cn, setNativeValue } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
 
   type TextareaVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
@@ -63,13 +64,34 @@
     rows = 3,
     placeholder,
     disabled,
+    id,
+    name,
+    oninput,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
     ...rest
   }: Props = $props()
 
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      name,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+    }),
+  )
+
   let textareaEl: HTMLTextAreaElement | undefined = $state()
   const hasWrapper = $derived(Boolean(clearable || start || end))
-  const ariaInvalid = $derived(rest['aria-invalid'])
-  const invalid = $derived(ariaInvalid === true || ariaInvalid === 'true')
+  const invalid = $derived(control.invalid)
+
+  function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }) {
+    field?.clearFormError()
+    oninput?.(event)
+  }
 
   function handleClear() {
     if (value !== undefined) {
@@ -78,6 +100,7 @@
       setNativeValue(textareaEl, '')
     }
     textareaEl?.focus()
+    field?.clearFormError()
     onClear?.()
   }
 </script>
@@ -88,10 +111,15 @@
     bind:value
     data-slot="textarea"
     data-invalid={invalid ? '' : undefined}
-    data-disabled={disabled ? '' : undefined}
-    {disabled}
+    data-disabled={control.disabled ? '' : undefined}
+    id={control.id}
+    name={control.name}
+    disabled={control.disabled}
+    aria-invalid={control.ariaInvalid}
+    aria-describedby={control.describedby}
     {rows}
     {placeholder}
+    oninput={handleInput}
     class={cn(
       inputVariants({ variant, size: inputSize, state: 'self' }),
       'placeholder:text-foreground-subtle h-auto resize-y',
@@ -124,10 +152,16 @@
       bind:this={textareaEl}
       bind:value
       data-slot="textarea"
-      {disabled}
+      id={control.id}
+      name={control.name}
+      disabled={control.disabled}
+      aria-invalid={control.ariaInvalid}
+      aria-describedby={control.describedby}
+      data-invalid={invalid ? '' : undefined}
       {rows}
       placeholder={placeholder ?? ' '}
       class="peer text-foreground placeholder:text-foreground-subtle min-w-0 flex-1 resize-none self-stretch bg-transparent outline-none disabled:cursor-not-allowed"
+      oninput={handleInput}
       {...rest}
     ></textarea>
     {#if clearable}

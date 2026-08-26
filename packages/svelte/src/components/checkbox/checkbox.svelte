@@ -4,6 +4,7 @@
   import { Checkbox as BitsCheckbox } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, commitBindableChange, invalidDataAttr } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
 
   const SQUISH_MS = 300
   const SQUISH_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
@@ -41,8 +42,23 @@
     name,
     value,
     disabled,
+    id,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
     ...rest
   }: Props = $props()
+
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      name,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+    }),
+  )
 
   const reducedMotion = useReducedMotion()
   let inner = $state(false)
@@ -53,6 +69,7 @@
   })
 
   function handleCheckedChange(next: boolean) {
+    field?.clearFormError()
     commitBindableChange({
       next,
       bound: checked,
@@ -115,12 +132,15 @@
   class={classes}
   bind:checked={inner}
   {indeterminate}
-  {disabled}
-  {name}
+  disabled={control.disabled}
+  name={control.name}
+  id={control.id}
+  aria-invalid={control.ariaInvalid}
+  aria-describedby={control.describedby}
   value={groupValue}
   onCheckedChange={handleCheckedChange}
   {...asBitsAttrs(rest)}
-  {...invalidDataAttr(rest['aria-invalid'])}
+  {...invalidDataAttr(control.ariaInvalid)}
 >
   {#snippet children({ checked: isChecked, indeterminate: isIndeterminate })}
     {@const showCheck = isChecked && !isIndeterminate}

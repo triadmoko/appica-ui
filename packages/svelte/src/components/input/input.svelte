@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte'
   import type { VariantProps } from 'class-variance-authority'
   import { cn, setNativeValue } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from './input-variants'
 
   type InputVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
@@ -44,13 +45,34 @@
     value = $bindable(),
     placeholder,
     disabled,
+    id,
+    name,
+    oninput,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
     ...rest
   }: Props = $props()
 
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      name,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+    }),
+  )
+
   let inputEl: HTMLInputElement | undefined = $state()
   const hasWrapper = $derived(Boolean(clearable || start || end))
-  const ariaInvalid = $derived(rest['aria-invalid'])
-  const invalid = $derived(ariaInvalid === true || ariaInvalid === 'true')
+  const invalid = $derived(control.invalid)
+
+  function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
+    field?.clearFormError()
+    oninput?.(event)
+  }
 
   function handleClear() {
     if (value !== undefined) {
@@ -59,6 +81,7 @@
       setNativeValue(inputEl, '')
     }
     inputEl?.focus()
+    field?.clearFormError()
     onClear?.()
   }
 </script>
@@ -69,10 +92,15 @@
     bind:value
     data-slot="input"
     data-invalid={invalid ? '' : undefined}
-    data-disabled={disabled ? '' : undefined}
-    {disabled}
+    data-disabled={control.disabled ? '' : undefined}
+    id={control.id}
+    name={control.name}
+    disabled={control.disabled}
+    aria-invalid={control.ariaInvalid}
+    aria-describedby={control.describedby}
     {placeholder}
     class={cn(inputVariants({ variant, size: inputSize, state: 'self' }), 'placeholder:text-foreground-subtle', className)}
+    oninput={handleInput}
     {...rest}
   />
 {:else}
@@ -90,9 +118,15 @@
       bind:this={inputEl}
       bind:value
       data-slot="input"
-      {disabled}
+      id={control.id}
+      name={control.name}
+      disabled={control.disabled}
+      aria-invalid={control.ariaInvalid}
+      aria-describedby={control.describedby}
+      data-invalid={invalid ? '' : undefined}
       placeholder={placeholder ?? ' '}
       class="peer text-foreground placeholder:text-foreground-subtle h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+      oninput={handleInput}
       {...rest}
     />
     {#if clearable}

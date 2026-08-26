@@ -4,6 +4,7 @@
   import { untrack } from 'svelte'
   import { RadioGroup as BitsRadioGroup } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /** Controlled selected value. Pair with `onValueChange` or `bind:value`. */
@@ -38,9 +39,24 @@
     orientation = 'vertical',
     name,
     disabled,
+    id,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
     children,
     ...rest
   }: Props = $props()
+
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      name,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+    }),
+  )
 
   let inner = $state('')
   inner = untrack(() => value ?? defaultValue)
@@ -52,6 +68,7 @@
   })
 
   function handleValueChange(next: string) {
+    field?.clearFormError()
     commitBindableChange({
       next,
       bound: value,
@@ -71,8 +88,11 @@
   class={classes}
   bind:value={inner}
   {orientation}
-  {name}
-  {disabled}
+  name={control.name}
+  disabled={control.disabled}
+  id={control.id}
+  aria-invalid={control.ariaInvalid}
+  aria-describedby={control.describedby}
   aria-orientation={orientation}
   onValueChange={handleValueChange}
   {...asBitsAttrs(rest)}

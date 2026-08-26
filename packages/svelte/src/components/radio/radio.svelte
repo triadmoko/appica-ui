@@ -3,6 +3,7 @@
   import { RadioGroup as BitsRadioGroup } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, invalidDataAttr } from '../../internal/utils'
+  import { getFieldContext, mergeFieldControl } from '../field/field-context'
 
   const SQUISH_MS = 300
   const SQUISH_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
@@ -12,7 +13,27 @@
     value: string
   }
 
-  let { class: className, value, disabled, ...rest }: Props = $props()
+  let {
+    class: className,
+    value,
+    disabled,
+    id,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': ariaDescribedby,
+    ...rest
+  }: Props = $props()
+
+  const field = getFieldContext()
+  const control = $derived(
+    mergeFieldControl({
+      field,
+      id,
+      disabled,
+      ariaInvalid,
+      ariaDescribedby,
+      omitId: true,
+    }),
+  )
 
   const reducedMotion = useReducedMotion()
   let rootEl: HTMLElement | null = $state(null)
@@ -64,9 +85,12 @@
   data-slot="radio"
   class={classes}
   {value}
-  {disabled}
+  disabled={control.disabled}
+  id={control.id}
+  aria-invalid={control.ariaInvalid}
+  aria-describedby={control.describedby}
   {...asBitsAttrs(rest)}
-  {...invalidDataAttr(rest['aria-invalid'])}
+  {...invalidDataAttr(control.ariaInvalid)}
 >
   {#snippet children({ checked })}
     {@const reduced = reducedMotion.current}

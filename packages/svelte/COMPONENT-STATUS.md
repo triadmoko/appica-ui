@@ -6,10 +6,10 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 ## Components
 
-- [ ] `accordion` - Wave 2: bits-ui (React uses Base UI Accordion)
+- [x] `accordion` - Wave 2: bits-ui. `multiple` → `type`. Variant/icon context. Closed content unmounts (`forceMount={false}`).
 - [x] `alert` - Wave 1. Dismiss uses `svelte/transition` (`out:`), not Motion. Compound parts: Icon / Title / Description / Action. Title tag via `el`.
-- [ ] `alert-dialog` - Wave 2: bits-ui
-- [ ] `autocomplete` - Wave 2: bits-ui Combobox analog
+- [x] `alert-dialog` - Wave 2: bits-ui. No default ×. `AlertDialog.createHandle` is a Svelte `$state` handle. Close wraps bits-ui Cancel.
+- [x] `autocomplete` - Wave 2: bits-ui Combobox analog. `icon` default `false`. Extra `AutocompleteStatus`. Filtering is consumer-side (`$derived` from input). No Collection / auto-filter.
 - [x] `avatar` - Wave 1. Native `<img>` load/error (no Base UI). Group size/shape via context, not `cloneElement`.
 - [x] `background-pattern` - Wave 1. Native CSS masks; spotlight uses `{@attach}` + WAAPI fade (persistent under `useReducedMotion`).
 - [x] `badge` - Wave 1. `<span>` by default; `<a>` when `href` is set; `<button>` when `onclick` is set. No `child` snippet.
@@ -20,59 +20,59 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [ ] `calendar` - Wave 2
 - [x] `card` - Wave 1. Root tag via `el` (`div` / `article` / `li` / …), not `render` / `child`.
 - [ ] `carousel` - Wave 2
-- [x] `checkbox` - Wave 2: bits-ui `Checkbox.Root`. Folded indicator. `bind:checked`. `aria-invalid` → `data-invalid`.
+- [x] `checkbox` - Wave 2: bits-ui `Checkbox.Root`. Folded indicator. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `checkbox-group` - Wave 2: bits-ui `Checkbox.Group`. `orientation` default `vertical`.
 - [x] `chip` - Wave 1. Reuses `buttonVariants`. Dismiss uses `svelte/transition`. Group `clearAll()` is a component export (`bind:this`).
-- [ ] `collapsible` - Wave 2: bits-ui
+- [x] `collapsible` - Wave 2: bits-ui. Height via `--bits-collapsible-content-height`. `keepMounted` → `forceMount`.
 - [ ] `color-area` - Wave 2
 - [ ] `color-picker` - Wave 2
 - [ ] `color-slider` - Wave 2
 - [ ] `color-swatch` - Wave 2
 - [ ] `color-swatch-picker` - Wave 2
-- [ ] `combobox` - Wave 2: bits-ui
-- [ ] `context-menu` - Wave 2: bits-ui
+- [x] `combobox` - Wave 2: bits-ui Combobox. `multiple` → `type`. Chips are Appica chrome (`ComboboxChips` / `ComboboxChip`). No Collection / `useFilteredItems`; filtering is consumer-side. Clear is an Appica button (bits-ui has no `.Clear`).
+- [x] `context-menu` - Wave 2: bits-ui. Clone of DropdownMenu chrome. Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
 - [x] `copy-button` - Wave 1. Uses `buttonVariants`. `value` is a string, HTMLElement (`bind:this`), or getter. `label` / `copiedLabel` drive aria-label; children do not swap.
 - [x] `countdown` - Wave 1. Timer + context. Digit roll is CSS `translateY`, not Motion. Children snippet receives `parts`.
 - [ ] `date-field` - Wave 2
 - [ ] `date-picker` - Wave 2: bits-ui
-- [ ] `dialog` - Wave 2: bits-ui. Triggers take `class={buttonVariants(...)}` directly (no wrapping Button through a `child` snippet).
-- [ ] `drawer` - Wave 2: bits-ui
-- [ ] `dropdown-menu` - Wave 2: bits-ui
-- [ ] `field` - Wave 2: bits-ui (Input/Textarea skip Field context until then)
+- [x] `dialog` - Wave 2: bits-ui. `splitModalProps` Portal/Overlay/viewport. `Dialog.createHandle` is a Svelte `$state` handle. Triggers take `class={buttonVariants(...)}`.
+- [x] `drawer` - Wave 2: bits-ui Dialog + Appica chrome (no bits-ui Drawer). Swipe/snap are CSS-only. Nested backdrop off when `depth > 1`. `Drawer.createHandle`.
+- [x] `dropdown-menu` - Wave 2: bits-ui. Extra `DropdownMenuCheckboxGroup` (`bind:value={string[]}`) for bits-ui checkbox items.
+- [x] `field` - Wave 2: native (bits-ui has Label only). Form `errors[name]` drives FieldError. Wired into Input, Textarea, Select trigger, Switch, Checkbox, Radio, OTPField, NumberField, Combobox Input, Autocomplete Input.
 - [x] `fieldset` - Wave 1. Native `<fieldset>` / `<legend>` (no bits-ui). `disabled` disables descendant controls.
 - [x] `form` - Wave 1. Native `<form>`. `errors` / `onClearErrors` live in context for Wave 2 Field.
 - [x] `gradient-glow` - Wave 1. Uses shared `animate-gradient-glow` utilities in `styles.css`.
-- [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. No Field context yet.
+- [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. Reads Field context (`invalid` / `disabled` / `name` / `aria-describedby`).
 - [x] `kbd` - Wave 1. Size via context on `KbdGroup`.
 - [x] `loader` - Wave 1. Bar / dots as CSS `@keyframes`, gated by `useReducedMotion` (no Motion).
-- [ ] `menubar` - Wave 2: bits-ui
+- [x] `menubar` - Wave 2: bits-ui `Menubar.Root` + `Menu` (not a DropdownMenu wrap). Extra `MenubarCheckboxGroup`. Vertical uses `side=right`.
 - [x] `meter` - Wave 1. Native ARIA `role="meter"` (no bits-ui). Threshold status classes on the indicator.
 - [x] `navigation` - Wave 1. Native `<nav>` / list / `el` on `NavigationLink` (`a` / `button`). No `render` / `child`.
-- [ ] `navigation-menu` - Wave 2: bits-ui
-- [ ] `number-field` - Wave 2
-- [ ] `otp-field` - Wave 2
+- [x] `navigation-menu` - Wave 2: bits-ui. Viewport auto-rendered (`viewport` default `true`). Appica `NavigationMenuIcon`, backdrop, Sub (pill + vertical inside Content). `useDirection()` for `dir`.
+- [x] `number-field` - Wave 2: native (bits-ui has no NumberField). Steppers + `Intl.NumberFormat`. Digit overlay is CSS `translateY`, not Motion. Reads Field context.
+- [x] `otp-field` - Wave 2: bits-ui PinInput. Public `length` maps to `maxlength`. Root snippet `{ cells }` → `OTPFieldInput {cell}`. One hidden input is the form control. `OTPFieldSeparator` is Appica chrome.
 - [x] `pagination` - Wave 1. `el` on `PaginationLink` (`a` / `button`). Links use `buttonVariants` via context.
-- [x] `popover` - Wave 2: bits-ui. Compound parts. Triggers take `class={buttonVariants(...)}`. Title/Description are styled `h2` / `p`. `keepMounted` → `forceMount`.
-- [ ] `preview-card` - Wave 2: bits-ui
+- [x] `popover` - Wave 2: bits-ui. Compound parts. Triggers take `class={buttonVariants(...)}`. Title/Description are styled `h2` / `p`. `keepMounted` → `forceMount`. `Popover.createHandle` is a Svelte `$state` handle.
+- [x] `preview-card` - Wave 2: bits-ui LinkPreview. Default `openDelay=600` / `closeDelay=300`. `PreviewCard.createHandle`. Arrow chrome cloned from Popover.
 - [x] `progress` - Wave 1. Native ARIA `role="progressbar"` (no bits-ui). Bar and circular variants.
-- [x] `radio` - Wave 2: bits-ui `RadioGroup.Item` (no standalone Radio). Requires a RadioGroup ancestor.
-- [x] `radio-group` - Wave 2: bits-ui `RadioGroup.Root`. `orientation` default `vertical`.
+- [x] `radio` - Wave 2: bits-ui `RadioGroup.Item` (no standalone Radio). Requires a RadioGroup ancestor. Reads Field context (`omitId` so the label targets the group).
+- [x] `radio-group` - Wave 2: bits-ui `RadioGroup.Root`. `orientation` default `vertical`. Inherits Field `name` / `disabled` / `id`.
 - [x] `rating` - Wave 1. Radiogroup + CSS clip-path / scale (no Motion). RTL from closest `[dir]`. `bind:value`.
 - [x] `scroll-area` - Wave 1. Native overflow + overlay thumbs (no bits-ui). `scrollShadow` CSS vars from overflow.
-- [ ] `select` - Wave 2: bits-ui
+- [x] `select` - Wave 2: bits-ui. `multiple` → `type`. Field context on the trigger. `start` / `end` snippets. Empty single value is `''`.
 - [x] `separator` - Wave 1. SVG decorative variants (dotted / wave / zigzag) ported as-is.
 - [x] `skeleton` - Wave 1. Same `shimmer` / `pulse` / `none` classes as React.
 - [x] `slider` - Wave 2: bits-ui. Folded Root + track + thumbs. Infers `type` from number vs array. `tooltipVisibility`. RTL via closest `[dir]`.
 - [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL from closest `[dir]` (no DirectionProvider).
 - [x] `spinner` - Wave 1. Circular / dots / sparkle as CSS `@keyframes`, gated by `useReducedMotion`.
-- [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`.
+- [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.
-- [ ] `tabs` - Wave 2: bits-ui
+- [x] `tabs` - Wave 2: bits-ui. Custom sliding indicator (`data-slot="tabs-indicator"`) because bits-ui has no Tabs.Indicator. `data-[state=active]:`.
 - [x] `text-animate` - Wave 1. rAF clock + `IntersectionObserver`. Required `text` prop (Svelte cannot tokenize string children). Presets match React.
-- [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`).
+- [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`). Reads Field context.
 - [x] `thumbnail` - Wave 1. Image vs icon variants; same size/shape scale as Avatar.
 - [ ] `time-field` - Wave 2
-- [ ] `toast` - Wave 2
+- [x] `toast` - Wave 2: native manager (`createToastManager`) + bits-ui Portal. Viewport `dir` from `useDirection()`. CSS enter/exit via `data-starting-style` / `data-ending-style`. Stack CSS only; no swipe.
 - [x] `toc` - Wave 1. Native `<nav>` + `IntersectionObserver`. No `render` / `child`.
 - [x] `toggle` - Wave 2: bits-ui. Standalone `Toggle.Root`; inside a group, `ToggleGroup.Item`. No chrome - pass `class={buttonVariants(...)}`.
 - [x] `toggle-group` - Wave 2: bits-ui. `multiple` maps to `type`. Default `flex w-fit gap-1`.
@@ -85,7 +85,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 ## Hooks
 
-- [ ] `use-direction` - with DirectionProvider
+- [x] `use-direction` - Wave 2. Returns `{ current }`; defaults to `'ltr'` without a provider.
 - [x] `use-dismissible` - shipped with Wave 1 (Alert persistKey)
 - [x] `use-local-storage` - shipped with Wave 1 (ThemeProvider)
 - [x] `use-media-query` - Wave 1. Wraps `MediaQuery` from `svelte/reactivity` (read `.current`)
@@ -94,6 +94,6 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 ## Providers
 
-- [ ] `direction-provider`
+- [x] `direction-provider` - Wave 2. `display: contents` wrapper with `dir`. Nested providers overwrite context.
 - [x] `reduced-motion-provider` - Wave 1. Sets `data-disable-animations` on `<html>`
 - [x] `theme-provider` - Wave 1. Same `localStorage` key and inline no-flash script as React
