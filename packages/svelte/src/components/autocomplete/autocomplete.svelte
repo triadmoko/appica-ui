@@ -5,17 +5,27 @@
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setAutocompleteContext, type AutocompleteSize, type AutocompleteVariant } from './autocomplete-context'
+  import { filterItems, stringifyItem } from './autocomplete-filter'
 
   type Props = {
-    /** Controlled value. A string when single-select, an array when `multiple`. */
-    value?: string | string[]
-    /** Uncontrolled initial value. */
-    defaultValue?: string | string[]
-    /** Fires when the selected value(s) change. */
-    onValueChange?: (value: string | string[]) => void
+    /**
+     * The data to filter. A flat array, or `{ value, items }` objects for grouped options.
+     */
+    items?: readonly unknown[]
+    /**
+     * Controlled input value. Pair with `onValueChange`.
+     */
+    value?: string
+    /** Uncontrolled initial input value. */
+    defaultValue?: string
+    /** Fires as the value changes (typing, selection, clear). */
+    onValueChange?: (value: string) => void
     /** Controlled popup visibility. */
     open?: boolean
-    /** Uncontrolled initial open state. */
+    /**
+     * Uncontrolled initial open state.
+     * @default false
+     */
     defaultOpen?: boolean
     /** Fires when the popup opens or closes. */
     onOpenChange?: (open: boolean) => void
@@ -40,21 +50,29 @@
      */
     icon?: boolean
     /**
-     * Lay list items out as a CSS grid.
+     * Lay options out as a CSS grid instead of a list.
      * @default false
      */
     grid?: boolean
     /**
-     * Allow several items to stay selected.
-     * @default false
+     * How the filter and input read each object item.
      */
-    multiple?: boolean
+    itemToStringValue?: (item: unknown) => string
+    /** Match items against the query. Return `true` to keep an item. */
+    filter?: (item: unknown, query: string) => boolean
+    /**
+     * Wrap arrow-key focus from the end of the list back to the input.
+     * @default true
+     */
+    loopFocus?: boolean
     name?: string
     disabled?: boolean
+    required?: boolean
     children?: Snippet
   }
 
   let {
+    items,
     value = $bindable(),
     defaultValue,
     onValueChange,
@@ -66,9 +84,12 @@
     clearable = false,
     icon = false,
     grid = false,
-    multiple = false,
+    itemToStringValue,
+    filter,
+    loopFocus = true,
     name,
     disabled,
+    required,
     children,
     ...rest
   }: Props = $props()
@@ -76,27 +97,16 @@
   const field = getFieldContext()
   const control = $derived(mergeFieldControl({ field, name, disabled, omitId: true }))
 
-  function toSingle(next: string | string[] | undefined): string {
-    if (next == null) return ''
-    return Array.isArray(next) ? (next[0] ?? '') : next
-  }
-
-  function toMultiple(next: string | string[] | undefined): string[] {
-    if (next == null) return []
-    return Array.isArray(next) ? next : [next]
-  }
-
-  let innerSingle = $state('')
-  let innerMultiple = $state<string[]>([])
+  let innerValue = $state('')
+  let innerSelected = $state('')
   let innerOpen = $state(false)
-  innerSingle = untrack(() => toSingle(value ?? defaultValue))
-  innerMultiple = untrack(() => toMultiple(value ?? defaultValue))
+  innerValue = untrack(() => value ?? defaultValue ?? '')
+  innerSelected = untrack(() => innerValue)
   innerOpen = untrack(() => open ?? defaultOpen)
 
   $effect(() => {
     if (value === undefined) return
-    if (multiple) innerMultiple = toMultiple(value)
-    else innerSingle = toSingle(value)
+    innerValue = value
   })
 
   $effect(() => {
@@ -104,7 +114,25 @@
     innerOpen = open
   })
 
-  function handleSingleChange(next: string) {
+  const filteredItems = $derived(filterItems(items, innerValue, itemToStringValue, filter))
+  const hasItems = $derived(items != null)
+  const isEmpty = $derived(hasItems && filteredItems.length === 0)
+  const hasValue = $derived(innerValue !== '')
+
+  const bitsItems = $derived(
+    (items ?? []).flatMap((entry) => {
+      if (entry && typeof entry === 'object' && Array.isArray((entry as { items?: unknown }).items)) {
+        return (entry as { items: unknown[] }).items.map((item) => {
+          const label = stringifyItem(item, itemToStringValue)
+          return { value: label, label }
+        })
+      }
+      const label = stringifyItem(entry, itemToStringValue)
+      return [{ value: label, label }]
+    }),
+  )
+
+  function handleValueChange(next: string) {
     field?.clearFormError()
     commitBindableChange({
       next,
@@ -113,30 +141,15 @@
         value = nextValue
       },
       setInner: (nextValue) => {
-        innerSingle = toSingle(nextValue)
+        innerValue = nextValue
       },
       onChange: onValueChange,
     })
   }
 
-  function handleMultipleChange(next: string[]) {
-    field?.clearFormError()
-    commitBindableChange({
-      next,
-      bound: value,
-      setBound: (nextValue) => {
-        value = nextValue
-      },
-      setInner: (nextValue) => {
-        innerMultiple = toMultiple(nextValue)
-      },
-      onChange: onValueChange,
-    })
-  }
-
-  function clear() {
-    if (multiple) handleMultipleChange([])
-    else handleSingleChange('')
+  function handleSelectedChange(next: string) {
+    innerSelected = next
+    handleValueChange(next)
   }
 
   function handleOpenChange(next: boolean) {
@@ -153,11 +166,10 @@
     })
   }
 
-  function toggle() {
-    handleOpenChange(!innerOpen)
+  function clear() {
+    innerSelected = ''
+    handleValueChange('')
   }
-
-  const hasValue = $derived(multiple ? innerMultiple.length > 0 : innerSingle !== '')
 
   setAutocompleteContext({
     get size() {
@@ -175,40 +187,32 @@
     get grid() {
       return grid
     },
-    get multiple() {
-      return multiple
-    },
+    hasItems: () => hasItems,
+    filteredItems: () => filteredItems,
+    isEmpty: () => isEmpty,
+    stringify: (item) => stringifyItem(item, itemToStringValue),
+    inputValue: () => innerValue,
+    setInputValue: handleValueChange,
     hasValue: () => hasValue,
     clear,
-    selected: () => (multiple ? innerMultiple : innerSingle),
-    toggle,
+    disabled: () => Boolean(control.disabled),
   })
 </script>
 
-{#if multiple}
-  <BitsCombobox.Root
-    type="multiple"
-    bind:value={innerMultiple}
-    bind:open={innerOpen}
-    name={control.name}
-    disabled={control.disabled}
-    onValueChange={handleMultipleChange}
-    onOpenChange={handleOpenChange}
-    {...asBitsAttrs({ ...rest, 'data-slot': 'autocomplete' })}
-  >
-    {@render children?.()}
-  </BitsCombobox.Root>
-{:else}
-  <BitsCombobox.Root
-    type="single"
-    bind:value={innerSingle}
-    bind:open={innerOpen}
-    name={control.name}
-    disabled={control.disabled}
-    onValueChange={handleSingleChange}
-    onOpenChange={handleOpenChange}
-    {...asBitsAttrs({ ...rest, 'data-slot': 'autocomplete' })}
-  >
-    {@render children?.()}
-  </BitsCombobox.Root>
-{/if}
+<BitsCombobox.Root
+  type="single"
+  bind:value={innerSelected}
+  bind:open={innerOpen}
+  inputValue={innerValue}
+  items={bitsItems}
+  name={control.name}
+  disabled={control.disabled}
+  {required}
+  loop={loopFocus}
+  allowDeselect={false}
+  onValueChange={handleSelectedChange}
+  onOpenChange={handleOpenChange}
+  {...asBitsAttrs({ ...rest, 'data-slot': 'autocomplete' })}
+>
+  {@render children?.()}
+</BitsCombobox.Root>

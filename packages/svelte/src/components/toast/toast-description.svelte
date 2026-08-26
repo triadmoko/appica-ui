@@ -2,12 +2,29 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
+  import { getToastItemContext } from './toast-item-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, id: idProp, children, ...rest }: Props = $props()
+
+  const item = getToastItemContext()
+  const fallback = $derived(item ? `${item.toast.id}-description` : undefined)
+  const id = $derived(idProp ?? fallback)
+  const text = $derived(children ? undefined : item?.toast.description)
+
+  $effect.pre(() => {
+    item?.setDescriptionId(id)
+    return () => item?.setDescriptionId(undefined)
+  })
 </script>
 
-<div data-slot="toast-description" class={cn('text-foreground text-sm [grid-area:description]', className)} {...rest}>
-  {@render children?.()}
-</div>
+{#if children || text}
+  <div {id} data-slot="toast-description" class={cn('text-foreground text-sm [grid-area:description]', className)} {...rest}>
+    {#if children}
+      {@render children()}
+    {:else}
+      {text}
+    {/if}
+  </div>
+{/if}

@@ -1,27 +1,22 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { cn } from '../../internal/utils'
-  import { getAutocompleteContext } from './autocomplete-context'
+  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { asBitsAttrs, cn } from '../../internal/utils'
 
   type Props = HTMLButtonAttributes & { children?: Snippet }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
-
-  const ctx = getAutocompleteContext()
+  let { class: className, children, ...rest }: Props = $props()
 </script>
 
-<button
-  type="button"
+<BitsCombobox.Trigger
   data-slot="autocomplete-trigger"
-  {disabled}
   class={cn(
     'cursor-pointer outline-none',
     'data-disabled:opacity-disabled data-disabled:pointer-events-none data-disabled:cursor-not-allowed',
     className,
   )}
-  onclick={() => ctx.toggle()}
-  {...rest}
+  {...asBitsAttrs(rest)}
 >
   {@render children?.()}
-</button>
+</BitsCombobox.Trigger>

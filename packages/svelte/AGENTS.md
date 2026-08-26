@@ -15,7 +15,7 @@ This package is a Svelte 5 component library sharing design tokens with `@appica
 - `$props()` for props. Treat props as changing - values that depend on them must be `$derived`.
 - `$bindable()` for two-way `value` on fields.
 - Default content is the `children` snippet + `{@render children?.()}`. Named snippets (`start`, `end`) replace React slots.
-- **No `child` snippet on the public API.** Polymorphism is `href` (Button/Badge render `<a>`) or `el` (Card/AlertTitle render a different tag). Consumers who need a link that only looks like a button put `buttonVariants(...)` on the `<a>`. Overlay triggers (Wave 2) take `class={buttonVariants(...)}` directly.
+- **No `child` snippet on the public API.** Polymorphism is `href` on `Badge` or `el` on `Card` / `AlertTitle`. Links that look like a button use `buttonVariants(...)` on the `<a>`. Overlay triggers (Wave 2) take `class={buttonVariants(...)}` directly.
 - `createContext` / `setContext` + `getContext` instead of `cloneElement`. Optional contexts return `undefined` when no provider is mounted.
 - `onclick={...}` not `on:click`. `{@attach}` not `use:action`. Classes use clsx-style arrays/objects in `class={cn(...)}`, not the `class:` directive.
 - No SvelteKit `$app/*` in this package. Use `esm-env` if a browser check is required.

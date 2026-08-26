@@ -19,4 +19,5 @@ export type {
   ToastPayload,
   ToastPromiseMessages,
   ToastStatusIcon,
+  ToastActionProps,
 } from './toast-manager.svelte'

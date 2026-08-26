@@ -1,26 +1,48 @@
 import { render, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import ToastHost from './toast.test-host.svelte'
+import ToastManual from './toast.test-manual.svelte'
 import { createToastManager, type ToastPosition } from './toast-manager.svelte'
+
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+})
 
 describe('Toast', () => {
   it('renders title and description after add()', async () => {
     const user = userEvent.setup()
-    render(ToastHost)
+    render(ToastHost, { props: { timeout: 0 } })
     await user.click(screen.getByRole('button', { name: 'Show toast' }))
     expect(await screen.findByText('Hello')).toBeInTheDocument()
     expect(screen.getByText('World')).toBeInTheDocument()
   })
 
-  it('dismisses on close', async () => {
+  it('tags every sub-component with a data-slot attribute', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0, withAction: true, icon: 'success' } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
+    expect(document.querySelector('[data-slot="toast-viewport"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-icon"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-title"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-description"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-actions"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-action"]')).not.toBeNull()
+    expect(document.querySelector('[data-slot="toast-close"]')).not.toBeNull()
+  })
+
+  it('renders the close button by default and removes the toast on click', async () => {
     const user = userEvent.setup()
     render(ToastHost, { props: { timeout: 0 } })
     await user.click(screen.getByRole('button', { name: 'Show toast' }))
     await screen.findByText('Hello')
     const close = document.querySelector<HTMLButtonElement>('[data-slot="toast-close"]')
     expect(close).toHaveAttribute('aria-label', 'Dismiss')
+    expect(close).toHaveAttribute('aria-hidden', 'true')
     await user.click(close!)
     await waitFor(
       () => {
@@ -30,15 +52,17 @@ describe('Toast', () => {
     )
   })
 
-  it('applies position classes', async () => {
-    const user = userEvent.setup()
-    const position: ToastPosition = 'top-left'
-    render(ToastHost, { props: { position, timeout: 0 } })
-    await user.click(screen.getByRole('button', { name: 'Show toast' }))
-    await screen.findByText('Hello')
-    expect(document.querySelector('[data-slot="toast-viewport"]')).toHaveAttribute('data-position', position)
-    expect(document.querySelector('[data-slot="toast"]')).toHaveAttribute('data-position', position)
-  })
+  it.each<ToastPosition>(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'])(
+    'applies position="%s" to viewport and toast root',
+    async (position) => {
+      const user = userEvent.setup()
+      render(ToastHost, { props: { position, timeout: 0 } })
+      await user.click(screen.getByRole('button', { name: 'Show toast' }))
+      await screen.findByText('Hello')
+      expect(document.querySelector('[data-slot="toast-viewport"]')).toHaveAttribute('data-position', position)
+      expect(document.querySelector('[data-slot="toast"]')).toHaveAttribute('data-position', position)
+    },
+  )
 
   it('renders a progress bar when progress is enabled', async () => {
     const user = userEvent.setup()
@@ -48,9 +72,25 @@ describe('Toast', () => {
     expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeNull()
   })
 
+  it('renders a progress bar for a default-timeout toast when progress is enabled', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { progress: true } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
+    expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeNull()
+  })
+
   it('omits the progress bar by default', async () => {
     const user = userEvent.setup()
     render(ToastHost, { props: { timeout: 10000 } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
+    expect(document.querySelector('[data-slot="toast-progress"]')).toBeNull()
+  })
+
+  it('omits the progress bar when timeout is 0 even if progress is enabled', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { progress: true, timeout: 0 } })
     await user.click(screen.getByRole('button', { name: 'Show toast' }))
     await screen.findByText('Hello')
     expect(document.querySelector('[data-slot="toast-progress"]')).toBeNull()
@@ -101,9 +141,82 @@ describe('Toast', () => {
     expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeNull()
   })
 
-  it('has no accessibility violations when idle', async () => {
-    const { container } = render(ToastHost)
+  it('fires actionProps.onclick when ToastAction is clicked', async () => {
+    const onAction = vi.fn()
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0, withAction: true, onAction } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await user.click(await screen.findByRole('button', { name: 'Do it' }))
+    expect(onAction).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders multiple toasts when add is called more than once', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0 } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await waitFor(() => {
+      expect(document.querySelectorAll('[data-slot="toast"]')).toHaveLength(2)
+    })
+  })
+
+  it('marks toasts beyond the provider limit', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0, limit: 1 } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await waitFor(() => {
+      expect(document.querySelectorAll('[data-slot="toast"]')).toHaveLength(2)
+    })
+    expect(document.querySelectorAll('[data-limited]')).toHaveLength(1)
+  })
+
+  it('exposes a notifications landmark and focuses it on F6', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0 } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
+    const viewport = document.querySelector('[data-slot="toast-viewport"]')
+    expect(viewport).toHaveAttribute('role', 'region')
+    expect(viewport).toHaveAttribute('aria-label', 'Notifications')
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F6', bubbles: true }))
+    expect(document.activeElement).toBe(viewport)
+  })
+
+  it('has no accessibility violations once a toast is shown', async () => {
+    const user = userEvent.setup()
+    const { container } = render(ToastHost, {
+      props: { timeout: 0, withAction: true },
+    })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Toast primitives (manual composition)', () => {
+  it('honors explicit position on ToastViewport and renders multiple actions', async () => {
+    const user = userEvent.setup()
+    render(ToastManual)
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Manual')
+    expect(document.querySelector('[data-slot="toast-viewport"]')).toHaveAttribute('data-position', 'top-left')
+    expect(screen.getByRole('button', { name: 'Cancel' })).toHaveAttribute('data-slot', 'toast-action')
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('data-slot', 'toast-action')
+    const close = document.querySelector('[data-slot="toast-close"]')
+    expect(close).not.toBeNull()
+    expect(close).toHaveAttribute('aria-label', 'Close')
+  })
+
+  it('forwards class on root and sub-components', async () => {
+    const user = userEvent.setup()
+    render(ToastManual, { props: { extraClass: true } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Manual')
+    expect(document.querySelector('[data-slot="toast-viewport"]')?.className).toContain('vp-extra')
+    expect(document.querySelector('[data-slot="toast"]')?.className).toContain('root-extra')
+    expect(screen.getByText('Manual').className).toContain('title-extra')
+    expect(screen.getByText('D').className).toContain('desc-extra')
   })
 })
 
@@ -124,5 +237,76 @@ describe('createToastManager', () => {
     const id = manager.add({ title: 'X', timeout: 0 })
     manager.remove(id)
     expect(manager.toasts).toHaveLength(0)
+  })
+
+  it('upserts when add() reuses an id', () => {
+    const manager = createToastManager()
+    manager.add({ id: 'same', title: 'One', timeout: 0 })
+    manager.add({ id: 'same', title: 'Two', timeout: 0 })
+    expect(manager.toasts).toHaveLength(1)
+    expect(manager.toasts[0]?.title).toBe('Two')
+  })
+
+  it('closes every toast when close() is called without an id', () => {
+    const manager = createToastManager()
+    manager.add({ title: 'A', timeout: 0 })
+    manager.add({ title: 'B', timeout: 0 })
+    manager.close()
+    expect(manager.toasts.every((toast) => toast.closing)).toBe(true)
+  })
+
+  it('marks older toasts as limited past the cap', () => {
+    const manager = createToastManager({ limit: 2 })
+    manager.add({ title: 'A', timeout: 0 })
+    manager.add({ title: 'B', timeout: 0 })
+    manager.add({ title: 'C', timeout: 0 })
+    expect(manager.toasts.map((toast) => toast.limited)).toEqual([false, false, true])
+  })
+
+  it('pauses and resumes auto-dismiss timers', () => {
+    vi.useFakeTimers()
+    const manager = createToastManager({ timeout: 1000 })
+    manager.add({ title: 'X' })
+    manager.pauseTimers()
+    vi.advanceTimersByTime(5000)
+    expect(manager.toasts[0]?.closing).toBeFalsy()
+    manager.resumeTimers()
+    vi.advanceTimersByTime(1000)
+    expect(manager.toasts[0]?.closing).toBe(true)
+  })
+
+  it('fires onClose then onRemove', () => {
+    const onClose = vi.fn()
+    const onRemove = vi.fn()
+    const manager = createToastManager()
+    const id = manager.add({ title: 'X', timeout: 0, onClose, onRemove })
+    manager.close(id)
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(onRemove).not.toHaveBeenCalled()
+    manager.remove(id)
+    expect(onRemove).toHaveBeenCalledTimes(1)
+  })
+
+  it('updates an existing toast in place', () => {
+    const manager = createToastManager()
+    const id = manager.add({ title: 'One', timeout: 0 })
+    manager.update(id, { title: 'Two', description: 'Changed' })
+    expect(manager.toasts).toHaveLength(1)
+    expect(manager.toasts[0]?.title).toBe('Two')
+    expect(manager.toasts[0]?.description).toBe('Changed')
+  })
+
+  it('accepts string shorthand for promise() states', async () => {
+    const manager = createToastManager()
+    const work = Promise.resolve('ok')
+    const result = manager.promise(work, {
+      loading: 'Working',
+      success: 'Done',
+      error: 'Fail',
+    })
+    expect(manager.toasts[0]?.description).toBe('Working')
+    await result
+    expect(manager.toasts[0]?.description).toBe('Done')
+    expect(manager.toasts[0]?.type).toBe('success')
   })
 })

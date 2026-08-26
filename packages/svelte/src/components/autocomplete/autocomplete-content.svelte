@@ -21,21 +21,51 @@
     'bg-background text-foreground z-1 flex h-6 w-[calc(100%-var(--border-width)*2)] cursor-default items-center justify-center',
   )
 
+  type Side = 'top' | 'bottom' | 'left' | 'right'
+  type Align = 'start' | 'center' | 'end'
+
   type Props = HTMLAttributes<HTMLDivElement> & {
+    /**
+     * Preferred side of the input to open on.
+     * @default 'bottom'
+     */
+    side?: Side
+    /**
+     * Gap between the input and the popup.
+     * @default 6
+     */
+    sideOffset?: number
+    /** Alignment along that side. */
+    align?: Align
+    /** Shift along the alignment axis. */
+    alignOffset?: number
+    /**
+     * Keep the popup mounted in the DOM while closed.
+     * @default false
+     */
     keepMounted?: boolean
     children?: Snippet
   }
 
-  let { class: className, keepMounted = false, children, ...rest }: Props = $props()
+  let {
+    class: className,
+    side = 'bottom',
+    sideOffset = 6,
+    align,
+    alignOffset,
+    keepMounted = false,
+    children,
+    ...rest
+  }: Props = $props()
 
   const ctx = getAutocompleteContext()
   const classes = $derived(
     cn(
-      'group/autocomplete-content bg-background border-border-overlay flex flex-col border py-2 shadow-2xl outline-none',
+      'group/autocomplete-content bg-background border-border-overlay flex flex-col border py-2 shadow-2xl outline-none has-data-empty:py-0',
       POPUP_RADIUS[ctx.size],
       'w-(--bits-combobox-anchor-width) min-w-36',
-      'max-h-(--bits-autocomplete-content-available-height) overflow-hidden',
-      'origin-(--bits-autocomplete-content-transform-origin)',
+      'max-h-(--bits-combobox-content-available-height) overflow-hidden',
+      'origin-(--bits-combobox-content-transform-origin)',
       'motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
       'data-[state=closed]:motion-safe:scale-95 data-[state=closed]:motion-safe:opacity-0',
       'data-starting-style:motion-safe:scale-90 data-starting-style:motion-safe:opacity-0',
@@ -48,9 +78,12 @@
 <BitsCombobox.Portal>
   <BitsCombobox.Content
     data-slot="autocomplete-content"
+    data-empty={ctx.isEmpty() ? '' : undefined}
     class={classes}
-    side="bottom"
-    sideOffset={6}
+    {side}
+    {sideOffset}
+    {align}
+    {alignOffset}
     forceMount={keepMounted ? true : undefined}
     {...asBitsAttrs(rest)}
   >

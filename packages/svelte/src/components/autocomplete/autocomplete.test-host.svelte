@@ -8,23 +8,36 @@
   import AutocompleteItem from './autocomplete-item.svelte'
   import AutocompleteList from './autocomplete-list.svelte'
   import AutocompleteStatus from './autocomplete-status.svelte'
+  import AutocompleteTrigger from './autocomplete-trigger.svelte'
 
   const FRAMEWORKS = ['Next.js', 'SvelteKit', 'Nuxt.js', 'Remix', 'Astro'] as const
 
   let {
     defaultValue,
+    value,
+    onValueChange,
     clearable,
     invalid,
-    icon = true,
+    icon,
+    grid,
+    cols,
     placeholder = 'Search a framework',
     status,
+    disabled,
+    standaloneTrigger,
   }: {
     defaultValue?: string
+    value?: string
+    onValueChange?: (value: string) => void
     clearable?: boolean
     invalid?: boolean
     icon?: boolean
+    grid?: boolean
+    cols?: number
     placeholder?: string
     status?: string
+    disabled?: boolean
+    standaloneTrigger?: boolean
   } = $props()
 </script>
 
@@ -34,10 +47,10 @@
       <AutocompleteStatus>{status}</AutocompleteStatus>
     {/if}
     <AutocompleteEmpty>No items found.</AutocompleteEmpty>
-    <AutocompleteList>
-      {#each FRAMEWORKS as item (item)}
-        <AutocompleteItem value={item} label={item}>{item}</AutocompleteItem>
-      {/each}
+    <AutocompleteList {cols}>
+      {#snippet children(item)}
+        <AutocompleteItem value={item}>{item}</AutocompleteItem>
+      {/snippet}
     </AutocompleteList>
   </AutocompleteContent>
 {/snippet}
@@ -45,14 +58,26 @@
 {#if invalid}
   <Field {invalid}>
     <FieldLabel>Framework</FieldLabel>
-    <Autocomplete {defaultValue} {clearable} {icon}>
+    <Autocomplete items={FRAMEWORKS} {defaultValue} {clearable} {icon}>
       <AutocompleteInput {placeholder} aria-label={placeholder} />
       {@render popup()}
     </Autocomplete>
   </Field>
+{:else if standaloneTrigger}
+  <Autocomplete items={FRAMEWORKS}>
+    <AutocompleteTrigger aria-label="Open picker">Open</AutocompleteTrigger>
+    <AutocompleteContent>
+      <AutocompleteInput aria-label="Search in popup" />
+      <AutocompleteList>
+        {#snippet children(item)}
+          <AutocompleteItem value={item}>{item}</AutocompleteItem>
+        {/snippet}
+      </AutocompleteList>
+    </AutocompleteContent>
+  </Autocomplete>
 {:else}
-  <Autocomplete {defaultValue} {clearable} {icon}>
-    <AutocompleteInput {placeholder} aria-label={placeholder} />
+  <Autocomplete items={FRAMEWORKS} {value} {defaultValue} {onValueChange} {clearable} {icon} {grid} {disabled}>
+    <AutocompleteInput {placeholder} aria-label={placeholder} {disabled} />
     {@render popup()}
   </Autocomplete>
 {/if}

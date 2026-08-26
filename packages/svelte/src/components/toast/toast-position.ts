@@ -6,6 +6,7 @@ const KEY = Symbol('appica-toast-view')
 export type ToastViewContext = {
   position: ToastPosition
   expanded: boolean
+  focused: boolean
 }
 
 export function setToastViewContext(value: ToastViewContext) {
@@ -17,6 +18,7 @@ export function getToastViewContext(): ToastViewContext {
     getContext<ToastViewContext>(KEY) ?? {
       position: 'bottom-right',
       expanded: false,
+      focused: false,
     }
   )
 }

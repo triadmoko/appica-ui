@@ -32,6 +32,11 @@
     /** Called when the clear button is pressed. */
     onClear?: () => void
     value?: string
+    /**
+     * Native `size` attribute (character width). Named `htmlSize` to avoid clashing
+     * with the visual `inputSize` scale.
+     */
+    htmlSize?: number
   }
 
   let {
@@ -48,6 +53,7 @@
     id,
     name,
     oninput,
+    htmlSize,
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
@@ -100,6 +106,7 @@
     aria-describedby={control.describedby}
     {placeholder}
     class={cn(inputVariants({ variant, size: inputSize, state: 'self' }), 'placeholder:text-foreground-subtle', className)}
+    size={htmlSize}
     oninput={handleInput}
     {...rest}
   />
@@ -126,6 +133,7 @@
       data-invalid={invalid ? '' : undefined}
       placeholder={placeholder ?? ' '}
       class="peer text-foreground placeholder:text-foreground-subtle h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+      size={htmlSize}
       oninput={handleInput}
       {...rest}
     />

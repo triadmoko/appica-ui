@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import { textSnippet } from '../../test/snippet'
 import Button from './button.svelte'
+import { buttonVariants } from './button-variants'
 
 describe('Button', () => {
   it('renders as a button by default', () => {
@@ -11,13 +12,24 @@ describe('Button', () => {
     const el = screen.getByRole('button', { name: 'Click me' })
     expect(el.tagName).toBe('BUTTON')
     expect(el).toHaveAttribute('data-slot', 'button')
+    expect(el).toHaveAttribute('type', 'button')
   })
 
-  it('renders as an anchor when href is set', () => {
-    render(Button, { props: { href: '/x', children: textSnippet('Link button') } })
-    const el = screen.getByRole('link', { name: 'Link button' })
-    expect(el.tagName).toBe('A')
-    expect(el).toHaveAttribute('href', '/x')
+  it('styles links via buttonVariants', () => {
+    const anchor = document.createElement('a')
+    anchor.href = '/x'
+    anchor.textContent = 'Link button'
+    anchor.className = buttonVariants({ variant: 'soft', size: 'md' })
+    document.body.appendChild(anchor)
+
+    try {
+      const el = screen.getByRole('link', { name: 'Link button' })
+      expect(el.tagName).toBe('A')
+      expect(el).toHaveAttribute('href', '/x')
+      expect(el.className).toContain('text-foreground-emphasis')
+    } finally {
+      anchor.remove()
+    }
   })
 
   it('forwards class alongside variant classes', () => {
@@ -54,6 +66,37 @@ describe('Button', () => {
     expect(onclick).not.toHaveBeenCalled()
   })
 
+  it('stays focusable when disabled with focusableWhenDisabled', () => {
+    render(Button, {
+      props: {
+        disabled: true,
+        focusableWhenDisabled: true,
+        children: textSnippet('Loading'),
+      },
+    })
+    const el = screen.getByRole('button', { name: 'Loading' })
+    expect(el).not.toHaveAttribute('disabled')
+    expect(el).toHaveAttribute('aria-disabled', 'true')
+    el.focus()
+    expect(el).toHaveFocus()
+  })
+
+  it('does not fire onclick when focusableWhileDisabled', async () => {
+    const user = userEvent.setup()
+    const onclick = vi.fn()
+    render(Button, {
+      props: {
+        disabled: true,
+        focusableWhenDisabled: true,
+        onclick,
+        children: textSnippet('Loading'),
+      },
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Loading' }))
+    expect(onclick).not.toHaveBeenCalled()
+  })
+
   it('activates on keyboard (Enter)', async () => {
     const user = userEvent.setup()
     const onclick = vi.fn()
@@ -62,6 +105,17 @@ describe('Button', () => {
     const btn = screen.getByRole('button', { name: 'Press' })
     btn.focus()
     await user.keyboard('{Enter}')
+    expect(onclick).toHaveBeenCalledOnce()
+  })
+
+  it('activates on keyboard (Space)', async () => {
+    const user = userEvent.setup()
+    const onclick = vi.fn()
+    render(Button, { props: { onclick, children: textSnippet('Press') } })
+
+    const btn = screen.getByRole('button', { name: 'Press' })
+    btn.focus()
+    await user.keyboard(' ')
     expect(onclick).toHaveBeenCalledOnce()
   })
 

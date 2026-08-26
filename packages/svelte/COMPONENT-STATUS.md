@@ -9,13 +9,13 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `accordion` - Wave 2: bits-ui. `multiple` → `type`. Variant/icon context. Closed content unmounts (`forceMount={false}`).
 - [x] `alert` - Wave 1. Dismiss uses `svelte/transition` (`out:`), not Motion. Compound parts: Icon / Title / Description / Action. Title tag via `el`.
 - [x] `alert-dialog` - Wave 2: bits-ui. No default ×. `AlertDialog.createHandle` is a Svelte `$state` handle. Close wraps bits-ui Cancel.
-- [x] `autocomplete` - Wave 2: bits-ui Combobox analog. `icon` default `false`. Extra `AutocompleteStatus`. Filtering is consumer-side (`$derived` from input). No Collection / auto-filter.
+- [x] `autocomplete` - Wave 2: bits-ui Combobox analog. `items` + built-in filter; `value` is the input string. `icon` default `false`. Extra `AutocompleteStatus`. `AutocompleteCollection` maps group items. No 2D grid keyboard nav.
 - [x] `avatar` - Wave 1. Native `<img>` load/error (no Base UI). Group size/shape via context, not `cloneElement`.
 - [x] `background-pattern` - Wave 1. Native CSS masks; spotlight uses `{@attach}` + WAAPI fade (persistent under `useReducedMotion`).
 - [x] `badge` - Wave 1. `<span>` by default; `<a>` when `href` is set; `<button>` when `onclick` is set. No `child` snippet.
 - [x] `border-beam` - Wave 1. CSS `animate-border-beam`. Same `revealOn` / `pressScale` pattern as GradientGlow.
 - [x] `breadcrumb` - Wave 1. Native `nav` / `ol` / `li`. `el` on `BreadcrumbLink` (`a` / `button`); `active` renders a non-interactive `<span>`.
-- [x] `button` - Wave 1. Native `<button>`, or `<a>` when `href` is set. Exports `buttonVariants` for Wave 2 triggers. Inherits `variant` / `size` / `disabled` from `ButtonGroup` context.
+- [x] `button` - Wave 2: bits-ui `Button.Root`. `type="button"` default. `focusableWhenDisabled`. Links use exported `buttonVariants` on `<a>` (no `href` on Button). Inherits `variant` / `size` / `disabled` from `ButtonGroup` context.
 - [x] `button-group` - Wave 1. Context for child `Button` variant, size, and disabled. No bits-ui.
 - [ ] `calendar` - Wave 2
 - [x] `card` - Wave 1. Root tag via `el` (`div` / `article` / `li` / …), not `render` / `child`.
@@ -72,7 +72,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`). Reads Field context.
 - [x] `thumbnail` - Wave 1. Image vs icon variants; same size/shape scale as Avatar.
 - [ ] `time-field` - Wave 2
-- [x] `toast` - Wave 2: native manager (`createToastManager`) + bits-ui Portal. Viewport `dir` from `useDirection()`. CSS enter/exit via `data-starting-style` / `data-ending-style`. Stack CSS only; no swipe.
+- [x] `toast` - Wave 2: native manager (`createToastManager`) + bits-ui Portal. Viewport `dir` from `useDirection()`. Swipe, stack limit, F6, and hover/focus timer pause match React.
 - [x] `toc` - Wave 1. Native `<nav>` + `IntersectionObserver`. No `render` / `child`.
 - [x] `toggle` - Wave 2: bits-ui. Standalone `Toggle.Root`; inside a group, `ToggleGroup.Item`. No chrome - pass `class={buttonVariants(...)}`.
 - [x] `toggle-group` - Wave 2: bits-ui. `multiple` maps to `type`. Default `flex w-fit gap-1`.

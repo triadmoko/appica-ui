@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import Thumbnail from '../thumbnail/thumbnail.svelte'
+  import { asBitsAttrs } from '../../internal/utils'
+  import { toastStackGapPx } from './toast-variants'
   import { useToastManager, type ToastPosition } from './toast-manager.svelte'
   import ToastPortal from './toast-portal.svelte'
   import ToastViewport from './toast-viewport.svelte'
@@ -26,6 +28,7 @@
     progress?: boolean
     /**
      * Provider default (ms) used to size the progress bar for toasts that don't set their own `timeout`.
+     * Match your `ToastProvider`'s `timeout`.
      * @default 5000
      */
     timeout?: number
@@ -34,66 +37,76 @@
      * @default document.body
      */
     container?: Element | string
+    /** Escape hatch forwarded to the underlying `ToastPortal`. */
+    portalProps?: Record<string, unknown>
   }
 
   let {
     position = 'bottom-right',
     progress = false,
-    timeout = 5000,
+    timeout,
     class: className,
     container,
+    portalProps,
     ...rest
   }: Props = $props()
 
   const manager = useToastManager()
-  let heights = $state<Record<string, number>>({})
-
-  function setHeight(id: string, next: number) {
-    if (heights[id] === next) return
-    heights[id] = next
-  }
-
-  $effect(() => {
-    const live = new Set(manager.toasts.map((toast) => toast.id))
-    for (const id of Object.keys(heights)) {
-      if (!live.has(id)) delete heights[id]
-    }
-  })
+  const providerTimeout = $derived(timeout ?? manager.timeout)
 
   function offsetY(index: number) {
     let sum = 0
     for (let i = 0; i < index; i++) {
-      const id = manager.toasts[i]?.id
-      if (id) sum += heights[id] ?? 0
+      sum += manager.toasts[i]?.height ?? 0
     }
     return sum
   }
 
-  const stackHeight = $derived.by(() => {
-    const list = manager.toasts
+  function visibleIndex(index: number) {
+    let count = 0
+    for (let i = 0; i < index; i++) {
+      if (!manager.toasts[i]?.closing) count += 1
+    }
+    return count
+  }
+
+  const frontmostHeight = $derived.by(() => {
+    const front = manager.toasts.find((toast) => !toast.closing)
+    return front?.height ?? 0
+  })
+
+  const collapsedHeight = $derived.by(() => {
+    const list = manager.toasts.filter((toast) => !toast.limited)
     if (list.length === 0) return 0
-    const measured = list.map((toast) => heights[toast.id] ?? 0)
-    const front = measured[0] ?? 0
-    const extra = Math.max(0, list.length - 1) * 12
-    const collapsed = front + extra
-    const expanded = measured.reduce((sum, value) => sum + value, 0) + extra
-    return Math.max(collapsed, expanded)
+    return frontmostHeight + Math.max(0, list.length - 1) * toastStackGapPx
+  })
+
+  const expandedHeight = $derived.by(() => {
+    const list = manager.toasts.filter((toast) => !toast.limited)
+    if (list.length === 0) return 0
+    const measured = list.reduce((sum, toast) => sum + (toast.height ?? 0), 0)
+    return measured + Math.max(0, list.length - 1) * toastStackGapPx
   })
 </script>
 
-<ToastPortal to={container}>
-  <ToastViewport {position} class={className} style="min-height: {stackHeight}px" {...rest}>
+<ToastPortal to={container} {...asBitsAttrs(portalProps ?? {})}>
+  <ToastViewport
+    {position}
+    class={className}
+    {...rest}
+    style="--stack-collapsed: {collapsedHeight}px; --stack-expanded: {expandedHeight}px"
+  >
     {#each manager.toasts as toast, index (toast.id)}
       <Toast
         {toast}
         {position}
         progress={toast.progress ?? progress}
-        providerTimeout={timeout}
-        {index}
-        ownHeight={heights[toast.id] ?? 0}
-        frontmostHeight={manager.toasts[0] ? (heights[manager.toasts[0].id] ?? 0) : 0}
+        providerTimeout={providerTimeout}
+        index={toast.closing ? index : visibleIndex(index)}
+        ownHeight={toast.height ?? 0}
+        {frontmostHeight}
         offsetY={offsetY(index)}
-        onHeight={(height) => setHeight(toast.id, height)}
+        onHeight={(height) => manager.setHeight(toast.id, height)}
       >
         {#if toast.data?.thumbnail}
           <ToastIcon>
@@ -112,7 +125,7 @@
         {/if}
         {#if toast.actionProps}
           <ToastActions>
-            <ToastAction onclick={toast.actionProps.onclick}>{toast.actionProps.children}</ToastAction>
+            <ToastAction />
           </ToastActions>
         {/if}
       </Toast>

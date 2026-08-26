@@ -15,6 +15,10 @@
     thumbnail,
     toastProgress,
     withPromise,
+    limit,
+    providerTimeout,
+    priority,
+    onAction,
   }: {
     title?: string
     description?: string
@@ -26,10 +30,25 @@
     thumbnail?: string
     toastProgress?: boolean
     withPromise?: boolean
+    limit?: number
+    providerTimeout?: number
+    priority?: 'low' | 'high'
+    onAction?: (event: MouseEvent) => void
   } = $props()
 </script>
 
-<ToastProvider>
-  <ToastTrigger {title} {description} {timeout} {withAction} {icon} {thumbnail} {toastProgress} {withPromise} />
+<ToastProvider timeout={providerTimeout} {limit}>
+  <ToastTrigger
+    {title}
+    {description}
+    {timeout}
+    {withAction}
+    {icon}
+    {thumbnail}
+    {toastProgress}
+    {withPromise}
+    {priority}
+    {onAction}
+  />
   <Toaster {position} {progress} />
 </ToastProvider>

@@ -10,6 +10,8 @@
     thumbnail,
     toastProgress,
     withPromise,
+    priority,
+    onAction,
     label = 'Show toast',
   }: {
     title?: string
@@ -20,6 +22,8 @@
     thumbnail?: string
     toastProgress?: boolean
     withPromise?: boolean
+    priority?: 'low' | 'high'
+    onAction?: (event: MouseEvent) => void
     label?: string
   } = $props()
 
@@ -31,10 +35,11 @@
       description,
       timeout,
       progress: toastProgress,
+      priority,
       ...(icon || thumbnail
         ? { data: { icon, thumbnail, thumbnailAlt: thumbnail ? 'Thumb' : undefined } }
         : {}),
-      ...(withAction ? { actionProps: { children: 'Do it' } } : {}),
+      ...(withAction ? { actionProps: { children: 'Do it', onclick: onAction } } : {}),
     })
   }
 

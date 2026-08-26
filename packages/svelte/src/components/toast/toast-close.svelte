@@ -2,6 +2,9 @@
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
+  import { getToastViewContext } from './toast-position'
+  import { getToastItemContext } from './toast-item-context'
+  import { useToastManager } from './toast-manager.svelte'
 
   type Props = HTMLButtonAttributes & {
     /**
@@ -12,12 +15,27 @@
     children?: Snippet
   }
 
-  let { class: className, closeLabel = 'Dismiss', children, ...rest }: Props = $props()
+  let { class: className, closeLabel = 'Dismiss', children, onclick, onfocus, onblur, ...rest }: Props = $props()
+
+  const manager = useToastManager()
+  const view = getToastViewContext()
+  const item = getToastItemContext()
+  let hasFocus = $state(false)
+  const hidden = $derived(!view.expanded && !hasFocus)
+
+  function handleClick(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
+    onclick?.(event)
+    if (event.defaultPrevented) return
+    const id = item?.toast.id
+    if (id) manager.close(id)
+  }
 </script>
 
 <button
   type="button"
   aria-label={closeLabel}
+  aria-hidden={hidden ? 'true' : undefined}
+  tabindex={hidden ? -1 : 0}
   data-slot="toast-close"
   class={cn(
     'text-foreground-muted -me-1 -mt-1 cursor-pointer self-start rounded-md p-1 outline-none [grid-area:close] motion-safe:transition-colors',
@@ -26,6 +44,15 @@
     className,
   )}
   {...rest}
+  onclick={handleClick}
+  onfocus={(event) => {
+    hasFocus = true
+    onfocus?.(event)
+  }}
+  onblur={(event) => {
+    hasFocus = false
+    onblur?.(event)
+  }}
 >
   {#if children}
     {@render children()}

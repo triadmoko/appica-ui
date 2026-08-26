@@ -18,7 +18,7 @@
   } as const
 
   type Props = HTMLAttributes<HTMLDivElement> & {
-    value: string
+    value: unknown
     label?: string
     disabled?: boolean
     children?: Snippet
@@ -27,6 +27,8 @@
   let { class: className, value, label, disabled, children, ...rest }: Props = $props()
 
   const ctx = getAutocompleteContext()
+  const stringValue = $derived(ctx.stringify(value))
+  const resolvedLabel = $derived(label ?? stringValue)
   const classes = $derived(
     cn(
       'text-foreground relative isolate flex w-full cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0',
@@ -34,6 +36,8 @@
       'active:translate-y-px active:scale-[0.98]',
       'data-highlighted:not-data-disabled:text-foreground-intense data-highlighted:not-data-disabled:before:opacity-100',
       'motion-safe:transition motion-safe:duration-250 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
+      'motion-safe:active:duration-100 motion-safe:active:ease-in-out',
+      'motion-safe:before:transition-opacity motion-safe:before:duration-200 motion-safe:before:ease-out',
       'data-disabled:opacity-disabled data-disabled:pointer-events-none',
       ITEM_SIZE[ctx.size],
       className,
@@ -41,6 +45,6 @@
   )
 </script>
 
-<BitsCombobox.Item data-slot="autocomplete-item" {value} {label} {disabled} class={classes} {...asBitsAttrs(rest)}>
+<BitsCombobox.Item data-slot="autocomplete-item" value={stringValue} label={resolvedLabel} {disabled} class={classes} {...asBitsAttrs(rest)}>
   <span class={cn('flex items-center text-start', ITEM_TEXT_SIZE[ctx.size])}>{@render children?.()}</span>
 </BitsCombobox.Item>

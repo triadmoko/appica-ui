@@ -19,7 +19,7 @@
 </script>
 
 <BitsCombobox.GroupHeading
-  data-slot="autocomplete-group-label"
+  data-slot="autocomplete-label"
   class={cn('text-foreground-subtle', GROUP_LABEL_SIZE[ctx.size], className)}
   {...asBitsAttrs(rest)}
 >
