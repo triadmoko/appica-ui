@@ -20,8 +20,8 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [ ] `calendar` - Wave 2
 - [x] `card` - Wave 1. Root tag via `el` (`div` / `article` / `li` / …), not `render` / `child`.
 - [ ] `carousel` - Wave 2
-- [ ] `checkbox` - Wave 2: bits-ui
-- [ ] `checkbox-group` - Wave 2: bits-ui
+- [x] `checkbox` - Wave 2: bits-ui `Checkbox.Root`. Folded indicator. `bind:checked`. `aria-invalid` → `data-invalid`.
+- [x] `checkbox-group` - Wave 2: bits-ui `Checkbox.Group`. `orientation` default `vertical`.
 - [x] `chip` - Wave 1. Reuses `buttonVariants`. Dismiss uses `svelte/transition`. Group `clearAll()` is a component export (`bind:this`).
 - [ ] `collapsible` - Wave 2: bits-ui
 - [ ] `color-area` - Wave 2
@@ -52,20 +52,20 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [ ] `number-field` - Wave 2
 - [ ] `otp-field` - Wave 2
 - [x] `pagination` - Wave 1. `el` on `PaginationLink` (`a` / `button`). Links use `buttonVariants` via context.
-- [ ] `popover` - Wave 2: bits-ui
+- [x] `popover` - Wave 2: bits-ui. Compound parts. Triggers take `class={buttonVariants(...)}`. Title/Description are styled `h2` / `p`. `keepMounted` → `forceMount`.
 - [ ] `preview-card` - Wave 2: bits-ui
 - [x] `progress` - Wave 1. Native ARIA `role="progressbar"` (no bits-ui). Bar and circular variants.
-- [ ] `radio` - Wave 2: bits-ui
-- [ ] `radio-group` - Wave 2: bits-ui
+- [x] `radio` - Wave 2: bits-ui `RadioGroup.Item` (no standalone Radio). Requires a RadioGroup ancestor.
+- [x] `radio-group` - Wave 2: bits-ui `RadioGroup.Root`. `orientation` default `vertical`.
 - [x] `rating` - Wave 1. Radiogroup + CSS clip-path / scale (no Motion). RTL from closest `[dir]`. `bind:value`.
 - [x] `scroll-area` - Wave 1. Native overflow + overlay thumbs (no bits-ui). `scrollShadow` CSS vars from overflow.
 - [ ] `select` - Wave 2: bits-ui
 - [x] `separator` - Wave 1. SVG decorative variants (dotted / wave / zigzag) ported as-is.
 - [x] `skeleton` - Wave 1. Same `shimmer` / `pulse` / `none` classes as React.
-- [ ] `slider` - Wave 2: bits-ui
+- [x] `slider` - Wave 2: bits-ui. Folded Root + track + thumbs. Infers `type` from number vs array. `tooltipVisibility`. RTL via closest `[dir]`.
 - [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL from closest `[dir]` (no DirectionProvider).
 - [x] `spinner` - Wave 1. Circular / dots / sparkle as CSS `@keyframes`, gated by `useReducedMotion`.
-- [ ] `switch` - Wave 2: bits-ui
+- [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`.
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.
 - [ ] `tabs` - Wave 2: bits-ui
 - [x] `text-animate` - Wave 1. rAF clock + `IntersectionObserver`. Required `text` prop (Svelte cannot tokenize string children). Presets match React.
@@ -74,10 +74,10 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [ ] `time-field` - Wave 2
 - [ ] `toast` - Wave 2
 - [x] `toc` - Wave 1. Native `<nav>` + `IntersectionObserver`. No `render` / `child`.
-- [ ] `toggle` - Wave 2: bits-ui
-- [ ] `toggle-group` - Wave 2: bits-ui
+- [x] `toggle` - Wave 2: bits-ui. Standalone `Toggle.Root`; inside a group, `ToggleGroup.Item`. No chrome - pass `class={buttonVariants(...)}`.
+- [x] `toggle-group` - Wave 2: bits-ui. `multiple` maps to `type`. Default `flex w-fit gap-1`.
 - [x] `toolbar` - Wave 1. Native `role="toolbar"` + roving tabindex (no bits-ui). Triggers take `class={buttonVariants(...)}`.
-- [ ] `tooltip` - Wave 2: bits-ui
+- [x] `tooltip` - Wave 2: bits-ui. `TooltipProvider` `delay` default 200 (`delayDuration`). Triggers take `class={buttonVariants(...)}`. `keepMounted` → `forceMount`.
 
 ## Lib
 

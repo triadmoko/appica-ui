@@ -89,6 +89,16 @@
       "svelte": "./dist/components/card/index.js",
       "default": "./dist/components/card/index.js"
     },
+    "./checkbox": {
+      "types": "./dist/components/checkbox/index.d.ts",
+      "svelte": "./dist/components/checkbox/index.js",
+      "default": "./dist/components/checkbox/index.js"
+    },
+    "./checkbox-group": {
+      "types": "./dist/components/checkbox-group/index.d.ts",
+      "svelte": "./dist/components/checkbox-group/index.js",
+      "default": "./dist/components/checkbox-group/index.js"
+    },
     "./chip": {
       "types": "./dist/components/chip/index.d.ts",
       "svelte": "./dist/components/chip/index.js",
@@ -149,10 +159,25 @@
       "svelte": "./dist/components/pagination/index.js",
       "default": "./dist/components/pagination/index.js"
     },
+    "./popover": {
+      "types": "./dist/components/popover/index.d.ts",
+      "svelte": "./dist/components/popover/index.js",
+      "default": "./dist/components/popover/index.js"
+    },
     "./progress": {
       "types": "./dist/components/progress/index.d.ts",
       "svelte": "./dist/components/progress/index.js",
       "default": "./dist/components/progress/index.js"
+    },
+    "./radio": {
+      "types": "./dist/components/radio/index.d.ts",
+      "svelte": "./dist/components/radio/index.js",
+      "default": "./dist/components/radio/index.js"
+    },
+    "./radio-group": {
+      "types": "./dist/components/radio-group/index.d.ts",
+      "svelte": "./dist/components/radio-group/index.js",
+      "default": "./dist/components/radio-group/index.js"
     },
     "./rating": {
       "types": "./dist/components/rating/index.d.ts",
@@ -174,6 +199,11 @@
       "svelte": "./dist/components/skeleton/index.js",
       "default": "./dist/components/skeleton/index.js"
     },
+    "./slider": {
+      "types": "./dist/components/slider/index.d.ts",
+      "svelte": "./dist/components/slider/index.js",
+      "default": "./dist/components/slider/index.js"
+    },
     "./sparkline": {
       "types": "./dist/components/sparkline/index.d.ts",
       "svelte": "./dist/components/sparkline/index.js",
@@ -183,6 +213,11 @@
       "types": "./dist/components/spinner/index.d.ts",
       "svelte": "./dist/components/spinner/index.js",
       "default": "./dist/components/spinner/index.js"
+    },
+    "./switch": {
+      "types": "./dist/components/switch/index.d.ts",
+      "svelte": "./dist/components/switch/index.js",
+      "default": "./dist/components/switch/index.js"
     },
     "./table": {
       "types": "./dist/components/table/index.d.ts",
@@ -209,10 +244,25 @@
       "svelte": "./dist/components/toc/index.js",
       "default": "./dist/components/toc/index.js"
     },
+    "./toggle": {
+      "types": "./dist/components/toggle/index.d.ts",
+      "svelte": "./dist/components/toggle/index.js",
+      "default": "./dist/components/toggle/index.js"
+    },
+    "./toggle-group": {
+      "types": "./dist/components/toggle-group/index.d.ts",
+      "svelte": "./dist/components/toggle-group/index.js",
+      "default": "./dist/components/toggle-group/index.js"
+    },
     "./toolbar": {
       "types": "./dist/components/toolbar/index.d.ts",
       "svelte": "./dist/components/toolbar/index.js",
       "default": "./dist/components/toolbar/index.js"
+    },
+    "./tooltip": {
+      "types": "./dist/components/tooltip/index.d.ts",
+      "svelte": "./dist/components/tooltip/index.js",
+      "default": "./dist/components/tooltip/index.js"
     },
     "./hooks/use-dismissible": {
       "types": "./dist/hooks/use-dismissible/index.d.ts",
@@ -281,6 +331,8 @@
     "clean": "rm -rf dist appica.css"
   },
   "dependencies": {
+    "@internationalized/date": "^3.8.1",
+    "bits-ui": "^2.19.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0"

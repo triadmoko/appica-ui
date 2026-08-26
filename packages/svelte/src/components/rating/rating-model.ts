@@ -26,13 +26,4 @@ export function clipFor(fill: number, rtl: boolean, vertical: boolean) {
   return rtl ? `inset(0 0 0 ${inset})` : `inset(0 ${inset} 0 0)`
 }
 
-export function readTextDirection(el: HTMLElement | undefined): 'ltr' | 'rtl' {
-  if (!el) return 'ltr'
-  const withDir = el.closest('[dir]')
-  const attr = withDir?.getAttribute('dir')
-  if (attr === 'rtl' || attr === 'ltr') return attr
-  if (typeof getComputedStyle === 'function') {
-    return getComputedStyle(el).direction === 'rtl' ? 'rtl' : 'ltr'
-  }
-  return 'ltr'
-}
+export { readTextDirection } from '../../internal/direction'

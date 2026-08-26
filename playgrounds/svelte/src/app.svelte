@@ -10,6 +10,7 @@
   import ButtonScreen from './screens/button-screen.svelte'
   import ButtonGroupScreen from './screens/button-group-screen.svelte'
   import CardScreen from './screens/card-screen.svelte'
+  import CheckboxScreen from './screens/checkbox-screen.svelte'
   import ChipScreen from './screens/chip-screen.svelte'
   import CopyButtonScreen from './screens/copy-button-screen.svelte'
   import CountdownScreen from './screens/countdown-screen.svelte'
@@ -22,19 +23,25 @@
   import MeterScreen from './screens/meter-screen.svelte'
   import NavigationScreen from './screens/navigation-screen.svelte'
   import PaginationScreen from './screens/pagination-screen.svelte'
+  import PopoverScreen from './screens/popover-screen.svelte'
   import ProgressScreen from './screens/progress-screen.svelte'
+  import RadioScreen from './screens/radio-screen.svelte'
   import RatingScreen from './screens/rating-screen.svelte'
   import ScrollAreaScreen from './screens/scroll-area-screen.svelte'
   import SeparatorScreen from './screens/separator-screen.svelte'
   import SkeletonScreen from './screens/skeleton-screen.svelte'
+  import SliderScreen from './screens/slider-screen.svelte'
   import SparklineScreen from './screens/sparkline-screen.svelte'
   import SpinnerScreen from './screens/spinner-screen.svelte'
+  import SwitchScreen from './screens/switch-screen.svelte'
   import TableScreen from './screens/table-screen.svelte'
   import TextAnimateScreen from './screens/text-animate-screen.svelte'
   import TextareaScreen from './screens/textarea-screen.svelte'
   import ThumbnailScreen from './screens/thumbnail-screen.svelte'
   import TocScreen from './screens/toc-screen.svelte'
+  import ToggleScreen from './screens/toggle-screen.svelte'
   import ToolbarScreen from './screens/toolbar-screen.svelte'
+  import TooltipScreen from './screens/tooltip-screen.svelte'
 
   const screens = [
     { id: 'button', label: 'Button' },
@@ -46,6 +53,7 @@
     { id: 'avatar', label: 'Avatar' },
     { id: 'background-pattern', label: 'BackgroundPattern' },
     { id: 'card', label: 'Card' },
+    { id: 'checkbox', label: 'Checkbox' },
     { id: 'chip', label: 'Chip' },
     { id: 'copy-button', label: 'CopyButton' },
     { id: 'countdown', label: 'Countdown' },
@@ -59,18 +67,24 @@
     { id: 'meter', label: 'Meter' },
     { id: 'navigation', label: 'Navigation' },
     { id: 'pagination', label: 'Pagination' },
+    { id: 'popover', label: 'Popover' },
     { id: 'progress', label: 'Progress' },
+    { id: 'radio', label: 'Radio' },
     { id: 'rating', label: 'Rating' },
     { id: 'scroll-area', label: 'ScrollArea' },
     { id: 'separator', label: 'Separator' },
     { id: 'skeleton', label: 'Skeleton' },
+    { id: 'slider', label: 'Slider' },
     { id: 'sparkline', label: 'Sparkline' },
     { id: 'spinner', label: 'Spinner' },
+    { id: 'switch', label: 'Switch' },
     { id: 'table', label: 'Table' },
     { id: 'text-animate', label: 'TextAnimate' },
     { id: 'thumbnail', label: 'Thumbnail' },
     { id: 'toc', label: 'Toc' },
+    { id: 'toggle', label: 'Toggle' },
     { id: 'toolbar', label: 'Toolbar' },
+    { id: 'tooltip', label: 'Tooltip' },
   ] as const
 
   type ScreenId = (typeof screens)[number]['id']
@@ -85,6 +99,7 @@
     avatar: AvatarScreen,
     'background-pattern': BackgroundPatternScreen,
     card: CardScreen,
+    checkbox: CheckboxScreen,
     chip: ChipScreen,
     'copy-button': CopyButtonScreen,
     countdown: CountdownScreen,
@@ -98,18 +113,24 @@
     meter: MeterScreen,
     navigation: NavigationScreen,
     pagination: PaginationScreen,
+    popover: PopoverScreen,
     progress: ProgressScreen,
+    radio: RadioScreen,
     rating: RatingScreen,
     'scroll-area': ScrollAreaScreen,
     separator: SeparatorScreen,
     skeleton: SkeletonScreen,
+    slider: SliderScreen,
     sparkline: SparklineScreen,
     spinner: SpinnerScreen,
+    switch: SwitchScreen,
     table: TableScreen,
     'text-animate': TextAnimateScreen,
     thumbnail: ThumbnailScreen,
     toc: TocScreen,
+    toggle: ToggleScreen,
     toolbar: ToolbarScreen,
+    tooltip: TooltipScreen,
   }
 
   let screen: ScreenId = $state('button')
@@ -126,7 +147,7 @@
     <div>
       <h1 class="text-foreground-intense text-3xl font-semibold">Appica UI Svelte Playground</h1>
       <p class="text-foreground-muted mt-1 text-sm">
-        Wave 1 components - edit <code>packages/svelte/src</code> and it hot-reloads.
+        Wave 1 and Wave 2 primitives - edit <code>packages/svelte/src</code> and it hot-reloads.
       </p>
     </div>
     <Button
