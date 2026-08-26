@@ -6,7 +6,7 @@
     setButtonGroupContext,
     type ButtonGroupSize,
     type ButtonGroupVariant,
-  } from '../button/button-group-context'
+  } from './button-group-context'
 
   const OUTLINED_VARIANTS = new Set<ButtonGroupVariant>(['primary-outline', 'outline', 'light'])
 
@@ -32,13 +32,13 @@
     class: className,
     variant,
     size,
-    disabled,
+    disabled = false,
     orientation = 'horizontal',
     children,
     ...rest
   }: Props = $props()
 
-  const ctx = {
+  setButtonGroupContext({
     get variant() {
       return variant
     },
@@ -48,30 +48,31 @@
     get disabled() {
       return disabled
     },
-  }
-  setButtonGroupContext(ctx)
+  })
 
   const horizontal = $derived(orientation === 'horizontal')
   const isOutlined = $derived(variant != null && OUTLINED_VARIANTS.has(variant))
-  const classes = $derived(
-    cn(
-      'isolate flex w-fit items-stretch',
-      '*:relative *:hover:z-2 *:focus-visible:z-2 *:active:z-2',
-      horizontal
-        ? [
-            '[&>*:not(:first-of-type)]:rounded-s-none [&>*:not(:last-of-type)]:rounded-e-none',
-            isOutlined ? '-space-x-(--border-width)' : 'space-x-(--border-width)',
-          ]
-        : [
-            'flex-col',
-            '[&>*:not(:first-of-type)]:rounded-t-none [&>*:not(:last-of-type)]:rounded-b-none',
-            isOutlined ? '-space-y-(--border-width)' : 'space-y-(--border-width)',
-          ],
-      className,
-    ),
-  )
 </script>
 
-<div data-slot="button-group" role="group" class={classes} {...rest}>
+<div
+  data-slot="button-group"
+  role="group"
+  class={cn(
+    'isolate flex w-fit items-stretch',
+    '*:relative *:hover:z-2 *:focus-visible:z-2 *:active:z-2',
+    horizontal
+      ? [
+          '[&>*:not(:first-of-type)]:rounded-s-none [&>*:not(:last-of-type)]:rounded-e-none',
+          isOutlined ? '-space-x-(--border-width)' : 'space-x-(--border-width)',
+        ]
+      : [
+          'flex-col',
+          '[&>*:not(:first-of-type)]:rounded-t-none [&>*:not(:last-of-type)]:rounded-b-none',
+          isOutlined ? '-space-y-(--border-width)' : 'space-y-(--border-width)',
+        ],
+    className,
+  )}
+  {...rest}
+>
   {@render children?.()}
 </div>

@@ -52,7 +52,7 @@
 </script>
 
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import { untrack, type Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import {
@@ -198,7 +198,7 @@
   let yInputEl: HTMLInputElement | undefined = $state()
   let dragging = $state(false)
   let focusedAxis = $state<'x' | 'y'>('x')
-  let latestColor = color
+  let latestColor = untrack(() => color)
 
   $effect(() => {
     latestColor = color

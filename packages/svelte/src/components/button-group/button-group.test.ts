@@ -1,14 +1,12 @@
 import { render } from '@testing-library/svelte'
 import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
-import { textSnippet } from '../../test/snippet'
-import Button from '../button/button.svelte'
 import ButtonGroupHost from './button-group.test-host.svelte'
+import ButtonGroup from './button-group.svelte'
 
 describe('ButtonGroup', () => {
   it('renders a data-slot wrapper with role=group and default horizontal classes', () => {
     const { container } = render(ButtonGroupHost)
-
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group).not.toBeNull()
     expect(group.getAttribute('role')).toBe('group')
@@ -20,8 +18,7 @@ describe('ButtonGroup', () => {
   })
 
   it('switches to vertical classes when orientation="vertical"', () => {
-    const { container } = render(ButtonGroupHost, { props: { orientation: 'vertical' } })
-
+    const { container } = render(ButtonGroupHost, { props: { orientation: 'vertical', count: 1 } })
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group.className).toContain('flex-col')
     expect(group.className).toContain('[&>*:not(:first-of-type)]:rounded-t-none')
@@ -33,8 +30,7 @@ describe('ButtonGroup', () => {
   it.each(['primary-outline', 'outline', 'light'] as const)(
     'uses negative -space-x for outlined variant "%s"',
     (variant) => {
-      const { container } = render(ButtonGroupHost, { props: { variant } })
-
+      const { container } = render(ButtonGroupHost, { props: { variant, count: 1 } })
       const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
       expect(group.className).toContain('-space-x-(--border-width)')
       expect(group.className).not.toContain(' space-x-(--border-width)')
@@ -42,44 +38,45 @@ describe('ButtonGroup', () => {
   )
 
   it('uses positive space-x for filled variants', () => {
-    const { container } = render(ButtonGroupHost, { props: { variant: 'primary' } })
-
+    const { container } = render(ButtonGroupHost, { props: { variant: 'primary', count: 1 } })
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group.className).toContain('space-x-(--border-width)')
     expect(group.className).not.toContain('-space-x-(--border-width)')
   })
 
   it('uses negative -space-y for outlined variant in vertical orientation', () => {
-    const { container } = render(ButtonGroupHost, { props: { orientation: 'vertical', variant: 'outline' } })
-
+    const { container } = render(ButtonGroupHost, {
+      props: { orientation: 'vertical', variant: 'outline', count: 1 },
+    })
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group.className).toContain('-space-y-(--border-width)')
   })
 
   it('uses positive space-y for filled variants in vertical orientation', () => {
-    const { container } = render(ButtonGroupHost, { props: { orientation: 'vertical', variant: 'primary' } })
-
+    const { container } = render(ButtonGroupHost, {
+      props: { orientation: 'vertical', variant: 'primary', count: 1 },
+    })
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group.className).toContain('space-y-(--border-width)')
     expect(group.className).not.toContain('-space-y-(--border-width)')
   })
 
   it('propagates size to child Buttons', () => {
-    const { container } = render(ButtonGroupHost, { props: { size: 'lg' } })
-
+    const { container } = render(ButtonGroupHost, { props: { size: 'lg', count: 1 } })
     const button = container.querySelector('[data-slot="button"]') as HTMLElement
     expect(button.className).toContain('h-12')
   })
 
   it('propagates variant to child Buttons', () => {
-    const { container } = render(ButtonGroupHost, { props: { variant: 'outline' } })
-
+    const { container } = render(ButtonGroupHost, { props: { variant: 'outline', count: 1 } })
     const button = container.querySelector('[data-testid="a"]') as HTMLElement
     expect(button.className).toContain('before:border')
   })
 
   it('lets an explicit prop on an inner Button override the group default', () => {
-    const { container } = render(ButtonGroupHost, { props: { size: 'lg', variant: 'primary', override: true } })
+    const { container } = render(ButtonGroupHost, {
+      props: { size: 'lg', variant: 'primary', overrideSize: 'sm', overrideVariant: 'ghost' },
+    })
 
     const overridden = container.querySelector('[data-testid="overridden"]') as HTMLElement
     expect(overridden.className).toContain('h-8')
@@ -89,15 +86,16 @@ describe('ButtonGroup', () => {
     expect(inherits.className).toContain('h-12')
   })
 
-  it('merges caller class on the wrapper', () => {
-    const { container } = render(ButtonGroupHost, { props: { class: 'my-group' } })
-
+  it('merges caller className on the wrapper', () => {
+    const { container } = render(ButtonGroupHost, { props: { class: 'my-group', count: 1 } })
     const group = container.querySelector('[data-slot="button-group"]') as HTMLElement
     expect(group.className).toContain('my-group')
   })
 
   it('propagates size/variant through a wrapping component (context, not direct child)', () => {
-    const { container } = render(ButtonGroupHost, { props: { size: 'lg', variant: 'outline', nested: true } })
+    const { container } = render(ButtonGroupHost, {
+      props: { size: 'lg', variant: 'outline', wrapped: true },
+    })
 
     const nested = container.querySelector('[data-testid="nested"]') as HTMLElement
     expect(nested.className).toContain('h-12')
@@ -114,7 +112,7 @@ describe('ButtonGroup', () => {
   })
 
   it('per-Button `disabled` adds to (does not override) the group state', () => {
-    const { container } = render(ButtonGroupHost, { props: { childDisabled: true } })
+    const { container } = render(ButtonGroupHost, { props: { ownDisabled: true } })
 
     const own = container.querySelector('[data-testid="own"]') as HTMLButtonElement
     const other = container.querySelector('[data-testid="other"]') as HTMLButtonElement
@@ -130,15 +128,23 @@ describe('ButtonGroup', () => {
   })
 
   it('Button outside any group keeps its defaults (variant=primary, size=md, not disabled)', () => {
-    const { container } = render(Button, { props: { 'data-testid': 'solo', children: textSnippet('Solo') } })
+    const { container } = render(ButtonGroupHost, { props: { solo: true } })
     const btn = container.querySelector('[data-testid="solo"]') as HTMLButtonElement
     expect(btn.disabled).toBe(false)
     expect(btn.className).toContain('h-10')
   })
 
   it('has no accessibility violations', async () => {
-    const { container } = render(ButtonGroupHost, { props: { size: 'md', variant: 'outline' } })
+    const { container } = render(ButtonGroupHost, {
+      props: { size: 'md', variant: 'outline', count: 3 },
+    })
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('renders without children', () => {
+    const { container } = render(ButtonGroup)
+    const group = container.querySelector('[data-slot="button-group"]')
+    expect(group).not.toBeNull()
   })
 })

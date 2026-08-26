@@ -16,6 +16,11 @@
   import CheckboxScreen from './screens/checkbox-screen.svelte'
   import ChipScreen from './screens/chip-screen.svelte'
   import CollapsibleScreen from './screens/collapsible-screen.svelte'
+  import ColorAreaScreen from './screens/color-area-screen.svelte'
+  import ColorPickerScreen from './screens/color-picker-screen.svelte'
+  import ColorSliderScreen from './screens/color-slider-screen.svelte'
+  import ColorSwatchScreen from './screens/color-swatch-screen.svelte'
+  import ColorSwatchPickerScreen from './screens/color-swatch-picker-screen.svelte'
   import ComboboxScreen from './screens/combobox-screen.svelte'
   import ContextMenuScreen from './screens/context-menu-screen.svelte'
   import CopyButtonScreen from './screens/copy-button-screen.svelte'
@@ -77,6 +82,11 @@
     { id: 'checkbox', label: 'Checkbox' },
     { id: 'chip', label: 'Chip' },
     { id: 'collapsible', label: 'Collapsible' },
+    { id: 'color-area', label: 'ColorArea' },
+    { id: 'color-picker', label: 'ColorPicker' },
+    { id: 'color-slider', label: 'ColorSlider' },
+    { id: 'color-swatch', label: 'ColorSwatch' },
+    { id: 'color-swatch-picker', label: 'ColorSwatchPicker' },
     { id: 'combobox', label: 'Combobox' },
     { id: 'context-menu', label: 'ContextMenu' },
     { id: 'copy-button', label: 'CopyButton' },
@@ -141,6 +151,11 @@
     checkbox: CheckboxScreen,
     chip: ChipScreen,
     collapsible: CollapsibleScreen,
+    'color-area': ColorAreaScreen,
+    'color-picker': ColorPickerScreen,
+    'color-slider': ColorSliderScreen,
+    'color-swatch': ColorSwatchScreen,
+    'color-swatch-picker': ColorSwatchPickerScreen,
     combobox: ComboboxScreen,
     'context-menu': ContextMenuScreen,
     'copy-button': CopyButtonScreen,

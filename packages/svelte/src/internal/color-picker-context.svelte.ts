@@ -3,7 +3,7 @@
 // what lets an area, a slider and a palette share one value without any prop wiring.
 // Internal: nothing here is re-exported from the package.
 
-import { getContext, setContext } from 'svelte'
+import { getContext, setContext, untrack } from 'svelte'
 import type { Color, ColorFormat } from '../lib/color'
 import { normalizeColor } from './color-control'
 import { commitBindableChange } from './utils'
@@ -57,7 +57,8 @@ export interface ColorControl {
  */
 export function useColorControl(opts: ColorControlOptions): ColorControl {
   const picker = getColorPickerContext()
-  let uncontrolled = $state(normalizeColor(opts.defaultValue))
+  let uncontrolled = $state(normalizeColor('#ffffff'))
+  uncontrolled = untrack(() => normalizeColor(opts.defaultValue))
 
   const color = $derived(
     opts.value !== undefined ? normalizeColor(opts.value) : (picker?.value ?? uncontrolled),

@@ -1,47 +1,61 @@
 <script lang="ts">
+  import type { VariantProps } from 'class-variance-authority'
   import Button from '../button/button.svelte'
+  import { buttonVariants } from '../button/button-variants'
   import ButtonGroup from './button-group.svelte'
-  import type { ButtonGroupSize, ButtonGroupVariant } from '../button/button-group-context'
+
+  type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>['variant']>
+  type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>['size']>
 
   let {
     variant,
     size,
-    disabled,
+    disabled = false,
     orientation,
     class: className,
-    override = false,
-    nested = false,
-    childDisabled = false,
+    overrideSize,
+    overrideVariant,
+    wrapped = false,
+    ownDisabled = false,
     childDisabledFalse = false,
+    solo = false,
+    count = 2,
   }: {
-    variant?: ButtonGroupVariant
-    size?: ButtonGroupSize
+    variant?: ButtonVariant
+    size?: ButtonSize
     disabled?: boolean
     orientation?: 'horizontal' | 'vertical'
     class?: string
-    override?: boolean
-    nested?: boolean
-    childDisabled?: boolean
+    overrideSize?: ButtonSize
+    overrideVariant?: ButtonVariant
+    wrapped?: boolean
+    ownDisabled?: boolean
     childDisabledFalse?: boolean
+    solo?: boolean
+    count?: number
   } = $props()
 </script>
 
-<ButtonGroup {variant} {size} {disabled} {orientation} class={className}>
-  {#if nested}
-    <span data-testid="wrapper">
-      <Button data-testid="nested">Wrapped</Button>
-    </span>
-  {:else if override}
-    <Button size="sm" variant="ghost" data-testid="overridden">One</Button>
-    <Button data-testid="inherits">Two</Button>
-  {:else if childDisabled}
-    <Button disabled data-testid="own">Own</Button>
-    <Button data-testid="other">Other</Button>
-  {:else if childDisabledFalse}
-    <Button disabled={false} data-testid="b">B</Button>
-  {:else}
-    <Button data-testid="a">One</Button>
-    <Button data-testid="b">Two</Button>
-    <Button>Three</Button>
-  {/if}
-</ButtonGroup>
+{#if solo}
+  <Button data-testid="solo">Solo</Button>
+{:else}
+  <ButtonGroup {variant} {size} {disabled} {orientation} class={className}>
+    {#if wrapped}
+      <span data-testid="wrapper">
+        <Button data-testid="nested">Wrapped</Button>
+      </span>
+    {:else if overrideSize != null || overrideVariant != null}
+      <Button size={overrideSize} variant={overrideVariant} data-testid="overridden">One</Button>
+      <Button data-testid="inherits">Two</Button>
+    {:else if childDisabledFalse}
+      <Button disabled={false} data-testid="b">B</Button>
+    {:else if ownDisabled}
+      <Button disabled data-testid="own">Own</Button>
+      <Button data-testid="other">Other</Button>
+    {:else}
+      {#if count >= 1}<Button data-testid="a">One</Button>{/if}
+      {#if count >= 2}<Button data-testid="b">Two</Button>{/if}
+      {#if count >= 3}<Button data-testid="c">Three</Button>{/if}
+    {/if}
+  </ButtonGroup>
+{/if}

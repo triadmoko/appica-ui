@@ -85,6 +85,7 @@
 </script>
 
 <Input
+  {...rest}
   inputSize="sm"
   spellcheck={false}
   autocomplete="off"
@@ -99,5 +100,4 @@
   oninput={handleInput}
   onblur={handleBlur}
   onkeydown={handleKeyDown}
-  {...rest}
 />

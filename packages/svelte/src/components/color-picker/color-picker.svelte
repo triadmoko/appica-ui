@@ -1,4 +1,5 @@
 <script lang="ts" module>
+  import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Color, ColorFormat } from '../../lib/color'
   import type { ColorSwatchShape } from '../color-swatch/color-swatch-variants'
@@ -110,6 +111,12 @@
     sideOffset?: number
     /** Escape hatch forwarded to the inner `PopoverContent`. */
     popoverProps?: ColorPickerPopoverProps
+    /**
+     * Content of the popover trigger. Omitted uses the default swatch button. Pass a
+     * snippet to put custom content inside `PopoverTrigger`. Pass `null` to render no
+     * trigger (`open` and `popoverProps` still drive the popover).
+     */
+    trigger?: Snippet | null
     /** Name of the hidden input, used when submitting an HTML form. */
     name?: string
     /** `id` of the `<form>` the hidden input belongs to, when it sits outside it. */
@@ -118,7 +125,6 @@
 </script>
 
 <script lang="ts">
-  import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
   import { cn, commitBindableChange } from '../../internal/utils'
   import { describeColor, normalizeColor } from '../../internal/color-control'
@@ -197,9 +203,9 @@
     class: className,
     'aria-label': ariaLabel,
     ...rest
-  }: ColorPickerProps & { children?: Snippet; trigger?: Snippet | null } = $props()
+  }: ColorPickerProps & { children?: Snippet } = $props()
 
-  let uncontrolled = $state(normalizeColor(defaultValue))
+  let uncontrolled = $state(normalizeColor(DEFAULT_VALUE))
   uncontrolled = untrack(() => normalizeColor(value ?? defaultValue))
 
   let innerOpen = $state(false)

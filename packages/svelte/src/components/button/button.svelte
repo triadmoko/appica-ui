@@ -4,7 +4,7 @@
   import type { VariantProps } from 'class-variance-authority'
   import { Button as BitsButton } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
-  import { getButtonGroupContext } from './button-group-context'
+  import { getButtonGroupContext } from '../button-group/button-group-context'
   import { buttonVariants } from './button-variants'
 
   type ButtonVariant = VariantProps<typeof buttonVariants>['variant']

@@ -1,7 +1,6 @@
 <script lang="ts">
   import ColorPicker from './color-picker.svelte'
   import ColorPickerInput from './color-picker-input.svelte'
-  import ColorArea from '../color-area/color-area.svelte'
   import ColorSlider from '../color-slider/color-slider.svelte'
   import ColorSwatch from '../color-swatch/color-swatch.svelte'
   import ColorSwatchPicker from '../color-swatch-picker/color-swatch-picker.svelte'
@@ -48,44 +47,56 @@
     onValueCommitted?: (value: Color) => void
     'aria-label'?: string
   } = $props()
+
+  const pickerProps = $derived({
+    inline,
+    alpha,
+    eyedropper,
+    disabled,
+    defaultValue,
+    value,
+    name,
+    label,
+    swatchPosition,
+    variant,
+    open,
+    onValueChange,
+    onValueCommitted,
+    'aria-label': ariaLabel,
+    'data-testid': 'trigger',
+    trigger: hideTrigger ? null : undefined,
+    popoverProps: keepMounted ? { keepMounted: true } : undefined,
+  })
 </script>
 
-<ColorPicker
-  data-testid="trigger"
-  {inline}
-  {alpha}
-  {eyedropper}
-  {disabled}
-  {defaultValue}
-  {value}
-  {name}
-  {label}
-  {swatchPosition}
-  {variant}
-  {open}
-  trigger={hideTrigger ? null : undefined}
-  popoverProps={keepMounted ? { keepMounted: true } : undefined}
-  {onValueChange}
-  {onValueCommitted}
-  aria-label={ariaLabel}
->
-  {#if panel === 'hue'}
+{#if panel === 'default'}
+  <ColorPicker {...pickerProps} />
+{:else if panel === 'hue'}
+  <ColorPicker {...pickerProps}>
     <ColorSlider channel="hue" />
-  {:else if panel === 'shared'}
+  </ColorPicker>
+{:else if panel === 'shared'}
+  <ColorPicker {...pickerProps}>
     <ColorSwatch />
     <ColorSlider channel="hue" />
     <ColorSwatchPicker aria-label="Presets">
       <ColorSwatchPickerItem color="#00ff00" />
     </ColorSwatchPicker>
-  {:else if panel === 'locked-palette'}
+  </ColorPicker>
+{:else if panel === 'locked-palette'}
+  <ColorPicker {...pickerProps}>
     <ColorSwatch />
-    <ColorSwatchPicker aria-label="Presets" value="#ff0000">
+    <ColorSwatchPicker aria-label="Presets" value="#ff0000" onValueChange={() => {}}>
       <ColorSwatchPickerItem color="#00ff00" />
     </ColorSwatchPicker>
-  {:else if panel === 'input'}
+  </ColorPicker>
+{:else if panel === 'input'}
+  <ColorPicker {...pickerProps}>
     <ColorSlider channel="hue" />
     <ColorPickerInput />
-  {:else if panel === 'input-only'}
+  </ColorPicker>
+{:else if panel === 'input-only'}
+  <ColorPicker {...pickerProps}>
     <ColorPickerInput format={inputFormat} />
-  {/if}
-</ColorPicker>
+  </ColorPicker>
+{/if}

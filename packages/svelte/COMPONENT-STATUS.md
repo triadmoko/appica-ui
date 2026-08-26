@@ -24,11 +24,11 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `checkbox-group` - Wave 2: bits-ui `Checkbox.Group`. `orientation` default `vertical`.
 - [x] `chip` - Wave 1. Reuses `buttonVariants`. Dismiss uses `svelte/transition`. Group `clearAll()` is a component export (`bind:this`).
 - [x] `collapsible` - Wave 2: bits-ui. Height via `--bits-collapsible-content-height`. `keepMounted` → `forceMount`.
-- [ ] `color-area` - Wave 2
-- [ ] `color-picker` - Wave 2
-- [ ] `color-slider` - Wave 2
-- [ ] `color-swatch` - Wave 2
-- [ ] `color-swatch-picker` - Wave 2
+- [x] `color-area` - Wave 2: custom (bits-ui has no color primitives). `bind:value`. RTL via `useDirection()`.
+- [x] `color-picker` - Wave 2: custom. `bind:value` / `bind:open`. `trigger` snippet or `null` (no React `render` / `child`). `onOpenChange(open)` (no Base UI `details` / `cancel()`). Default `children` snippet replaces the HSB panel.
+- [x] `color-slider` - Wave 2: custom. `bind:value`. RTL via `useDirection()`. Thumb inset from `offsetWidth` / `offsetHeight`.
+- [x] `color-swatch` - Wave 2: custom. Picker-context preview when `color` is omitted.
+- [x] `color-swatch-picker` - Wave 2: custom. Roving listbox, sliding indicator. `bind:value`. RTL via `useDirection()`.
 - [x] `combobox` - Wave 2: bits-ui Combobox. `multiple` → `type`. Chips are Appica chrome (`ComboboxChips` / `ComboboxChip`). No Collection / `useFilteredItems`; filtering is consumer-side. Clear is an Appica button (bits-ui has no `.Clear`).
 - [x] `context-menu` - Wave 2: bits-ui. Clone of DropdownMenu chrome. Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
 - [x] `copy-button` - Wave 1. Uses `buttonVariants`. `value` is a string, HTMLElement (`bind:this`), or getter. `label` / `copiedLabel` drive aria-label; children do not swap.
@@ -81,7 +81,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 ## Lib
 
-- [ ] `color` - shared color model; port when color components land
+- [x] `color` - shared color model (`@appica/ui-svelte/color`), copied from React.
 
 ## Hooks
 

@@ -22,7 +22,6 @@
   import { cn } from '../../internal/utils'
   import { requireColorPickerContext } from '../../internal/color-picker-context.svelte'
   import { safeParseColor, withChannelValue } from '../../lib/color'
-  import { buttonVariants } from '../button/button-variants'
 
   interface EyeDropperApi {
     new (): { open: (options?: { signal?: AbortSignal }) => Promise<{ sRGBHex: string }> }

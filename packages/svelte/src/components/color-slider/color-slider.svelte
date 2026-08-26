@@ -48,7 +48,7 @@
 </script>
 
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import { untrack, type Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import {
@@ -168,7 +168,7 @@
   let thumbEl: HTMLSpanElement | undefined = $state()
   let dragging = $state(false)
   let inset = $state(0)
-  let latestColor = color
+  let latestColor = untrack(() => color)
 
   $effect(() => {
     latestColor = color
