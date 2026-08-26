@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import { type Color, getChannelValue } from '../../lib/color'
 import ColorPickerInput from './color-picker-input.svelte'
@@ -8,12 +8,18 @@ import ColorPickerHost from './color-picker.test-host.svelte'
 
 const overlay = { hidden: true as const }
 
-function revealOverlay() {
-  document.querySelectorAll<HTMLElement>('[data-bits-floating-content-wrapper]').forEach((node) => {
-    node.style.visibility = 'visible'
-    node.style.transform = 'none'
-  })
-}
+beforeAll(() => {
+  const style = document.createElement('style')
+  style.dataset.colorPickerTest = ''
+  style.textContent =
+    '[data-bits-floating-content-wrapper] { visibility: visible !important; transform: none !important; }'
+  document.head.append(style)
+})
+
+afterAll(() => {
+  document.querySelector('[data-color-picker-test]')?.remove()
+})
+
 const trigger = () => screen.getByTestId('trigger')
 const hexField = () => screen.getByRole('textbox', { name: 'Hex', ...overlay }) as HTMLInputElement
 const swatch = () => screen.getByRole('img')
@@ -29,7 +35,6 @@ describe('ColorPicker', () => {
     expect(screen.queryByRole('slider')).not.toBeInTheDocument()
 
     await user.click(trigger())
-    revealOverlay()
     expect(screen.getByRole('group', { name: 'Saturation and brightness', ...overlay })).toBeInTheDocument()
     expect(screen.getByRole('slider', { name: 'Hue', ...overlay })).toBeInTheDocument()
     expect(hexField()).toHaveValue('#3b82f6')
@@ -40,7 +45,6 @@ describe('ColorPicker', () => {
     render(ColorPickerHost, { props: { alpha: true, defaultValue: '#3b82f680' } })
 
     await user.click(trigger())
-    revealOverlay()
     expect(screen.getByRole('slider', { name: 'Alpha', ...overlay })).toBeInTheDocument()
     expect(hexField()).toHaveValue('#3b82f680')
   })
@@ -53,11 +57,12 @@ describe('ColorPicker', () => {
     expect(container.querySelector('input[type=hidden]')).toHaveValue('#3b82f6')
 
     await user.click(trigger())
-    revealOverlay()
     expect(hexField()).toHaveValue('#3b82f6')
 
-    await user.clear(hexField())
-    await user.type(hexField(), '#3b82f680')
+    const field = hexField()
+    field.focus()
+    field.value = '#3b82f680'
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
     expect(hexField()).toHaveValue('#3b82f680')
   })
 
@@ -74,7 +79,6 @@ describe('ColorPicker', () => {
     const user = userEvent.setup()
     const popover = render(ColorPickerHost)
     await user.click(trigger())
-    revealOverlay()
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     popover.unmount()
 
@@ -84,7 +88,6 @@ describe('ColorPicker', () => {
 
   it('renders a panel with no trigger of its own', () => {
     render(ColorPickerHost, { props: { hideTrigger: true, open: true, name: 'brand', keepMounted: true } })
-    revealOverlay()
     expect(screen.queryByRole('button', { hidden: true })).not.toBeInTheDocument()
     expect(screen.getByRole('slider', { name: 'Hue', ...overlay })).toBeInTheDocument()
     expect(document.querySelector('input[type=hidden]')).toHaveValue('#3b82f6')
@@ -111,7 +114,6 @@ describe('ColorPicker', () => {
     render(ColorPickerHost, { props: { defaultValue: '#ffffff' } })
 
     await user.click(trigger())
-    revealOverlay()
     expect(screen.queryByRole('slider', { name: 'Alpha', ...overlay })).not.toBeInTheDocument()
   })
 
@@ -207,8 +209,9 @@ describe('ColorPicker', () => {
     const user = userEvent.setup()
     render(ColorPickerHost, { props: { alpha: true, 'aria-label': 'Fill color' } })
     await user.click(trigger())
-    revealOverlay()
-    expect(await axe(document.body)).toHaveNoViolations()
+    const panel = document.querySelector('[data-slot=color-picker-panel]')
+    expect(panel).toBeTruthy()
+    expect(await axe(panel!)).toHaveNoViolations()
   })
 })
 

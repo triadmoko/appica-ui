@@ -42,7 +42,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `fieldset` - Wave 1. Native `<fieldset>` / `<legend>` (no bits-ui). `disabled` disables descendant controls.
 - [x] `form` - Wave 1. Native `<form>`. `errors` / `onClearErrors` live in context for Wave 2 Field.
 - [x] `gradient-glow` - Wave 1. Uses shared `animate-gradient-glow` utilities in `styles.css`.
-- [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. Reads Field context (`invalid` / `disabled` / `name` / `aria-describedby`).
+- [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. `htmlSize` maps to the native `size` attribute. Reads Field context (`invalid` / `disabled` / `name` / `aria-describedby`).
 - [x] `kbd` - Wave 1. Size via context on `KbdGroup`.
 - [x] `loader` - Wave 1. Bar / dots as CSS `@keyframes`, gated by `useReducedMotion` (no Motion).
 - [x] `menubar` - Wave 2: bits-ui `Menubar.Root` + `Menu` (not a DropdownMenu wrap). Extra `MenubarCheckboxGroup`. Vertical uses `side=right`.

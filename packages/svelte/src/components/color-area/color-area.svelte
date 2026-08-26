@@ -198,7 +198,7 @@
   let yInputEl: HTMLInputElement | undefined = $state()
   let dragging = $state(false)
   let focusedAxis = $state<'x' | 'y'>('x')
-  let latestColor = untrack(() => color)
+  let latestColor: Color = untrack(() => color)
 
   $effect(() => {
     latestColor = color

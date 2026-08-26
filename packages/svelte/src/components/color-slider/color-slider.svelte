@@ -168,7 +168,7 @@
   let thumbEl: HTMLSpanElement | undefined = $state()
   let dragging = $state(false)
   let inset = $state(0)
-  let latestColor = untrack(() => color)
+  let latestColor: Color = untrack(() => color)
 
   $effect(() => {
     latestColor = color

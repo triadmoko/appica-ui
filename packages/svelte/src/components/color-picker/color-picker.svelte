@@ -129,7 +129,7 @@
   import { cn, commitBindableChange } from '../../internal/utils'
   import { describeColor, normalizeColor } from '../../internal/color-control'
   import { setColorPickerContext } from '../../internal/color-picker-context.svelte'
-  import { type Color, type ColorFormat, formatColor } from '../../lib/color'
+  import { formatColor } from '../../lib/color'
   import { buttonVariants } from '../button/button-variants'
   import ColorArea from '../color-area/color-area.svelte'
   import ColorSlider from '../color-slider/color-slider.svelte'

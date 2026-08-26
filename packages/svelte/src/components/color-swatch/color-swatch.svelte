@@ -81,7 +81,8 @@
   const isNumeric = $derived(typeof size === 'number')
   const checkered = $derived(checkerboard && resolved.alpha < 1)
   const css = $derived(formatColor(resolved))
-  const classes = $derived(cn(colorSwatchVariants({ shape, size: isNumeric ? undefined : size }), className))
+  const presetSize = $derived(typeof size === 'number' ? undefined : size)
+  const classes = $derived(cn(colorSwatchVariants({ shape, size: presetSize }), className))
   const announced = $derived([colorName ?? describeColor(resolved), ariaLabel].filter(Boolean).join(', '))
 </script>
 

@@ -116,8 +116,9 @@
   )
   const selectedKey = $derived(resolved === null ? null : formatColor(resolved, 'hexa'))
   const isNumeric = $derived(typeof size === 'number')
+  const presetSize = $derived(typeof size === 'number' ? undefined : size)
   const classes = $derived(
-    cn(colorSwatchPickerVariants({ layout, size: isNumeric ? undefined : size }), className),
+    cn(colorSwatchPickerVariants({ layout, size: presetSize }), className),
   )
 
   function select(color: Color) {

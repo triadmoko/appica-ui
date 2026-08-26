@@ -15,7 +15,7 @@
   import Input from '../input/input.svelte'
   import { cn } from '../../internal/utils'
   import { requireColorPickerContext } from '../../internal/color-picker-context.svelte'
-  import { type Color, type ColorFormat, formatColor, safeParseColor } from '../../lib/color'
+  import { type Color, formatColor, safeParseColor } from '../../lib/color'
 
   const FORMAT_LABELS: Record<ColorFormat, string> = {
     hex: 'Hex',
