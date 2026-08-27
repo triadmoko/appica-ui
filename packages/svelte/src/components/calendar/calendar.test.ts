@@ -44,8 +44,54 @@ describe('Calendar', () => {
     render(CalendarHost)
     expect(screen.getByRole('button', { name: /May 15, 2026/ })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /^next$/i }))
+    await user.click(screen.getByRole('button', { name: /next month/i }))
     expect(screen.getByRole('button', { name: /June 15, 2026/ })).toBeInTheDocument()
+  })
+
+  it('renders month and year dropdowns by default', () => {
+    render(CalendarHost)
+    expect(screen.getByRole('combobox', { name: /month/i })).toHaveTextContent(/may/i)
+    expect(screen.getByRole('combobox', { name: /year/i })).toHaveTextContent('2026')
+  })
+
+  it('swaps dropdowns for a static label when captionLayout is label', () => {
+    render(CalendarHost, { props: { captionLayout: 'label' } })
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+    expect(document.querySelector('[data-calendar-heading]')).toHaveTextContent('May 2026')
+  })
+
+  it('renders multiple month grids when numberOfMonths is set', () => {
+    render(CalendarHost, { props: { numberOfMonths: 2 } })
+    expect(screen.getAllByRole('grid')).toHaveLength(2)
+  })
+
+  it('does not render adjacent-month days when showOutsideDays is false', () => {
+    render(CalendarHost, { props: { showOutsideDays: false } })
+    expect(screen.queryByRole('button', { name: /April 27, 2026/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /May 1, 2026/ })).toBeInTheDocument()
+  })
+
+  it('does not clear the selected day when required is set', async () => {
+    const user = userEvent.setup()
+    render(CalendarHost, { props: { defaultValue: MAY_15, required: true } })
+    await user.click(screen.getByRole('button', { name: /May 15, 2026/ }))
+    expect(screen.getByRole('gridcell', { selected: true })).toHaveAttribute('data-value', '2026-05-15')
+  })
+
+  it('blocks disabled dates from being selected', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    render(CalendarHost, {
+      props: {
+        onValueChange,
+        isDateDisabled: (date) => {
+          const weekday = date.toDate('UTC').getUTCDay()
+          return weekday === 0 || weekday === 6
+        },
+      },
+    })
+    await user.click(screen.getByRole('button', { name: /May 16, 2026/ }))
+    expect(onValueChange).not.toHaveBeenCalled()
   })
 
   it('selects a range when type is range', async () => {

@@ -497,6 +497,7 @@
     {fixedWeeks}
     {isDateDisabled}
     {isDateUnavailable}
+    {required}
   />
 {/snippet}
 

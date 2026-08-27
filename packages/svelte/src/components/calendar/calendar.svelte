@@ -1,13 +1,13 @@
 <script lang="ts" module>
   import type { HTMLAttributes } from 'svelte/elements'
   import type { DateValue } from '@internationalized/date'
-  import type { CalendarSize, CalendarType, DateRange } from './calendar-tokens'
+  import type { CalendarCaptionLayout, CalendarSize, CalendarType, DateRange } from './calendar-tokens'
 
   type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
   export type CalendarProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'placeholder'> & {
     /**
-     * Cell size and text scale.
+     * Cell size and text scale (Appica extension).
      * @default 'md'
      */
     size?: CalendarSize
@@ -27,6 +27,26 @@
     /** Fires when the visible month changes. */
     onPlaceholderChange?: (value: DateValue) => void
     /**
+     * Month/year header: select dropdowns, or a static label with arrows.
+     * @default 'dropdown'
+     */
+    captionLayout?: CalendarCaptionLayout
+    /**
+     * Render days from the adjacent months.
+     * @default true
+     */
+    showOutsideDays?: boolean
+    /**
+     * How many months to display.
+     * @default 1
+     */
+    numberOfMonths?: number
+    /**
+     * When several months are visible, jump by that count instead of one month.
+     * @default false
+     */
+    pagedNavigation?: boolean
+    /**
      * First day of the week. `0` is Sunday, `1` is Monday.
      * @default 1
      */
@@ -35,6 +55,11 @@
     locale?: string
     disabled?: boolean
     readonly?: boolean
+    /**
+     * Prevent clearing the selection by re-clicking the selected day.
+     * @default false
+     */
+    required?: boolean
     /**
      * Earliest selectable date.
      * @default 1925-01-01
@@ -62,9 +87,8 @@
   import { untrack } from 'svelte'
   import { Calendar as BitsCalendar, RangeCalendar as BitsRangeCalendar } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
-  import CalendarRangeView from './calendar-range-view.svelte'
   import CalendarView from './calendar-view.svelte'
-  import { ROOT_CONFIG } from './calendar-tokens'
+  import { ROOT_CONFIG, yearsInRange } from './calendar-tokens'
 
   type BitsDateRange = { start: DateValue | undefined; end: DateValue | undefined }
 
@@ -80,10 +104,15 @@
     onValueChange,
     placeholder = $bindable(),
     onPlaceholderChange,
+    captionLayout = 'dropdown',
+    showOutsideDays = true,
+    numberOfMonths = 1,
+    pagedNavigation = false,
     weekStartsOn = 1,
     locale,
     disabled,
     readonly,
+    required = false,
     minValue = DEFAULT_MIN,
     maxValue = DEFAULT_MAX,
     fixedWeeks = false,
@@ -198,6 +227,7 @@
 
   const cfg = $derived(ROOT_CONFIG[size])
   const rootClasses = $derived(cn('inline-flex w-fit flex-col', cfg.text, cfg.cellVar, className))
+  const years = $derived(yearsInRange(minValue, maxValue))
 
   const shared = $derived({
     weekStartsOn,
@@ -209,8 +239,19 @@
     fixedWeeks,
     isDateDisabled,
     isDateUnavailable,
+    numberOfMonths,
+    pagedNavigation,
+    preventDeselect: required,
     weekdayFormat: 'short' as const,
-    disableDaysOutsideMonth: false,
+    disableDaysOutsideMonth: !showOutsideDays,
+  })
+
+  const viewProps = $derived({
+    size,
+    captionLayout,
+    showOutsideDays,
+    locale,
+    years,
   })
 </script>
 
@@ -226,7 +267,7 @@
     {...asBitsAttrs(rest)}
   >
     {#snippet children({ months, weekdays })}
-      <CalendarRangeView {size} {months} {weekdays} />
+      <CalendarView range {...viewProps} {months} {weekdays} />
     {/snippet}
   </BitsRangeCalendar.Root>
 {:else if type === 'multiple'}
@@ -242,7 +283,7 @@
     {...asBitsAttrs(rest)}
   >
     {#snippet children({ months, weekdays })}
-      <CalendarView {size} {months} {weekdays} />
+      <CalendarView {...viewProps} {months} {weekdays} />
     {/snippet}
   </BitsCalendar.Root>
 {:else}
@@ -258,7 +299,7 @@
     {...asBitsAttrs(rest)}
   >
     {#snippet children({ months, weekdays })}
-      <CalendarView {size} {months} {weekdays} />
+      <CalendarView {...viewProps} {months} {weekdays} />
     {/snippet}
   </BitsCalendar.Root>
 {/if}
