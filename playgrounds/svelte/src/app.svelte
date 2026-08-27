@@ -12,7 +12,9 @@
   import BreadcrumbScreen from './screens/breadcrumb-screen.svelte'
   import ButtonScreen from './screens/button-screen.svelte'
   import ButtonGroupScreen from './screens/button-group-screen.svelte'
+  import CalendarScreen from './screens/calendar-screen.svelte'
   import CardScreen from './screens/card-screen.svelte'
+  import CarouselScreen from './screens/carousel-screen.svelte'
   import CheckboxScreen from './screens/checkbox-screen.svelte'
   import ChipScreen from './screens/chip-screen.svelte'
   import CollapsibleScreen from './screens/collapsible-screen.svelte'
@@ -25,6 +27,8 @@
   import ContextMenuScreen from './screens/context-menu-screen.svelte'
   import CopyButtonScreen from './screens/copy-button-screen.svelte'
   import CountdownScreen from './screens/countdown-screen.svelte'
+  import DateFieldScreen from './screens/date-field-screen.svelte'
+  import DatePickerScreen from './screens/date-picker-screen.svelte'
   import DialogScreen from './screens/dialog-screen.svelte'
   import DrawerScreen from './screens/drawer-screen.svelte'
   import DropdownMenuScreen from './screens/dropdown-menu-screen.svelte'
@@ -59,6 +63,7 @@
   import TabsScreen from './screens/tabs-screen.svelte'
   import TextAnimateScreen from './screens/text-animate-screen.svelte'
   import TextareaScreen from './screens/textarea-screen.svelte'
+  import TimeFieldScreen from './screens/time-field-screen.svelte'
   import ThumbnailScreen from './screens/thumbnail-screen.svelte'
   import ToastScreen from './screens/toast-screen.svelte'
   import TocScreen from './screens/toc-screen.svelte'
@@ -78,7 +83,9 @@
     { id: 'autocomplete', label: 'Autocomplete' },
     { id: 'avatar', label: 'Avatar' },
     { id: 'background-pattern', label: 'BackgroundPattern' },
+    { id: 'calendar', label: 'Calendar' },
     { id: 'card', label: 'Card' },
+    { id: 'carousel', label: 'Carousel' },
     { id: 'checkbox', label: 'Checkbox' },
     { id: 'chip', label: 'Chip' },
     { id: 'collapsible', label: 'Collapsible' },
@@ -91,6 +98,8 @@
     { id: 'context-menu', label: 'ContextMenu' },
     { id: 'copy-button', label: 'CopyButton' },
     { id: 'countdown', label: 'Countdown' },
+    { id: 'date-field', label: 'DateField' },
+    { id: 'date-picker', label: 'DatePicker' },
     { id: 'dialog', label: 'Dialog' },
     { id: 'drawer', label: 'Drawer' },
     { id: 'dropdown-menu', label: 'DropdownMenu' },
@@ -100,6 +109,7 @@
     { id: 'gradient-glow', label: 'GradientGlow' },
     { id: 'input', label: 'Input' },
     { id: 'textarea', label: 'Textarea' },
+    { id: 'time-field', label: 'TimeField' },
     { id: 'kbd', label: 'Kbd' },
     { id: 'loader', label: 'Loader' },
     { id: 'meter', label: 'Meter' },
@@ -147,7 +157,9 @@
     autocomplete: AutocompleteScreen,
     avatar: AvatarScreen,
     'background-pattern': BackgroundPatternScreen,
+    calendar: CalendarScreen,
     card: CardScreen,
+    carousel: CarouselScreen,
     checkbox: CheckboxScreen,
     chip: ChipScreen,
     collapsible: CollapsibleScreen,
@@ -160,6 +172,8 @@
     'context-menu': ContextMenuScreen,
     'copy-button': CopyButtonScreen,
     countdown: CountdownScreen,
+    'date-field': DateFieldScreen,
+    'date-picker': DatePickerScreen,
     dialog: DialogScreen,
     drawer: DrawerScreen,
     'dropdown-menu': DropdownMenuScreen,
@@ -169,6 +183,7 @@
     'gradient-glow': GradientGlowScreen,
     input: InputScreen,
     textarea: TextareaScreen,
+    'time-field': TimeFieldScreen,
     kbd: KbdScreen,
     loader: LoaderScreen,
     meter: MeterScreen,
