@@ -4,6 +4,7 @@
   import { untrack } from 'svelte'
   import { Checkbox as BitsCheckbox } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
+  import { setCheckboxGroupContext } from './checkbox-group-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /** Controlled selected values. Pair with `onValueChange` or `bind:value`. */
@@ -15,6 +16,10 @@
     defaultValue?: string[]
     /** Fires when the selected values change. */
     onValueChange?: (value: string[]) => void
+    /**
+     * Every child value - required to drive a `parent` "select all" checkbox.
+     */
+    allValues?: string[]
     /**
      * Stack the boxes in a column, or wrap them into a row.
      * @default 'vertical'
@@ -35,6 +40,7 @@
     value = $bindable(),
     defaultValue = [],
     onValueChange,
+    allValues,
     orientation = 'vertical',
     name,
     disabled,
@@ -64,6 +70,12 @@
       onChange: onValueChange,
     })
   }
+
+  setCheckboxGroupContext({
+    getValue: () => inner,
+    setValue: handleValueChange,
+    allValues: () => allValues,
+  })
 </script>
 
 <BitsCheckbox.Group

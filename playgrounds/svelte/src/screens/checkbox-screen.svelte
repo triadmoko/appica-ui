@@ -14,14 +14,8 @@
     { name: 'delete', label: 'Delete' },
   ]
 
-  const allPermissions = permissions.map((permission) => permission.name)
+  const allValues = permissions.map((permission) => permission.name)
   let permissionValue = $state<string[]>(['read'])
-  const allPermissionsChecked = $derived(allPermissions.every((name) => permissionValue.includes(name)))
-  const somePermissionsChecked = $derived(permissionValue.length > 0 && !allPermissionsChecked)
-
-  function onParentCheckedChange(checked: boolean) {
-    permissionValue = checked ? [...allPermissions] : []
-  }
 </script>
 
 <section class="flex flex-col gap-8">
@@ -102,7 +96,7 @@
       <span id="toppings-label" class="text-foreground mb-1 text-sm font-medium">Toppings</span>
       {#each toppings as topping (topping.name)}
         <label class="flex items-center gap-2 text-sm select-none">
-          <Checkbox value={topping.name} />
+          <Checkbox name={topping.name} />
           {topping.label}
         </label>
       {/each}
@@ -114,15 +108,15 @@
     <CheckboxGroup orientation="horizontal" aria-labelledby="channels-label" defaultValue={['sms']}>
       <span id="channels-label" class="text-foreground w-full text-sm font-medium">Channels</span>
       <label class="flex items-center gap-2 text-sm select-none">
-        <Checkbox value="email" />
+        <Checkbox name="email" />
         Email
       </label>
       <label class="flex items-center gap-2 text-sm select-none">
-        <Checkbox value="sms" />
+        <Checkbox name="sms" />
         SMS
       </label>
       <label class="flex items-center gap-2 text-sm select-none">
-        <Checkbox value="push" />
+        <Checkbox name="push" />
         Push
       </label>
     </CheckboxGroup>
@@ -130,23 +124,19 @@
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Select all (parent checkbox)</p>
-    <div class="flex flex-col gap-2">
+    <CheckboxGroup allValues={allValues} bind:value={permissionValue} aria-labelledby="permissions-label">
       <label class="flex items-center gap-2 text-sm font-medium select-none">
-        <Checkbox
-          checked={allPermissionsChecked}
-          indeterminate={somePermissionsChecked}
-          onCheckedChange={onParentCheckedChange}
-        />
+        <Checkbox parent />
         <span id="permissions-label">Permissions</span>
       </label>
-      <CheckboxGroup aria-labelledby="permissions-label" bind:value={permissionValue} class="pl-6">
+      <div class="flex flex-col gap-2 pl-6">
         {#each permissions as permission (permission.name)}
           <label class="flex items-center gap-2 text-sm select-none">
-            <Checkbox value={permission.name} />
+            <Checkbox name={permission.name} />
             {permission.label}
           </label>
         {/each}
-      </CheckboxGroup>
-    </div>
+      </div>
+    </CheckboxGroup>
   </div>
 </section>

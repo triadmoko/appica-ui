@@ -1,11 +1,12 @@
 <script lang="ts" module>
   import type { HTMLAttributes } from 'svelte/elements'
   import type { DateValue } from '@internationalized/date'
-  import type { CalendarCaptionLayout, CalendarSize, CalendarType, DateRange } from './calendar-tokens'
+  import type { CalendarCaptionLayout, CalendarMode, CalendarSize, Matcher } from './calendar-tokens'
+  import type { CalendarDateInput, CalendarSelectedInput, CalendarSelection } from './calendar-value'
 
   type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
-  export type CalendarProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'placeholder'> & {
+  export type CalendarProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /**
      * Cell size and text scale (Appica extension).
      * @default 'md'
@@ -15,17 +16,19 @@
      * Selection behavior. `range` uses a start/end pair.
      * @default 'single'
      */
-    type?: CalendarType
-    /** Controlled value. Shape matches `type`. Pair with `onValueChange` or `bind:value`. */
-    value?: DateValue | DateValue[] | DateRange
-    /** Uncontrolled initial value. */
-    defaultValue?: DateValue | DateValue[] | DateRange
-    /** Fires when the selection changes. The argument shape matches `type`. */
-    onValueChange?: (value: DateValue | DateValue[] | DateRange | undefined) => void
-    /** Visible month when no value is selected. Pair with `onPlaceholderChange` or `bind:placeholder`. */
-    placeholder?: DateValue
-    /** Fires when the visible month changes. */
-    onPlaceholderChange?: (value: DateValue) => void
+    mode?: CalendarMode
+    /** Controlled selection. Shape matches `mode`. Pair with `onSelect` or `bind:selected`. */
+    selected?: CalendarSelectedInput
+    /** Uncontrolled initial selection. */
+    defaultSelected?: CalendarSelectedInput
+    /** Fires when the selection changes. The argument shape matches `mode`. */
+    onSelect?: (value: CalendarSelection | undefined) => void
+    /** Controlled displayed month. Pair with `onMonthChange` or `bind:month`. */
+    month?: CalendarDateInput
+    /** Uncontrolled initial month to display. */
+    defaultMonth?: CalendarDateInput
+    /** Fires when the user navigates to another month. */
+    onMonthChange?: (month: DateValue) => void
     /**
      * Month/year header: select dropdowns, or a static label with arrows.
      * @default 'dropdown'
@@ -53,7 +56,6 @@
     weekStartsOn?: WeekStartsOn
     /** Locale used to format weekdays, months, and years. */
     locale?: string
-    disabled?: boolean
     readonly?: boolean
     /**
      * Prevent clearing the selection by re-clicking the selected day.
@@ -61,22 +63,22 @@
      */
     required?: boolean
     /**
-     * Earliest selectable date.
+     * Earliest navigable month.
      * @default 1925-01-01
      */
-    minValue?: DateValue
+    startMonth?: CalendarDateInput
     /**
-     * Latest selectable date.
+     * Latest navigable month.
      * @default 2050-12-31
      */
-    maxValue?: DateValue
+    endMonth?: CalendarDateInput
     /**
      * Always render six week rows.
      * @default false
      */
     fixedWeeks?: boolean
-    /** Return true to block selection of a date. */
-    isDateDisabled?: (date: DateValue) => boolean
+    /** Dates that can't be selected (a date, range, weekday set, or predicate). */
+    disabled?: Matcher
     /** Return true to mark a date unavailable. */
     isDateUnavailable?: (date: DateValue) => boolean
   }
@@ -88,57 +90,60 @@
   import { Calendar as BitsCalendar, RangeCalendar as BitsRangeCalendar } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import CalendarView from './calendar-view.svelte'
-  import { ROOT_CONFIG, yearsInRange } from './calendar-tokens'
+  import { isDateMatching } from './calendar-matcher'
+  import { ROOT_CONFIG, yearsInRange, type DateRange } from './calendar-tokens'
+  import { isCalendarRange, normalizeSelected, toDateValue } from './calendar-value'
 
   type BitsDateRange = { start: DateValue | undefined; end: DateValue | undefined }
 
-  const DEFAULT_MIN = new CalendarDate(1925, 1, 1)
-  const DEFAULT_MAX = new CalendarDate(2050, 12, 31)
+  const DEFAULT_START = new CalendarDate(1925, 1, 1)
+  const DEFAULT_END = new CalendarDate(2050, 12, 31)
 
   let {
     class: className,
     size = 'md',
-    type = 'single',
-    value = $bindable(),
-    defaultValue,
-    onValueChange,
-    placeholder = $bindable(),
-    onPlaceholderChange,
+    mode = 'single',
+    selected = $bindable(),
+    defaultSelected,
+    onSelect,
+    month = $bindable(),
+    defaultMonth,
+    onMonthChange,
     captionLayout = 'dropdown',
     showOutsideDays = true,
     numberOfMonths = 1,
     pagedNavigation = false,
     weekStartsOn = 1,
     locale,
-    disabled,
     readonly,
     required = false,
-    minValue = DEFAULT_MIN,
-    maxValue = DEFAULT_MAX,
+    startMonth,
+    endMonth,
     fixedWeeks = false,
-    isDateDisabled,
+    disabled,
     isDateUnavailable,
     ...rest
   }: CalendarProps = $props()
 
-  function isAppicaRange(next: DateValue | DateValue[] | DateRange | undefined): next is DateRange {
-    return typeof next === 'object' && next !== null && !Array.isArray(next) && 'from' in next
-  }
+  const selectionMode = $derived(mode)
 
-  function toSingle(next: DateValue | DateValue[] | DateRange | undefined): DateValue | undefined {
+  function toSingle(next: CalendarSelection | CalendarDateInput | undefined): DateValue | undefined {
     if (next == null || Array.isArray(next)) return undefined
-    if (isAppicaRange(next)) return next.from
-    return next
+    if (isCalendarRange(next)) return next.from ? toDateValue(next.from) : undefined
+    return toDateValue(next)
   }
 
-  function toMultiple(next: DateValue | DateValue[] | DateRange | undefined): DateValue[] {
-    if (Array.isArray(next)) return next
+  function toMultiple(next: CalendarSelection | undefined): DateValue[] {
+    if (Array.isArray(next)) return next.map(toDateValue)
     return []
   }
 
-  function toBitsRange(next: DateValue | DateValue[] | DateRange | undefined): BitsDateRange {
-    if (isAppicaRange(next)) {
-      return { start: next.from, end: next.to }
+  function toBitsRange(next: CalendarSelection | undefined): BitsDateRange {
+    if (isCalendarRange(next)) {
+      return {
+        start: next.from ? toDateValue(next.from) : undefined,
+        end: next.to ? toDateValue(next.to) : undefined,
+      }
     }
     return { start: undefined, end: undefined }
   }
@@ -152,61 +157,62 @@
   let innerRange = $state<BitsDateRange>({ start: undefined, end: undefined })
   let innerPlaceholder = $state<DateValue | undefined>(undefined)
 
-  innerSingle = untrack(() => toSingle(value ?? defaultValue))
-  innerMultiple = untrack(() => toMultiple(value ?? defaultValue))
-  innerRange = untrack(() => toBitsRange(value ?? defaultValue))
-  innerPlaceholder = untrack(() => placeholder)
+  innerSingle = untrack(() => toSingle(normalizeSelected(selected ?? defaultSelected, 'single')))
+  innerMultiple = untrack(() => toMultiple(normalizeSelected(selected ?? defaultSelected, 'multiple')))
+  innerRange = untrack(() => toBitsRange(normalizeSelected(selected ?? defaultSelected, 'range')))
+  innerPlaceholder = untrack(() => (month !== undefined ? toDateValue(month) : defaultMonth ? toDateValue(defaultMonth) : undefined))
 
   $effect(() => {
-    if (value === undefined) return
-    if (type === 'multiple') innerMultiple = toMultiple(value)
-    else if (type === 'range') innerRange = toBitsRange(value)
-    else innerSingle = toSingle(value)
+    if (selected === undefined) return
+    const next = normalizeSelected(selected, selectionMode)
+    if (selectionMode === 'multiple') innerMultiple = toMultiple(next)
+    else if (selectionMode === 'range') innerRange = toBitsRange(next)
+    else innerSingle = toSingle(next)
   })
 
   $effect(() => {
-    if (placeholder !== undefined) innerPlaceholder = placeholder
+    if (month !== undefined) innerPlaceholder = toDateValue(month)
   })
 
-  function handlePlaceholderChange(next: DateValue) {
+  function handleMonthChange(next: DateValue) {
     commitBindableChange({
       next,
-      bound: placeholder,
+      bound: month === undefined ? undefined : toDateValue(month),
       setBound: (nextValue) => {
-        placeholder = nextValue
+        month = nextValue
       },
+      onChange: onMonthChange,
       setInner: (nextValue) => {
         innerPlaceholder = nextValue
       },
-      onChange: onPlaceholderChange,
     })
   }
 
   function handleSingleChange(next: DateValue | undefined) {
     commitBindableChange({
       next,
-      bound: value,
+      bound: selected === undefined ? undefined : toSingle(normalizeSelected(selected, 'single')),
       setBound: (nextValue) => {
-        value = nextValue
+        selected = nextValue
       },
+      onChange: onSelect,
       setInner: (nextValue) => {
         innerSingle = toSingle(nextValue)
       },
-      onChange: onValueChange,
     })
   }
 
   function handleMultipleChange(next: DateValue[]) {
     commitBindableChange({
       next,
-      bound: value,
+      bound: selected === undefined ? undefined : toMultiple(normalizeSelected(selected, 'multiple')),
       setBound: (nextValue) => {
-        value = nextValue
+        selected = nextValue
       },
+      onChange: onSelect,
       setInner: (nextValue) => {
         innerMultiple = toMultiple(nextValue)
       },
-      onChange: onValueChange,
     })
   }
 
@@ -214,25 +220,32 @@
     const mapped = fromBitsRange(next)
     commitBindableChange({
       next: mapped,
-      bound: value,
+      bound: selected === undefined ? undefined : fromBitsRange(toBitsRange(normalizeSelected(selected, 'range'))),
       setBound: (nextValue) => {
-        value = nextValue
+        selected = nextValue
       },
+      onChange: onSelect,
       setInner: (nextValue) => {
         innerRange = toBitsRange(nextValue)
       },
-      onChange: onValueChange,
     })
   }
 
   const cfg = $derived(ROOT_CONFIG[size])
   const rootClasses = $derived(cn('inline-flex w-fit flex-col', cfg.text, cfg.cellVar, className))
+  const minValue = $derived(startMonth ? toDateValue(startMonth) : DEFAULT_START)
+  const maxValue = $derived(endMonth ? toDateValue(endMonth) : DEFAULT_END)
   const years = $derived(yearsInRange(minValue, maxValue))
+  const dateDisabled = $derived(disabled === true)
+  const isDateDisabled = $derived.by(() => {
+    if (disabled == null || disabled === false) return undefined
+    return (date: DateValue) => isDateMatching(date, disabled)
+  })
 
   const shared = $derived({
     weekStartsOn,
     locale,
-    disabled,
+    disabled: dateDisabled,
     readonly,
     minValue,
     maxValue,
@@ -255,14 +268,14 @@
   })
 </script>
 
-{#if type === 'range'}
+{#if mode === 'range'}
   <BitsRangeCalendar.Root
     data-slot="calendar"
     class={rootClasses}
     bind:value={innerRange}
     bind:placeholder={innerPlaceholder}
     onValueChange={handleRangeChange}
-    onPlaceholderChange={handlePlaceholderChange}
+    onPlaceholderChange={handleMonthChange}
     {...shared}
     {...asBitsAttrs(rest)}
   >
@@ -270,7 +283,7 @@
       <CalendarView range {...viewProps} {months} {weekdays} />
     {/snippet}
   </BitsRangeCalendar.Root>
-{:else if type === 'multiple'}
+{:else if mode === 'multiple'}
   <BitsCalendar.Root
     data-slot="calendar"
     class={rootClasses}
@@ -278,7 +291,7 @@
     bind:value={innerMultiple}
     bind:placeholder={innerPlaceholder}
     onValueChange={handleMultipleChange}
-    onPlaceholderChange={handlePlaceholderChange}
+    onPlaceholderChange={handleMonthChange}
     {...shared}
     {...asBitsAttrs(rest)}
   >
@@ -294,7 +307,7 @@
     bind:value={innerSingle}
     bind:placeholder={innerPlaceholder}
     onValueChange={handleSingleChange}
-    onPlaceholderChange={handlePlaceholderChange}
+    onPlaceholderChange={handleMonthChange}
     {...shared}
     {...asBitsAttrs(rest)}
   >

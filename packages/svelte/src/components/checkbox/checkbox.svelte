@@ -5,6 +5,7 @@
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, commitBindableChange, invalidDataAttr } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
+  import { getCheckboxGroupContext } from '../checkbox-group/checkbox-group-context'
 
   const SQUISH_MS = 300
   const SQUISH_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
@@ -24,11 +25,18 @@
      * @default false
      */
     indeterminate?: boolean
-    /** Field name submitted with a form, via a hidden input. */
+    /**
+     * Inside a `CheckboxGroup`, makes this the "select all" box driven by the children (needs group `allValues`).
+     * @default false
+     */
+    parent?: boolean
+    /**
+     * Field name on form submit. When `value` is omitted, also how a `CheckboxGroup` matches this box to its value array.
+     */
     name?: string
     /**
      * Value submitted with the form, and the identity of this box inside a `CheckboxGroup`.
-     * Falls back to `name` when used in a group.
+     * Falls back to `name` when omitted.
      */
     value?: string
   }
@@ -39,6 +47,7 @@
     defaultChecked = false,
     onCheckedChange,
     indeterminate = false,
+    parent = false,
     name,
     value,
     disabled,
@@ -49,6 +58,7 @@
   }: Props = $props()
 
   const field = getFieldContext()
+  const group = getCheckboxGroupContext()
   const control = $derived(
     mergeFieldControl({
       field,
@@ -64,12 +74,36 @@
   let inner = $state(false)
   inner = untrack(() => checked ?? defaultChecked)
 
+  const listedValues = $derived(group?.allValues())
+  const isParent = $derived(Boolean(parent && group && listedValues && listedValues.length > 0))
+  const parentSelectedCount = $derived.by(() => {
+    if (!isParent || !listedValues || !group) return 0
+    const selected = group.getValue()
+    return listedValues.filter((item) => selected.includes(item)).length
+  })
+  const parentChecked = $derived(isParent && listedValues != null && parentSelectedCount === listedValues.length)
+  const parentIndeterminate = $derived(
+    isParent && listedValues != null && parentSelectedCount > 0 && parentSelectedCount < listedValues.length,
+  )
+  const resolvedIndeterminate = $derived(isParent ? parentIndeterminate : indeterminate)
+
+  $effect.pre(() => {
+    if (!isParent) return
+    inner = parentChecked
+  })
+
   $effect(() => {
+    if (isParent) return
     if (checked !== undefined) inner = checked
   })
 
   function handleCheckedChange(next: boolean) {
     field?.clearFormError()
+    if (isParent && group && listedValues) {
+      group.setValue(next ? [...listedValues] : [])
+      onCheckedChange?.(next)
+      return
+    }
     commitBindableChange({
       next,
       bound: checked,
@@ -89,7 +123,7 @@
 
   $effect(() => {
     const nextChecked = inner
-    const nextIndeterminate = indeterminate
+    const nextIndeterminate = resolvedIndeterminate
     const el = rootEl
     const reduced = reducedMotion.current
     if (prevChecked === null) {
@@ -131,13 +165,13 @@
   data-slot="checkbox"
   class={classes}
   bind:checked={inner}
-  {indeterminate}
+  indeterminate={resolvedIndeterminate}
   disabled={control.disabled}
-  name={control.name}
+  name={isParent ? undefined : control.name}
   id={control.id}
   aria-invalid={control.ariaInvalid}
   aria-describedby={control.describedby}
-  value={groupValue}
+  value={isParent ? '' : groupValue}
   onCheckedChange={handleCheckedChange}
   {...asBitsAttrs(rest)}
   {...invalidDataAttr(control.ariaInvalid)}

@@ -3,13 +3,35 @@ import { buttonVariants } from '../button/button-variants'
 import { cn } from '../../internal/utils'
 
 export type CalendarSize = 'sm' | 'md' | 'lg'
-export type CalendarType = 'single' | 'multiple' | 'range'
+export type CalendarMode = 'single' | 'multiple' | 'range'
+/** @deprecated Use `CalendarMode`. */
+export type CalendarType = CalendarMode
 export type CalendarCaptionLayout = 'dropdown' | 'dropdown-months' | 'dropdown-years' | 'label'
 
 export type DateRange = {
   from?: DateValue
   to?: DateValue
 }
+
+export type DateAfter = { after: DateValue }
+export type DateBefore = { before: DateValue }
+export type DateInterval = { before: DateValue; after: DateValue }
+export type DayOfWeek = { dayOfWeek: number[] }
+
+/** Dates that can't be selected. Mirrors react-day-picker's Matcher, with `DateValue` instead of `Date`. */
+export type Matcher =
+  | boolean
+  | DateValue
+  | Date
+  | DateValue[]
+  | Date[]
+  | DateRange
+  | DateBefore
+  | DateAfter
+  | DateInterval
+  | DayOfWeek
+  | ((date: DateValue) => boolean)
+  | Matcher[]
 
 export type CalendarMonth = {
   value: DateValue

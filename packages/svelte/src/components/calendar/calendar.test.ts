@@ -16,17 +16,17 @@ describe('Calendar', () => {
 
   it('selects a date when a day is clicked', async () => {
     const user = userEvent.setup()
-    const onValueChange = vi.fn()
-    render(CalendarHost, { props: { onValueChange } })
+    const onSelect = vi.fn()
+    render(CalendarHost, { props: { onSelect } })
     await user.click(screen.getByRole('button', { name: /May 20, 2026/ }))
-    expect(onValueChange).toHaveBeenCalled()
-    const [selected] = onValueChange.mock.calls[0]!
+    expect(onSelect).toHaveBeenCalled()
+    const [selected] = onSelect.mock.calls[0]!
     expect(selected).toBeInstanceOf(CalendarDate)
     expect((selected as CalendarDate).day).toBe(20)
   })
 
   it('reflects the controlled selected date with aria-selected', () => {
-    render(CalendarHost, { props: { value: MAY_15 } })
+    render(CalendarHost, { props: { selected: MAY_15 } })
     const cell = screen.getByRole('gridcell', { selected: true })
     expect(cell).toHaveAttribute('data-value', '2026-05-15')
   })
@@ -73,37 +73,34 @@ describe('Calendar', () => {
 
   it('does not clear the selected day when required is set', async () => {
     const user = userEvent.setup()
-    render(CalendarHost, { props: { defaultValue: MAY_15, required: true } })
+    render(CalendarHost, { props: { defaultSelected: MAY_15, required: true } })
     await user.click(screen.getByRole('button', { name: /May 15, 2026/ }))
     expect(screen.getByRole('gridcell', { selected: true })).toHaveAttribute('data-value', '2026-05-15')
   })
 
   it('blocks disabled dates from being selected', async () => {
     const user = userEvent.setup()
-    const onValueChange = vi.fn()
+    const onSelect = vi.fn()
     render(CalendarHost, {
       props: {
-        onValueChange,
-        isDateDisabled: (date) => {
-          const weekday = date.toDate('UTC').getUTCDay()
-          return weekday === 0 || weekday === 6
-        },
+        onSelect,
+        disabled: { dayOfWeek: [0, 6] },
       },
     })
     await user.click(screen.getByRole('button', { name: /May 16, 2026/ }))
-    expect(onValueChange).not.toHaveBeenCalled()
+    expect(onSelect).not.toHaveBeenCalled()
   })
 
-  it('selects a range when type is range', async () => {
+  it('selects a range when mode is range', async () => {
     const user = userEvent.setup()
-    const onValueChange = vi.fn()
-    render(CalendarHost, { props: { type: 'range', onValueChange } })
+    const onSelect = vi.fn()
+    render(CalendarHost, { props: { mode: 'range', onSelect } })
 
     await user.click(screen.getByRole('button', { name: /May 10, 2026/ }))
     await user.click(screen.getByRole('button', { name: /May 20, 2026/ }))
 
-    expect(onValueChange).toHaveBeenCalled()
-    const last = onValueChange.mock.calls.at(-1)![0] as { from?: CalendarDate; to?: CalendarDate }
+    expect(onSelect).toHaveBeenCalled()
+    const last = onSelect.mock.calls.at(-1)![0] as { from?: CalendarDate; to?: CalendarDate }
     expect(last.from?.day).toBe(10)
     expect(last.to?.day).toBe(20)
   })

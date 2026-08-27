@@ -9,6 +9,7 @@
     onValueChange,
     class: className,
     testId,
+    matchByName = false,
   }: {
     orientation?: 'horizontal' | 'vertical'
     defaultValue?: string[]
@@ -16,6 +17,7 @@
     onValueChange?: (value: string[]) => void
     class?: string
     testId?: string
+    matchByName?: boolean
   } = $props()
 </script>
 
@@ -28,6 +30,11 @@
   class={className}
   data-testid={testId}
 >
-  <Checkbox value="cheese" aria-label="Cheese" />
-  <Checkbox value="bacon" aria-label="Bacon" />
+  {#if matchByName}
+    <Checkbox name="cheese" aria-label="Cheese" />
+    <Checkbox name="bacon" aria-label="Bacon" />
+  {:else}
+    <Checkbox value="cheese" aria-label="Cheese" />
+    <Checkbox value="bacon" aria-label="Bacon" />
+  {/if}
 </CheckboxGroup>

@@ -1,48 +1,46 @@
 <script lang="ts">
-  import { CalendarDate, type DateValue } from '@internationalized/date'
+  import { CalendarDate } from '@internationalized/date'
   import Calendar from './calendar.svelte'
-  import type { CalendarCaptionLayout, CalendarSize, CalendarType, DateRange } from './calendar-tokens'
+  import type { CalendarCaptionLayout, CalendarMode, CalendarSize, Matcher } from './calendar-tokens'
+  import type { CalendarSelectedInput, CalendarSelection } from './calendar-value'
 
   let {
-    type = 'single',
+    mode = 'single',
     size,
-    value,
-    defaultValue,
-    placeholder = new CalendarDate(2026, 5, 15),
-    onValueChange,
+    selected,
+    defaultSelected,
+    month = new CalendarDate(2026, 5, 15),
+    onSelect,
     captionLayout,
     showOutsideDays,
     numberOfMonths,
     required,
     disabled,
-    isDateDisabled,
   }: {
-    type?: CalendarType
+    mode?: CalendarMode
     size?: CalendarSize
-    value?: DateValue | DateValue[] | DateRange
-    defaultValue?: DateValue | DateValue[] | DateRange
-    placeholder?: DateValue
-    onValueChange?: (value: DateValue | DateValue[] | DateRange | undefined) => void
+    selected?: CalendarSelectedInput
+    defaultSelected?: CalendarSelectedInput
+    month?: CalendarDate
+    onSelect?: (value: CalendarSelection | undefined) => void
     captionLayout?: CalendarCaptionLayout
     showOutsideDays?: boolean
     numberOfMonths?: number
     required?: boolean
-    disabled?: boolean
-    isDateDisabled?: (date: DateValue) => boolean
+    disabled?: Matcher
   } = $props()
 </script>
 
 <Calendar
-  {type}
+  {mode}
   {size}
-  {value}
-  {defaultValue}
-  {placeholder}
-  {onValueChange}
+  {selected}
+  {defaultSelected}
+  {month}
+  {onSelect}
   {captionLayout}
   {showOutsideDays}
   {numberOfMonths}
   {required}
   {disabled}
-  {isDateDisabled}
 />

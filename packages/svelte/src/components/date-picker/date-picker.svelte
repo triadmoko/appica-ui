@@ -3,12 +3,12 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { DateValue } from '@internationalized/date'
   import type { TimeValue } from 'bits-ui'
-  import type { CalendarSize, CalendarType, DateRange } from '../calendar/calendar-tokens'
+  import type { CalendarSize, CalendarMode, DateRange } from '../calendar/calendar-tokens'
   import type { DateFieldVariant } from '../date-field/date-field.svelte'
 
   export type DatePickerSize = CalendarSize
   export type DatePickerVariant = DateFieldVariant
-  export type DatePickerType = CalendarType
+  export type DatePickerType = CalendarMode
   export type { DateRange }
 
   type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -485,17 +485,17 @@
 {#snippet calendarPanel()}
   <Calendar
     {size}
-    {type}
-    value={current}
-    onValueChange={handleCalendarSelect}
-    placeholder={calendarPlaceholder}
-    onPlaceholderChange={handlePlaceholderChange}
+    mode={type}
+    selected={current}
+    onSelect={handleCalendarSelect}
+    month={calendarPlaceholder}
+    onMonthChange={handlePlaceholderChange}
     {locale}
     {weekStartsOn}
-    {minValue}
-    {maxValue}
+    startMonth={minValue}
+    endMonth={maxValue}
     {fixedWeeks}
-    {isDateDisabled}
+    disabled={isDateDisabled}
     {isDateUnavailable}
     {required}
   />
