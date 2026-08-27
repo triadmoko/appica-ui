@@ -17,9 +17,9 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `breadcrumb` - Wave 1. Native `nav` / `ol` / `li`. `el` on `BreadcrumbLink` (`a` / `button`); `active` renders a non-interactive `<span>`.
 - [x] `button` - Wave 2: bits-ui `Button.Root`. `type="button"` default. `focusableWhenDisabled`. Links use exported `buttonVariants` on `<a>` (no `href` on Button). Inherits `variant` / `size` / `disabled` from `ButtonGroup` context.
 - [x] `button-group` - Wave 1. Context for child `Button` variant, size, and disabled. No bits-ui.
-- [ ] `calendar` - Wave 2
+- [x] `calendar` - Wave 2: bits-ui Calendar/RangeCalendar. `mode` → `type`. Values are `DateValue` from `@internationalized/date` (`CalendarDate`, `CalendarDateTime`, …), not native `Date`. Range is `{ from?, to? }`, mapped internally to bits-ui `{ start, end }`. Caption is bits-ui `MonthSelect` + `YearSelect`.
 - [x] `card` - Wave 1. Root tag via `el` (`div` / `article` / `li` / …), not `render` / `child`.
-- [ ] `carousel` - Wave 2
+- [x] `carousel` - custom Wave 2 (bits-ui has no carousel). Embla v9 via `embla-carousel-svelte` (same plugins as React). No `render` on Prev/Next: native `<button>` + `position`. `useLinkedCarousels` takes getters (`() => api`) so Svelte can track the apis.
 - [x] `checkbox` - Wave 2: bits-ui `Checkbox.Root`. Folded indicator. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `checkbox-group` - Wave 2: bits-ui `Checkbox.Group`. `orientation` default `vertical`.
 - [x] `chip` - Wave 1. Reuses `buttonVariants`. Dismiss uses `svelte/transition`. Group `clearAll()` is a component export (`bind:this`).
@@ -33,12 +33,12 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `context-menu` - Wave 2: bits-ui. Clone of DropdownMenu chrome. Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
 - [x] `copy-button` - Wave 1. Uses `buttonVariants`. `value` is a string, HTMLElement (`bind:this`), or getter. `label` / `copiedLabel` drive aria-label; children do not swap.
 - [x] `countdown` - Wave 1. Timer + context. Digit roll is CSS `translateY`, not Motion. Children snippet receives `parts`.
-- [ ] `date-field` - Wave 2
-- [ ] `date-picker` - Wave 2: bits-ui
+- [x] `date-field` - Wave 2: bits-ui DateField. Field context (`omitId`, `aria-labelledby`). `unstyled` for DatePicker. Values are `DateValue`, not native `Date`. Hidden input is ISO `yyyy-MM-dd`.
+- [x] `date-picker` - compose Calendar + DateField + TimeField + Popover (not a bits-ui DatePicker wrap). `type` (not React `mode`), `showTime`, `closeOnSelect`. No date-fns `dateFormat` / `timeFormat`; formatting is `locale` + granularity / `hourCycle`. Visible month via `defaultPlaceholder` (not React `defaultMonth`). Values are `DateValue` / `DateValue[]` / `{ from?, to? }`.
 - [x] `dialog` - Wave 2: bits-ui. `splitModalProps` Portal/Overlay/viewport. `Dialog.createHandle` is a Svelte `$state` handle. Triggers take `class={buttonVariants(...)}`.
 - [x] `drawer` - Wave 2: bits-ui Dialog + Appica chrome (no bits-ui Drawer). Swipe/snap are CSS-only. Nested backdrop off when `depth > 1`. `Drawer.createHandle`.
 - [x] `dropdown-menu` - Wave 2: bits-ui. Extra `DropdownMenuCheckboxGroup` (`bind:value={string[]}`) for bits-ui checkbox items.
-- [x] `field` - Wave 2: native (bits-ui has Label only). Form `errors[name]` drives FieldError. Wired into Input, Textarea, Select trigger, Switch, Checkbox, Radio, OTPField, NumberField, Combobox Input, Autocomplete Input.
+- [x] `field` - Wave 2: native (bits-ui has Label only). Form `errors[name]` drives FieldError. Wired into Input, Textarea, Select trigger, Switch, Checkbox, Radio, OTPField, NumberField, Combobox Input, Autocomplete Input, DateField, TimeField, DatePicker.
 - [x] `fieldset` - Wave 1. Native `<fieldset>` / `<legend>` (no bits-ui). `disabled` disables descendant controls.
 - [x] `form` - Wave 1. Native `<form>`. `errors` / `onClearErrors` live in context for Wave 2 Field.
 - [x] `gradient-glow` - Wave 1. Uses shared `animate-gradient-glow` utilities in `styles.css`.
@@ -71,7 +71,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `text-animate` - Wave 1. rAF clock + `IntersectionObserver`. Required `text` prop (Svelte cannot tokenize string children). Presets match React.
 - [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`). Reads Field context.
 - [x] `thumbnail` - Wave 1. Image vs icon variants; same size/shape scale as Avatar.
-- [ ] `time-field` - Wave 2
+- [x] `time-field` - Wave 2: bits-ui TimeField. `dir="ltr"` on the segments row. Field context. Values are `TimeValue` (`Time` / `CalendarDateTime` / `ZonedDateTime`), not `"HH:mm"` strings. Hidden input is bits-ui ISO time.
 - [x] `toast` - Wave 2: native manager (`createToastManager`) + bits-ui Portal. Viewport `dir` from `useDirection()`. Swipe, stack limit, F6, and hover/focus timer pause match React.
 - [x] `toc` - Wave 1. Native `<nav>` + `IntersectionObserver`. No `render` / `child`.
 - [x] `toggle` - Wave 2: bits-ui. Standalone `Toggle.Root`; inside a group, `ToggleGroup.Item`. No chrome - pass `class={buttonVariants(...)}`.

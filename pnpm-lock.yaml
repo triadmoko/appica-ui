@@ -165,6 +165,33 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      embla-carousel:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02
+      embla-carousel-accessibility:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-auto-height:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-auto-scroll:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-autoplay:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-class-names:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-fade:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      embla-carousel-svelte:
+        specifier: 9.0.0-rc02
+        version: 9.0.0-rc02(svelte@5.56.10(@typescript-eslint/types@8.66.0))
+      embla-carousel-wheel-gestures:
+        specifier: 9.0.0-rc01
+        version: 9.0.0-rc01(embla-carousel@9.0.0-rc02)
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
@@ -1484,6 +1511,11 @@ packages:
     resolution: {integrity: sha512-H1c+yUbcVST9eJoGU+05L1vSDyBs0hf/Gf1OadHYIJ3asBfyvn6oaGCs2wXq1D8/f09y0wwCxeRxT9UZU/TxJA==}
     peerDependencies:
       embla-carousel: 9.0.0-rc02
+
+  embla-carousel-svelte@9.0.0-rc02:
+    resolution: {integrity: sha512-iTRISQ1Gsvs09afcEbaZC5n0n9sFSPVBrqKlk/Clck3v+nRyHPoOw+AdiqpqSDTKLxfTyaxbn6Xt4Seu7KqjFA==}
+    peerDependencies:
+      svelte: ^3.49.0 || ^4.0.0 || ^5.0.0
 
   embla-carousel-wheel-gestures@9.0.0-rc01:
     resolution: {integrity: sha512-mFLzP98am00JfPle7k4gTTrAQkQ667g5muGfuyxOQVtTGsau76M3bWRSEHAZ+6d7dmUBdwzepH5ZeAbVa1e/+Q==}
@@ -3606,6 +3638,12 @@ snapshots:
   embla-carousel-reactive-utils@9.0.0-rc02(embla-carousel@9.0.0-rc02):
     dependencies:
       embla-carousel: 9.0.0-rc02
+
+  embla-carousel-svelte@9.0.0-rc02(svelte@5.56.10(@typescript-eslint/types@8.66.0)):
+    dependencies:
+      embla-carousel: 9.0.0-rc02
+      embla-carousel-reactive-utils: 9.0.0-rc02(embla-carousel@9.0.0-rc02)
+      svelte: 5.56.10(@typescript-eslint/types@8.66.0)
 
   embla-carousel-wheel-gestures@9.0.0-rc01(embla-carousel@9.0.0-rc02):
     dependencies:

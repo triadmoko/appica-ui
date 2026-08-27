@@ -99,10 +99,20 @@
       "svelte": "./dist/components/button-group/index.js",
       "default": "./dist/components/button-group/index.js"
     },
+    "./calendar": {
+      "types": "./dist/components/calendar/index.d.ts",
+      "svelte": "./dist/components/calendar/index.js",
+      "default": "./dist/components/calendar/index.js"
+    },
     "./card": {
       "types": "./dist/components/card/index.d.ts",
       "svelte": "./dist/components/card/index.js",
       "default": "./dist/components/card/index.js"
+    },
+    "./carousel": {
+      "types": "./dist/components/carousel/index.d.ts",
+      "svelte": "./dist/components/carousel/index.js",
+      "default": "./dist/components/carousel/index.js"
     },
     "./checkbox": {
       "types": "./dist/components/checkbox/index.d.ts",
@@ -168,6 +178,16 @@
       "types": "./dist/components/countdown/index.d.ts",
       "svelte": "./dist/components/countdown/index.js",
       "default": "./dist/components/countdown/index.js"
+    },
+    "./date-field": {
+      "types": "./dist/components/date-field/index.d.ts",
+      "svelte": "./dist/components/date-field/index.js",
+      "default": "./dist/components/date-field/index.js"
+    },
+    "./date-picker": {
+      "types": "./dist/components/date-picker/index.d.ts",
+      "svelte": "./dist/components/date-picker/index.js",
+      "default": "./dist/components/date-picker/index.js"
     },
     "./dialog": {
       "types": "./dist/components/dialog/index.d.ts",
@@ -349,6 +369,11 @@
       "svelte": "./dist/components/thumbnail/index.js",
       "default": "./dist/components/thumbnail/index.js"
     },
+    "./time-field": {
+      "types": "./dist/components/time-field/index.d.ts",
+      "svelte": "./dist/components/time-field/index.js",
+      "default": "./dist/components/time-field/index.js"
+    },
     "./toast": {
       "types": "./dist/components/toast/index.d.ts",
       "svelte": "./dist/components/toast/index.js",
@@ -465,6 +490,15 @@
     "bits-ui": "^2.19.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel": "9.0.0-rc02",
+    "embla-carousel-accessibility": "9.0.0-rc02",
+    "embla-carousel-auto-height": "9.0.0-rc02",
+    "embla-carousel-auto-scroll": "9.0.0-rc02",
+    "embla-carousel-autoplay": "9.0.0-rc02",
+    "embla-carousel-class-names": "9.0.0-rc02",
+    "embla-carousel-fade": "9.0.0-rc02",
+    "embla-carousel-svelte": "9.0.0-rc02",
+    "embla-carousel-wheel-gestures": "9.0.0-rc01",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
