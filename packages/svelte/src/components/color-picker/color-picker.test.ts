@@ -93,6 +93,16 @@ describe('ColorPicker', () => {
     expect(document.querySelector('input[type=hidden]')).toHaveValue('#3b82f6')
   })
 
+  it('anchors a triggerless panel through popoverProps', () => {
+    render(ColorPickerHost, {
+      props: { hideTrigger: true, open: true, name: 'brand', keepMounted: true, customAnchor: true },
+    })
+    expect(screen.getByTestId('field-anchor')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { hidden: true })).not.toBeInTheDocument()
+    expect(screen.getByRole('slider', { name: 'Hue', ...overlay })).toBeInTheDocument()
+    expect(document.querySelector('input[type=hidden]')).toHaveValue('#3b82f6')
+  })
+
   it('takes the button shell off the trigger when flush', () => {
     const first = render(ColorPickerHost, { props: { label: 'Fill' } })
     expect(trigger().className).toMatch(/\bpx-5\b/)
@@ -252,6 +262,15 @@ describe('ColorPickerInput', () => {
   it('writes the format it is given', () => {
     render(ColorPickerHost, { props: { inline: true, defaultValue: '#ff0000', panel: 'input-only', inputFormat: 'hsl' } })
     expect(screen.getByRole('textbox', { name: 'HSL' })).toHaveValue('hsl(0, 100%, 50%)')
+  })
+
+  it('honors inputSize and variant without losing the width contract', () => {
+    render(ColorPickerHost, {
+      props: { inline: true, panel: 'input-chrome', inputSize: 'md', inputVariant: 'soft' },
+    })
+    expect(hexField()).toHaveAttribute('size', '1')
+    expect(hexField().className).toMatch(/\bh-10\b/)
+    expect(hexField().className).toMatch(/bg-background-muted/)
   })
 
   it('refuses to render outside a picker', () => {

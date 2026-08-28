@@ -1,1 +1,1 @@
-export { default as ColorSwatch, type ColorSwatchProps, type ColorSwatchPresetSize, type ColorSwatchShape } from './color-swatch.svelte'
+export { default as ColorSwatch, type ColorSwatchProps } from './color-swatch.svelte'

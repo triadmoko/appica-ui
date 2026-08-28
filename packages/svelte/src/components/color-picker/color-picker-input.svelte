@@ -1,6 +1,12 @@
 <script lang="ts" module>
+  import type { Snippet } from 'svelte'
   import type { ColorFormat } from '../../lib/color'
   import type { HTMLInputAttributes } from 'svelte/elements'
+  import type { VariantProps } from 'class-variance-authority'
+  import { inputVariants } from '../input/input-variants'
+
+  type InputVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
+  type InputSize = NonNullable<VariantProps<typeof inputVariants>['size']>
 
   export type ColorPickerInputProps = Omit<
     HTMLInputAttributes,
@@ -8,6 +14,20 @@
   > & {
     /** Format the color is written in. Defaults to the enclosing picker's `format`. */
     format?: ColorFormat
+    /**
+     * Field appearance - bordered or filled.
+     * @default 'outline'
+     */
+    variant?: InputVariant
+    /**
+     * Scales height, padding, and text. Named `inputSize` to avoid the native `size` attribute.
+     * @default 'sm'
+     */
+    inputSize?: InputSize
+    /** Adornment rendered before the field, inside the frame. */
+    start?: Snippet
+    /** Adornment rendered after the field, inside the frame. */
+    end?: Snippet
   }
 </script>
 
@@ -47,7 +67,18 @@
     return safeParseColor(/^[0-9a-f]{3,8}$/i.test(trimmed) ? `#${trimmed}` : trimmed)
   }
 
-  let { format: formatProp, class: className, disabled, onblur, onkeydown, ...rest }: ColorPickerInputProps = $props()
+  let {
+    format: formatProp,
+    variant = 'outline',
+    inputSize = 'sm',
+    start,
+    end,
+    class: className,
+    disabled,
+    onblur,
+    onkeydown,
+    ...rest
+  }: ColorPickerInputProps = $props()
 
   const picker = requireColorPickerContext('ColorPickerInput')
   const format = $derived(formatProp ?? picker.format)
@@ -86,18 +117,21 @@
 
 <Input
   {...rest}
-  inputSize="sm"
+  {variant}
+  {inputSize}
+  {start}
+  {end}
   spellcheck={false}
   autocomplete="off"
   autocorrect="off"
   autocapitalize="off"
   aria-label={FORMAT_LABELS[format]}
   data-slot="color-picker-input"
-  htmlSize={1}
   disabled={disabled ?? picker.disabled}
   value={displayed}
   class={cn('font-mono', className)}
   oninput={handleInput}
   onblur={handleBlur}
   onkeydown={handleKeyDown}
+  htmlSize={1}
 />

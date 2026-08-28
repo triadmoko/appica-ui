@@ -22,8 +22,11 @@
     open,
     hideTrigger = false,
     keepMounted = false,
+    customAnchor = false,
     panel = 'default',
     inputFormat,
+    inputSize,
+    inputVariant,
     onValueChange,
     onValueCommitted,
     'aria-label': ariaLabel,
@@ -41,12 +44,17 @@
     open?: boolean
     hideTrigger?: boolean
     keepMounted?: boolean
-    panel?: 'default' | 'hue' | 'shared' | 'locked-palette' | 'input' | 'input-only'
+    customAnchor?: boolean
+    panel?: 'default' | 'hue' | 'shared' | 'locked-palette' | 'input' | 'input-only' | 'input-chrome'
     inputFormat?: ColorFormat
+    inputSize?: 'sm' | 'md' | 'lg'
+    inputVariant?: 'outline' | 'soft'
     onValueChange?: (value: Color) => void
     onValueCommitted?: (value: Color) => void
     'aria-label'?: string
   } = $props()
+
+  let anchorEl: HTMLDivElement | undefined = $state()
 
   const pickerProps = $derived({
     inline,
@@ -65,9 +73,16 @@
     'aria-label': ariaLabel,
     'data-testid': 'trigger',
     trigger: hideTrigger ? null : undefined,
-    popoverProps: keepMounted ? { keepMounted: true } : undefined,
+    popoverProps:
+      keepMounted || customAnchor
+        ? { keepMounted, customAnchor: customAnchor ? anchorEl : undefined }
+        : undefined,
   })
 </script>
+
+{#if customAnchor}
+  <div bind:this={anchorEl} data-testid="field-anchor"></div>
+{/if}
 
 {#if panel === 'default'}
   <ColorPicker {...pickerProps} />
@@ -98,5 +113,9 @@
 {:else if panel === 'input-only'}
   <ColorPicker {...pickerProps}>
     <ColorPickerInput format={inputFormat} />
+  </ColorPicker>
+{:else if panel === 'input-chrome'}
+  <ColorPicker {...pickerProps}>
+    <ColorPickerInput {inputSize} variant={inputVariant} />
   </ColorPicker>
 {/if}

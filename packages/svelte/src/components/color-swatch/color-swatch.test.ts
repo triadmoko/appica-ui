@@ -4,6 +4,7 @@ import { axe } from 'vitest-axe'
 import { htmlSnippet } from '../../test/snippet'
 import { parseColor } from '../../lib/color'
 import ColorSwatch from './color-swatch.svelte'
+import ColorSwatchHost from './color-swatch.test-host.svelte'
 
 function renderSwatch(props: Record<string, unknown> = {}) {
   return render(ColorSwatch, { props: { 'data-testid': 'swatch', ...props } })
@@ -114,5 +115,20 @@ describe('ColorSwatch', () => {
   it('has no accessibility violations', async () => {
     const { container } = renderSwatch({ color: 'rgba(59, 130, 246, 0.5)' })
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('throws without a color when it is not inside a ColorPicker', () => {
+    expect(() => render(ColorSwatch)).toThrow(/needs a `color`/)
+  })
+
+  it('previews the enclosing ColorPicker value when color is omitted', () => {
+    render(ColorSwatchHost, { props: { defaultValue: '#ff0000' } })
+    expect(swatch()).toHaveAccessibleName('vivid red')
+  })
+
+  it('dims with the enclosing ColorPicker when that picker is disabled', () => {
+    render(ColorSwatchHost, { props: { disabled: true } })
+    expect(swatch()).toHaveAttribute('data-disabled')
+    expect(swatch().style.backgroundColor).toBe('')
   })
 })

@@ -1,4 +1,5 @@
 <script lang="ts" module>
+  import type { Snippet } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { VariantProps } from 'class-variance-authority'
   import { buttonVariants } from '../button/button-variants'
@@ -14,11 +15,12 @@
      * @default 'icon-sm'
      */
     size?: VariantProps<typeof buttonVariants>['size']
+    /** Icon rendered inside the button. */
+    children?: Snippet
   }
 </script>
 
 <script lang="ts">
-  import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
   import { requireColorPickerContext } from '../../internal/color-picker-context.svelte'
   import { safeParseColor, withChannelValue } from '../../lib/color'
@@ -36,7 +38,7 @@
     onclick,
     'aria-label': ariaLabel = 'Pick a color from the screen',
     ...rest
-  }: ColorPickerEyeDropperProps & { children?: Snippet } = $props()
+  }: ColorPickerEyeDropperProps = $props()
 
   const picker = requireColorPickerContext('ColorPickerEyeDropper')
   let supported = $state(false)

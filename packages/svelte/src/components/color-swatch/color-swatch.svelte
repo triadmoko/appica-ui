@@ -3,8 +3,6 @@
   import type { Color } from '../../lib/color'
   import type { ColorSwatchPresetSize, ColorSwatchShape } from './color-swatch-variants'
 
-  export type { ColorSwatchPresetSize, ColorSwatchShape }
-
   export type ColorSwatchProps = Omit<HTMLAttributes<HTMLSpanElement>, 'color'> & {
     /**
      * Color to show. Pass a `Color` or any CSS color string. Inside a `ColorPicker` it

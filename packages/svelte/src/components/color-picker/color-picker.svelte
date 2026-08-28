@@ -14,6 +14,19 @@
     side?: 'top' | 'bottom' | 'left' | 'right'
     align?: 'start' | 'center' | 'end'
     sideOffset?: number
+    /** Element or selector the panel anchors to when there is no trigger. */
+    customAnchor?: string | HTMLElement | null
+    /**
+     * Trap focus inside the panel while open.
+     * @default true
+     */
+    trapFocus?: boolean
+    /** Fires when the panel takes focus on open. Call `preventDefault()` to leave focus where it is. */
+    onOpenAutoFocus?: (event: Event) => void
+    /** Fires when the panel returns focus on close. Call `preventDefault()` to leave focus where it is. */
+    onCloseAutoFocus?: (event: Event) => void
+    /** Fires on a press outside the panel. Call `preventDefault()` to keep it open. */
+    onInteractOutside?: (event: Event) => void
     [key: string]: unknown
   }
 
@@ -109,7 +122,12 @@
      * @default 6
      */
     sideOffset?: number
-    /** Escape hatch forwarded to the inner `PopoverContent`. */
+    /**
+     * Escape hatch forwarded to the inner `PopoverContent`. Use `customAnchor` to point
+     * the panel at an element you own when `trigger={null}`, `trapFocus={false}` plus
+     * `onOpenAutoFocus` / `onCloseAutoFocus` to leave the caret in a field, and
+     * `onInteractOutside` to keep a press on that field from dismissing the panel.
+     */
     popoverProps?: ColorPickerPopoverProps
     /**
      * Content of the popover trigger. Omitted uses the default swatch button. Pass a

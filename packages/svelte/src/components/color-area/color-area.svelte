@@ -6,8 +6,8 @@
   export type ColorAreaProps = Omit<HTMLAttributes<HTMLDivElement>, 'color'> & {
     /**
      * Selected color. Pass a `Color` or any CSS color string to control the component.
-     * Inside a `ColorPicker` it can be left off: the control then reads and writes the
-     * picker's color.
+     * Pair with `onValueChange` or `bind:value`. Inside a `ColorPicker` it can be left
+     * off: the control then reads and writes the picker's color.
      */
     value?: Color | string
     /**
