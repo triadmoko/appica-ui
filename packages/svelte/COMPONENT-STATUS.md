@@ -31,7 +31,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `color-swatch-picker` - Wave 2: custom. Roving listbox, sliding indicator. `bind:value`. RTL via `useDirection()`.
 - [x] `combobox` - Wave 2: bits-ui Combobox. `multiple` → `type`. Chips are Appica chrome (`ComboboxChips` / `ComboboxChip`). No Collection / `useFilteredItems`; filtering is consumer-side. Clear is an Appica button (bits-ui has no `.Clear`).
 - [x] `context-menu` - Wave 2: bits-ui. Clone of DropdownMenu chrome. Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
-- [x] `copy-button` - Wave 1. Uses `buttonVariants`. `value` is a string, HTMLElement (`bind:this`), or getter. `label` / `copiedLabel` drive aria-label; children do not swap.
+- [x] `copy-button` - Built on `Button`. Children swap to `copiedLabel` on success. `value` is a string, HTMLElement (`bind:this`), or getter.
 - [x] `countdown` - Wave 1. Timer + context. Digit roll is CSS `translateY`, not Motion. Children snippet receives `parts`.
 - [x] `date-field` - Wave 2: bits-ui DateField. Field context (`omitId`, `aria-labelledby`). `unstyled` for DatePicker. Values are `DateValue`, not native `Date`. Hidden input is ISO `yyyy-MM-dd`.
 - [x] `date-picker` - compose Calendar + DateField + TimeField + Popover (not a bits-ui DatePicker wrap). `type` (not React `mode`), `showTime`, `closeOnSelect`. No date-fns `dateFormat` / `timeFormat`; formatting is `locale` + granularity / `hourCycle`. Visible month via `defaultPlaceholder` (not React `defaultMonth`). Values are `DateValue` / `DateValue[]` / `{ from?, to? }`.

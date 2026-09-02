@@ -3,6 +3,7 @@
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { VariantProps } from 'class-variance-authority'
   import { cn } from '../../internal/utils'
+  import Button from '../button/button.svelte'
   import { buttonVariants } from '../button/button-variants'
 
   export type CopyButtonValue = string | HTMLElement | (() => string | Promise<string>)
@@ -10,7 +11,7 @@
   type ButtonVariant = VariantProps<typeof buttonVariants>['variant']
   type ButtonSize = VariantProps<typeof buttonVariants>['size']
 
-  type Props = Omit<HTMLButtonAttributes, 'value'> & {
+  export type CopyButtonProps = Omit<HTMLButtonAttributes, 'value'> & {
     /**
      * Visual style.
      * @default 'ghost'
@@ -22,6 +23,11 @@
      */
     size?: ButtonSize
     /**
+     * Keep the control reachable by keyboard while disabled.
+     * @default false
+     */
+    focusableWhenDisabled?: boolean
+    /**
      * **Required.** What to copy: a string, an element (`bind:this`), or a (possibly async) getter.
      */
     value: CopyButtonValue
@@ -31,17 +37,17 @@
      */
     timeout?: number
     /**
-     * Accessible name (and tooltip via `title`) in the idle state.
+     * Accessible name in the idle state.
      * @default 'Copy'
      */
     label?: string
     /**
-     * Accessible name after a successful copy.
+     * Accessible name after a successful copy; children also swap to this.
      * @default 'Copied'
      */
     copiedLabel?: string
     /** Called with the copied text on success. */
-    onCopy?: (copied: string) => void
+    onCopy?: (value: string) => void
     /** Called if reading the value or writing to the clipboard fails. */
     onCopyError?: (error: unknown) => void
     children?: Snippet
@@ -85,10 +91,9 @@
     variant = 'ghost',
     size = 'icon-sm',
     class: className,
-    disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: CopyButtonProps = $props()
 
   let copied = $state(false)
   let resetId: ReturnType<typeof setTimeout> | undefined
@@ -119,15 +124,15 @@
   }
 </script>
 
-<button
+<Button
   data-slot="copy-button"
   data-copied={copied ? '' : undefined}
-  data-disabled={disabled ? '' : undefined}
   type="button"
-  {disabled}
+  {variant}
+  {size}
   aria-label={copied ? copiedLabel : label}
   onclick={handleClick}
-  class={cn('group/copy', buttonVariants({ variant, size }), className)}
+  class={cn('group/copy', className)}
   {...rest}
 >
   <span data-icon={children != null ? 'start' : undefined} class="grid place-items-center *:[grid-area:1/1]">
@@ -173,8 +178,14 @@
       />
     </svg>
   </span>
-  {@render children?.()}
+  {#if children}
+    {#if copied}
+      {copiedLabel}
+    {:else}
+      {@render children()}
+    {/if}
+  {/if}
   <span role="status" class="sr-only">
     {copied ? copiedLabel : ''}
   </span>
-</button>
+</Button>

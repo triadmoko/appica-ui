@@ -23,6 +23,16 @@ describe('CopyButton', () => {
     expect(screen.getByText('Copy SVG')).toBeInTheDocument()
   })
 
+  it('swaps a string label to the copied label on success', async () => {
+    const { user } = setup()
+    render(CopyButton, { props: { value: 'hello', copiedLabel: 'Copied', children: textSnippet('Copy SVG') } })
+
+    await user.click(screen.getByRole('button'))
+
+    await waitFor(() => expect(screen.queryByText('Copy SVG')).not.toBeInTheDocument())
+    expect(screen.getAllByText('Copied').length).toBeGreaterThanOrEqual(1)
+  })
+
   it('copies the string value on click', async () => {
     const { user, writeText } = setup()
     const onCopy = vi.fn()
