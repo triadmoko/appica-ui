@@ -525,6 +525,7 @@
         {readonly}
         {required}
         name={control.name}
+        granularity="day"
         {locale}
         {minValue}
         {maxValue}
@@ -542,7 +543,7 @@
             {@render start()}
           </div>
         {/if}
-        <DateField unstyled value={singleDate} onValueChange={handleDateFieldChange} {variant} {size} disabled={control.disabled} {readonly} {required} {locale} {minValue} {maxValue} />
+        <DateField unstyled value={singleDate} onValueChange={handleDateFieldChange} {variant} {size} disabled={control.disabled} {readonly} {required} granularity="day" {locale} {minValue} {maxValue} />
         <TimeField
           unstyled
           value={singleDate ? toTimeValue(singleDate) : undefined}
@@ -585,6 +586,7 @@
           disabled={control.disabled}
           {readonly}
           {required}
+          granularity="day"
           {locale}
           {minValue}
           {maxValue}
@@ -613,6 +615,7 @@
           disabled={control.disabled}
           {readonly}
           {required}
+          granularity="day"
           {locale}
           {minValue}
           {maxValue}
