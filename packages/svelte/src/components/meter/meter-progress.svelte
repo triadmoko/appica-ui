@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getMeterContext } from './meter-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type MeterProgressProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: MeterProgressProps = $props()
 
   const ctx = getMeterContext()
   const indicatorBg = $derived(ctx.indicatorBg())
@@ -21,7 +21,7 @@
   <div
     data-slot="meter-indicator"
     class={cn(
-      'rounded-full transition-[width,background-color] duration-300 motion-reduce:transition-none',
+      'absolute inset-y-0 inset-s-0 rounded-full transition-[width,background-color] duration-300 motion-reduce:transition-none',
       indicatorBg,
     )}
     style={`width: ${pct}%`}

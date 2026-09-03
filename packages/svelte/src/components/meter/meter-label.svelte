@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getMeterContext } from './meter-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
+  export type MeterLabelProps = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
 
-  let { class: className, id, children, ...rest }: Props = $props()
+  let { class: className, id, children, ...rest }: MeterLabelProps = $props()
 
   const ctx = getMeterContext()
   const uid = $props.id()

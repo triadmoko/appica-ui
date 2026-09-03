@@ -13,10 +13,14 @@
     high,
     optimum,
     statusClassNames,
+    format,
+    locale,
+    getAriaValueText,
     class: className,
     showLabel = false,
     label = 'Storage',
     showValue = false,
+    showValueSnippet = false,
   }: {
     value?: number
     min?: number
@@ -25,18 +29,40 @@
     high?: number
     optimum?: number
     statusClassNames?: MeterStatusClassNames
+    format?: Intl.NumberFormatOptions
+    locale?: Intl.LocalesArgument
+    getAriaValueText?: (formatted: string, value: number) => string
     class?: string
     showLabel?: boolean
     label?: string
     showValue?: boolean
+    showValueSnippet?: boolean
   } = $props()
 </script>
 
-<Meter {value} {min} {max} {low} {high} {optimum} {statusClassNames} class={className}>
+<Meter
+  {value}
+  {min}
+  {max}
+  {low}
+  {high}
+  {optimum}
+  {statusClassNames}
+  {format}
+  {locale}
+  {getAriaValueText}
+  class={className}
+>
   {#if showLabel}
     <MeterLabel>{label}</MeterLabel>
   {/if}
-  {#if showValue}
+  {#if showValueSnippet}
+    <MeterValue>
+      {#snippet children(formatted, current)}
+        {formatted}|{current}
+      {/snippet}
+    </MeterValue>
+  {:else if showValue}
     <MeterValue />
   {/if}
   <MeterProgress />

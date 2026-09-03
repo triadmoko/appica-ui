@@ -13,6 +13,7 @@ export interface MeterContextValue {
   value: () => number
   min: () => number
   max: () => number
+  formatted: () => string
   indicatorBg: () => string
   percent: () => number
   labelId: () => string | undefined
@@ -46,8 +47,27 @@ export function percentOf(value: number, min: number, max: number): number {
   return Math.max(0, Math.min(100, ((value - min) / span) * 100))
 }
 
-export function formatPercent(value: number, min: number, max: number): string {
-  return `${Math.round(percentOf(value, min, max))}%`
+export function clampMeterValue(value: number, min: number, max: number): number {
+  if (Number.isNaN(value)) return min
+  return Math.min(max, Math.max(min, value))
+}
+
+export function formatMeterValue(
+  value: number,
+  min: number,
+  max: number,
+  format?: Intl.NumberFormatOptions,
+  locale?: Intl.LocalesArgument,
+): string {
+  const pct = percentOf(value, min, max) / 100
+  const clamped = clampMeterValue(value, min, max)
+  try {
+    return format
+      ? new Intl.NumberFormat(locale, format).format(clamped)
+      : new Intl.NumberFormat(locale, { style: 'percent' }).format(pct)
+  } catch {
+    return new Intl.NumberFormat(undefined, { style: 'percent' }).format(pct)
+  }
 }
 
 export function computeStatus(

@@ -41,16 +41,16 @@
     })
   })
 
-  function handleLoad(event: Event & { currentTarget: EventTarget & HTMLImageElement }) {
+  function handleLoad(event: Event) {
     avatar?.setStatus('loaded')
     onLoadingStatusChange?.('loaded')
-    onload?.(event)
+    onload?.(event as Event & { currentTarget: EventTarget & HTMLImageElement })
   }
 
-  function handleError(event: Event & { currentTarget: EventTarget & HTMLImageElement }) {
+  function handleError(event: Event) {
     avatar?.setStatus('error')
     onLoadingStatusChange?.('error')
-    onerror?.(event)
+    onerror?.(event as Event & { currentTarget: EventTarget & HTMLImageElement })
   }
 </script>
 

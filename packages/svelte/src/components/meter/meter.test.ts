@@ -38,8 +38,49 @@ describe('Meter', () => {
   })
 
   it('renders the formatted value via MeterValue', () => {
-    render(MeterHost, { props: { value: 42, showValue: true } })
+    render(MeterHost, { props: { value: 42, locale: 'en-US', showValue: true } })
     expect(screen.getByText('42%')).toBeInTheDocument()
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '42%')
+  })
+
+  it('formats the clamped raw value when format is set', () => {
+    render(MeterHost, {
+      props: {
+        value: 1280,
+        max: 2000,
+        format: { style: 'currency', currency: 'USD' },
+        locale: 'en-US',
+        showValue: true,
+      },
+    })
+    expect(screen.getByText('$1,280.00')).toBeInTheDocument()
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '$1,280.00')
+  })
+
+  it('lets getAriaValueText override aria-valuetext', () => {
+    render(MeterHost, {
+      props: {
+        value: 7.5,
+        max: 10,
+        locale: 'en-US',
+        getAriaValueText: (formatted, current) => `${current} out of 10 (${formatted})`,
+        showValue: true,
+      },
+    })
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '7.5 out of 10 (75%)')
+    expect(screen.getByText('75%')).toBeInTheDocument()
+  })
+
+  it('passes formatted text and the raw value to the MeterValue snippet', () => {
+    render(MeterHost, { props: { value: 42, locale: 'en-US', showValueSnippet: true } })
+    expect(screen.getByText('42%|42')).toBeInTheDocument()
+  })
+
+  it('clamps aria-valuenow when value is outside the range', () => {
+    const { container } = render(MeterHost, { props: { value: 150, max: 100 } })
+    expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '100')
+    const indicator = container.querySelector('[data-slot=meter-indicator]') as HTMLElement
+    expect(indicator.style.width).toBe('100%')
   })
 
   it('does not set data-status and uses bg-primary when no thresholds are provided', () => {
