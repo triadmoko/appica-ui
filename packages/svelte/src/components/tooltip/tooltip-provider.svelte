@@ -9,16 +9,16 @@
      */
     delay?: number
     /**
-     * Time a user has to enter another trigger without incurring a delay again.
-     * @default 300
+     * Window after a tooltip closes during which the next one opens instantly (no delay).
+     * @default 400
      */
-    skipDelayDuration?: number
+    timeout?: number
     children?: Snippet
   }
 
-  let { delay = 200, skipDelayDuration = 300, children }: Props = $props()
+  let { delay = 200, timeout = 400, children }: Props = $props()
 </script>
 
-<BitsTooltip.Provider delayDuration={delay} {skipDelayDuration}>
+<BitsTooltip.Provider delayDuration={delay} skipDelayDuration={timeout}>
   {@render children?.()}
 </BitsTooltip.Provider>

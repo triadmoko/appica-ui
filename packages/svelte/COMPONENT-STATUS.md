@@ -77,7 +77,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `toggle` - Wave 2: bits-ui. Standalone `Toggle.Root`; inside a group, `ToggleGroup.Item`. No chrome - pass `class={buttonVariants(...)}`.
 - [x] `toggle-group` - Wave 2: bits-ui. `multiple` maps to `type`. Default `flex w-fit gap-1`.
 - [x] `toolbar` - Wave 1. Native `role="toolbar"` + roving tabindex (no bits-ui). Triggers take `class={buttonVariants(...)}`.
-- [x] `tooltip` - Wave 2: bits-ui. `TooltipProvider` `delay` default 200 (`delayDuration`). Triggers take `class={buttonVariants(...)}`. `keepMounted` → `forceMount`.
+- [x] `tooltip` - Wave 2: bits-ui. `TooltipProvider` `delay` default 200 (`delayDuration`), `timeout` default 400 (`skipDelayDuration`). Root `disabled` and `trackCursorAxis`. Content `dir` from `useDirection()`. Instant-open skips the enter animation. Diamond arrow uses bits-ui placement (`left`/`top`) plus the React rotate-45 chrome. Triggers take `class={buttonVariants(...)}`. `keepMounted` → `forceMount`.
 
 ## Lib
 

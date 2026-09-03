@@ -27,6 +27,7 @@ describe('Tooltip', () => {
     expect(popup).not.toBeNull()
     expect(popup.className).toContain('bg-background-inverse')
     expect(popup.className).toContain('text-foreground-inverse')
+    expect(popup.className).toContain('data-[state=instant-open]:motion-safe:transition-none')
 
     await user.unhover(screen.getByRole('button', { name: 'Hover' }))
     await user.keyboard('{Escape}')
@@ -62,6 +63,32 @@ describe('Tooltip', () => {
     render(TooltipHost, { props: { content: 'Keyboard-visible' } })
     await user.tab()
     expect(await screen.findByText('Keyboard-visible')).toBeTruthy()
+  })
+
+  it('does not open when disabled', async () => {
+    const user = userEvent.setup()
+    render(TooltipHost, { props: { disabled: true, content: 'Should stay hidden' } })
+
+    await user.hover(screen.getByRole('button', { name: 'Hover' }))
+    expect(screen.queryByText('Should stay hidden')).toBeNull()
+  })
+
+  it('tracks the cursor when trackCursorAxis is set', async () => {
+    const user = userEvent.setup()
+    render(TooltipHost, { props: { trackCursorAxis: 'x', content: 'Following the cursor' } })
+
+    await user.hover(screen.getByRole('button', { name: 'Hover' }))
+    expect(await screen.findByText('Following the cursor')).toBeTruthy()
+  })
+
+  it('forwards DirectionProvider dir onto the portaled popup', async () => {
+    const user = userEvent.setup()
+    render(TooltipHost, { props: { dir: 'rtl', content: 'RTL popup' } })
+
+    await user.hover(screen.getByRole('button', { name: 'Hover' }))
+    const content = await screen.findByText('RTL popup')
+    const popup = content.closest('[data-slot="tooltip-content"]') as HTMLElement
+    expect(popup.closest('[dir]')?.getAttribute('dir')).toBe('rtl')
   })
 
   it('has no accessibility violations (closed state)', async () => {

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { buttonVariants } from '../button/button-variants'
+  import { DirectionProvider } from '../../providers/direction-provider'
+  import type { Direction } from '../../providers/direction-provider/direction-context'
   import Tooltip from './tooltip.svelte'
   import TooltipTrigger from './tooltip-trigger.svelte'
   import TooltipContent from './tooltip-content.svelte'
@@ -9,18 +11,34 @@
     delay = 0,
     arrow = true,
     content = 'Add to library',
+    disabled = false,
+    trackCursorAxis = 'none',
+    dir,
   }: {
     delay?: number
     arrow?: boolean
     content?: string
+    disabled?: boolean
+    trackCursorAxis?: 'none' | 'x' | 'y' | 'both'
+    dir?: Direction
   } = $props()
 </script>
 
-<TooltipProvider {delay}>
-  <Tooltip>
-    <TooltipTrigger class={buttonVariants({ variant: 'outline' })}>Hover</TooltipTrigger>
-    <TooltipContent {arrow}>
-      <p>{content}</p>
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>
+{#snippet tree()}
+  <TooltipProvider {delay}>
+    <Tooltip {disabled} {trackCursorAxis}>
+      <TooltipTrigger class={buttonVariants({ variant: 'outline' })}>Hover</TooltipTrigger>
+      <TooltipContent {arrow}>
+        <p>{content}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+{/snippet}
+
+{#if dir}
+  <DirectionProvider {dir}>
+    {@render tree()}
+  </DirectionProvider>
+{:else}
+  {@render tree()}
+{/if}
