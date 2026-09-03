@@ -80,11 +80,7 @@
   const isMultiple = $derived(Array.isArray(value) || (value === undefined && Array.isArray(defaultValue)))
 
   let rootEl: HTMLElement | null = $state(null)
-  let textDir = $state<'ltr' | 'rtl'>('ltr')
-
-  $effect(() => {
-    textDir = readTextDirection(rootEl ?? undefined)
-  })
+  let textDir = $derived(readTextDirection(rootEl ?? undefined))
 
   $effect(() => {
     if (value === undefined) return

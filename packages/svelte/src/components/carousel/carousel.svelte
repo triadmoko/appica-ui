@@ -100,6 +100,7 @@
 
 <script lang="ts">
   import { untrack } from 'svelte'
+  import { SvelteSet } from 'svelte/reactivity'
   import Accessibility from 'embla-carousel-accessibility'
   import AutoHeight from 'embla-carousel-auto-height'
   import AutoScroll from 'embla-carousel-auto-scroll'
@@ -222,7 +223,7 @@
   let autoplayState = $state<CarouselAutoplayState | null>(null)
 
   let scrollProgress = 0
-  const scrollListeners = new Set<() => void>()
+  const scrollListeners = new SvelteSet<() => void>()
 
   function subscribeScrollProgress(onChange: () => void) {
     scrollListeners.add(onChange)

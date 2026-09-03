@@ -1,6 +1,6 @@
 {
   "name": "@appica/ui-svelte",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Appica UI components library for Svelte applications",
   "license": "MIT",
   "author": "Appica UI",

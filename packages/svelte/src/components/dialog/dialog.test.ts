@@ -6,6 +6,8 @@ import { createHandle } from '../../internal/overlay-handle.svelte'
 import DialogHost from './dialog.test-host.svelte'
 import { Dialog } from './index'
 
+const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 })
+
 describe('Dialog', () => {
   it('tags the trigger with data-slot', () => {
     render(DialogHost)
@@ -18,7 +20,7 @@ describe('Dialog', () => {
   })
 
   it('opens on trigger click and exposes a labeled dialog', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -30,7 +32,7 @@ describe('Dialog', () => {
   })
 
   it('closes when the built-in close button is clicked', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -43,7 +45,7 @@ describe('Dialog', () => {
   })
 
   it('closes when a DialogClose action is clicked', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -56,7 +58,7 @@ describe('Dialog', () => {
   })
 
   it('closes on Escape', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -69,7 +71,7 @@ describe('Dialog', () => {
   })
 
   it('hides the built-in close button when closeButton is false', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost, { props: { closeButton: false } })
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -79,7 +81,7 @@ describe('Dialog', () => {
   })
 
   it('renders a backdrop by default', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -89,7 +91,7 @@ describe('Dialog', () => {
   })
 
   it('omits the backdrop when backdrop is false', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost, { props: { backdrop: false } })
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))
@@ -99,7 +101,7 @@ describe('Dialog', () => {
   })
 
   it('drops the frame when backdrop is off', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DialogHost, { props: { backdrop: false, frame: true } })
 
     await user.click(screen.getByRole('button', { name: 'Open dialog' }))

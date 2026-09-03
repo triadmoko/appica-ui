@@ -1,4 +1,5 @@
 import { getContext, setContext } from 'svelte'
+import { SvelteMap } from 'svelte/reactivity'
 import type { HTMLButtonAttributes } from 'svelte/elements'
 import type { ToastSwipeAxis } from './toast-swipe'
 
@@ -143,8 +144,8 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
   let timeout = $state(options.timeout ?? DEFAULT_TIMEOUT)
   let limit = $state(options.limit ?? DEFAULT_LIMIT)
   let timersPaused = false
-  const timers = new Map<string, TimerEntry>()
-  const exitTimers = new Map<string, ReturnType<typeof setTimeout>>()
+  const timers = new SvelteMap<string, TimerEntry>()
+  const exitTimers = new SvelteMap<string, ReturnType<typeof setTimeout>>()
 
   function setItems(next: ToastData[]) {
     items = applyLimited(next, limit)

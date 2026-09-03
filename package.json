@@ -20,7 +20,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "sync-exports:check": "pnpm --filter @appica/ui-react exec node scripts/sync-exports.mjs --check && pnpm --filter @appica/ui-svelte exec node scripts/sync-exports.mjs --check",
-    "release": "pnpm --filter @appica/ui-react publish"
+    "release": "pnpm --filter @appica/ui-react publish",
+    "release:svelte": "pnpm --filter @appica/ui-svelte publish"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

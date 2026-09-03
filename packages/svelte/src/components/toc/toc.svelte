@@ -2,6 +2,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
+  import { SvelteMap, SvelteSet } from 'svelte/reactivity'
   import { areSameIds, closestHeadingId, setTocContext } from './toc-context'
 
   type Props = HTMLAttributes<HTMLElement> & {
@@ -24,7 +25,7 @@
 
   let ids = $state<readonly string[]>([])
   let activeIds = $state<readonly string[]>([])
-  const linkElements = new Map<string, HTMLElement>()
+  const linkElements = new SvelteMap<string, HTMLElement>()
 
   function register(id: string, element: HTMLElement) {
     linkElements.set(id, element)
@@ -59,7 +60,7 @@
       return
     }
     if (typeof IntersectionObserver === 'undefined') return
-    const visible = new Set<string>()
+    const visible = new SvelteSet<string>()
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {

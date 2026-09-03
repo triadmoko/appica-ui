@@ -6,6 +6,8 @@ import { createHandle } from '../../internal/overlay-handle.svelte'
 import AlertDialogHost from './alert-dialog.test-host.svelte'
 import { AlertDialog } from './index'
 
+const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 })
+
 describe('AlertDialog', () => {
   it('tags the trigger with data-slot', () => {
     render(AlertDialogHost)
@@ -18,7 +20,7 @@ describe('AlertDialog', () => {
   })
 
   it('opens as role=alertdialog with no default close button', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(AlertDialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Delete' }))
@@ -29,7 +31,7 @@ describe('AlertDialog', () => {
   })
 
   it('closes from a footer close button', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(AlertDialogHost)
 
     await user.click(screen.getByRole('button', { name: 'Delete' }))

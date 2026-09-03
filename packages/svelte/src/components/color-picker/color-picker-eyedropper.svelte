@@ -41,11 +41,7 @@
   }: ColorPickerEyeDropperProps = $props()
 
   const picker = requireColorPickerContext('ColorPickerEyeDropper')
-  let supported = $state(false)
-
-  $effect(() => {
-    supported = typeof window !== 'undefined' && 'EyeDropper' in window
-  })
+  const supported = $derived(typeof window !== 'undefined' && 'EyeDropper' in window)
 
   const off = $derived(disabled ?? picker.disabled)
   const classes = $derived(

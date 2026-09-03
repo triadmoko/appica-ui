@@ -6,6 +6,8 @@ import { createHandle } from '../../internal/overlay-handle.svelte'
 import DrawerHost from './drawer.test-host.svelte'
 import { Drawer } from './index'
 
+const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 })
+
 describe('Drawer', () => {
   it('tags the trigger with data-slot', () => {
     render(DrawerHost)
@@ -18,7 +20,7 @@ describe('Drawer', () => {
   })
 
   it('opens from the default side and exposes a labeled dialog', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DrawerHost)
 
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
@@ -35,7 +37,7 @@ describe('Drawer', () => {
   })
 
   it.each(['top', 'left', 'right'] as const)('opens from side=%s', async (side) => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DrawerHost, { props: { side } })
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     const dialog = await screen.findByRole('dialog')
@@ -48,7 +50,7 @@ describe('Drawer', () => {
   })
 
   it('closes from the built-in close button', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DrawerHost)
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     await screen.findByRole('dialog')
@@ -59,7 +61,7 @@ describe('Drawer', () => {
   })
 
   it('closes on Escape', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DrawerHost)
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     await screen.findByRole('dialog')
@@ -70,7 +72,7 @@ describe('Drawer', () => {
   })
 
   it('turns the backdrop off for nested drawers by default', async () => {
-    const user = userEvent.setup()
+    const user = setupUser()
     render(DrawerHost, { props: { nested: true } })
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     await screen.findByText('Body content')
