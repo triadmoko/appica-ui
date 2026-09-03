@@ -2,6 +2,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { LinkPreview as BitsLinkPreview } from 'bits-ui'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
   type Side = 'top' | 'bottom' | 'left' | 'right'
@@ -43,10 +44,13 @@
     alignOffset = 0,
     arrow = true,
     keepMounted = false,
+    dir,
     children,
     ...rest
   }: Props = $props()
 
+  const direction = useDirection()
+  const resolvedDir = $derived(dir === 'rtl' || dir === 'ltr' ? dir : direction.current)
   const resolvedOffset = $derived(sideOffset ?? (arrow ? 10 : 6))
   const classes = $derived(
     cn(
@@ -72,6 +76,7 @@
     sideOffset={resolvedOffset}
     {align}
     {alignOffset}
+    dir={resolvedDir}
     forceMount={keepMounted ? true : undefined}
     {...asBitsAttrs(rest)}
   >

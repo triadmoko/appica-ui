@@ -53,7 +53,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `otp-field` - Wave 2: bits-ui PinInput. Public `length` maps to `maxlength`. Root snippet `{ cells }` → `OTPFieldInput {cell}`. One hidden input is the form control. `OTPFieldSeparator` is Appica chrome.
 - [x] `pagination` - Wave 1. `el` on `PaginationLink` (`a` / `button`). Links use `buttonVariants` via context.
 - [x] `popover` - Wave 2: bits-ui. Compound parts. Triggers take `class={buttonVariants(...)}`. Title/Description are styled `h2` / `p`. `keepMounted` → `forceMount`. `Popover.createHandle` is a Svelte `$state` handle.
-- [x] `preview-card` - Wave 2: bits-ui LinkPreview. Default `openDelay=600` / `closeDelay=300`. `PreviewCard.createHandle`. Arrow chrome cloned from Popover.
+- [x] `preview-card` - Wave 2: bits-ui LinkPreview. Default `openDelay=600` / `closeDelay=300`. `PreviewCard.createHandle`. Arrow chrome cloned from Popover. Content `dir` from `useDirection()`.
 - [x] `progress` - Wave 1. Native ARIA `role="progressbar"` (no bits-ui). Bar and circular variants.
 - [x] `radio` - Wave 2: bits-ui `RadioGroup.Item` (no standalone Radio). Requires a RadioGroup ancestor. Reads Field context (`omitId` so the label targets the group).
 - [x] `radio-group` - Wave 2: bits-ui `RadioGroup.Root`. `orientation` default `vertical`. Inherits Field `name` / `disabled` / `id`.

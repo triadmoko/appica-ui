@@ -71,6 +71,16 @@ describe('PreviewCard', () => {
     expect(screen.getByText('Always in the DOM')).toBeInTheDocument()
   })
 
+  it('forwards DirectionProvider dir onto the portaled popup', async () => {
+    const user = setupUser()
+    render(PreviewCardHost, { props: { dir: 'rtl', body: 'RTL popup' } })
+
+    await user.hover(screen.getByRole('button', { name: 'example.com' }))
+    const content = await screen.findByText('RTL popup', overlayText)
+    const popup = content.closest('[data-slot="preview-card-content"]') as HTMLElement
+    expect(popup.closest('[dir]')?.getAttribute('dir')).toBe('rtl')
+  })
+
   it('has no accessibility violations (closed state)', async () => {
     const { container } = render(PreviewCardHost)
     expect(await axe(container)).toHaveNoViolations()
