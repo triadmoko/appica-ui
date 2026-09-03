@@ -1,15 +1,12 @@
-<script module lang="ts">
-  let clipSeq = 0
-</script>
-
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import { cn } from '../../internal/utils'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
 
   type LoaderVariant = 'bar' | 'dots'
+  type VariantColors = { indicator: string; track: string }
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type LoaderProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     /**
      * The animated shape.
      * @default 'bar'
@@ -22,29 +19,28 @@
     currentColor?: boolean
   }
 
+  const LOADER_SIZE = 'text-[2.5rem]'
+  const PRIMARY_COLORS: VariantColors = { indicator: 'text-primary', track: 'text-primary-soft' }
+  const CURRENT_COLORS: VariantColors = { indicator: 'text-current', track: 'text-current/20' }
+
   let {
     variant = 'bar',
     currentColor = false,
     'aria-label': ariaLabel = 'Loading',
     class: className,
     ...rest
-  }: Props = $props()
+  }: LoaderProps = $props()
 
   const reduced = useReducedMotion()
-  const colors = $derived(
-    currentColor
-      ? { indicator: 'text-current', track: 'text-current/20' }
-      : { indicator: 'text-primary', track: 'text-primary-soft' },
-  )
-
-  const clipId = `appica-loader-clip-${++clipSeq}`
+  const colors = $derived(currentColor ? CURRENT_COLORS : PRIMARY_COLORS)
+  const clipId = $props.id()
 </script>
 
 <span
   data-slot="loader"
   role="status"
   aria-label={ariaLabel}
-  class={cn('inline-flex shrink-0 items-center justify-center align-middle text-[2.5rem]', className)}
+  class={cn('inline-flex shrink-0 items-center justify-center align-middle', LOADER_SIZE, className)}
   {...rest}
 >
   {#if variant === 'bar'}
@@ -84,12 +80,7 @@
         {#if reduced.current}
           <circle cx={4 + i * 10} cy="6" r="4"></circle>
         {:else}
-          <circle
-            cy="6"
-            cx="28"
-            r="0"
-            class="appica-loader-dot"
-            style={`animation-delay: ${-(0.85 + i) * 1.6}s`}
+          <circle cy="6" cx="28" r="0" class="appica-loader-dot" style={`animation-delay: ${-(0.85 + i) * 1.6}s`}
           ></circle>
         {/if}
       {/each}
