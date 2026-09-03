@@ -5,8 +5,8 @@
   import { getAlertVariant } from './alert-context'
   import { alertIconColor } from './alert-variants'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type AlertIconProps = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
+  let { class: className, children, ...rest }: AlertIconProps = $props()
 
   const readVariant = getAlertVariant()
   const variant = $derived(readVariant())

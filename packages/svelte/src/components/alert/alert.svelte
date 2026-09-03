@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { cn } from '../../internal/utils'
+  import { cn, commitBindableChange } from '../../internal/utils'
   import { useDismissible } from '../../hooks/use-dismissible/use-dismissible.svelte'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { setAlertVariant } from './alert-context'
@@ -9,7 +9,7 @@
 
   type AlertLayout = 'block' | 'inline'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AlertProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Color scheme; also drives the `AlertIcon` accent.
      * @default 'default'
@@ -25,7 +25,7 @@
      * @default false
      */
     dismissible?: boolean
-    /** Controlled visibility. Pair with `onOpenChange`. */
+    /** Controlled visibility. Pair with `onOpenChange` or `bind:open`. */
     open?: boolean
     /** Called when the alert is dismissed (with `false`). */
     onOpenChange?: (open: boolean) => void
@@ -48,7 +48,7 @@
     variant = 'default',
     layout = 'block',
     dismissible = false,
-    open,
+    open = $bindable(),
     onOpenChange,
     persistKey,
     persistStorage = 'local',
@@ -57,7 +57,7 @@
     class: className,
     children,
     ...rest
-  }: Props = $props()
+  }: AlertProps = $props()
 
   setAlertVariant(() => variant)
 
@@ -71,16 +71,22 @@
   const actualOpen = $derived(isControlled ? open : usingPersisted ? persisted.open : internalOpen)
 
   function handleDismiss() {
-    if (isControlled) {
+    if (usingPersisted) {
+      persisted.dismiss()
       onOpenChange?.(false)
       return
     }
-    if (usingPersisted) {
-      persisted.dismiss()
-    } else {
-      internalOpen = false
-    }
-    onOpenChange?.(false)
+    commitBindableChange({
+      next: false,
+      bound: open,
+      setBound: (value) => {
+        open = value
+      },
+      setInner: (value) => {
+        internalOpen = value
+      },
+      onChange: onOpenChange,
+    })
   }
 
   function dismissTransition(_node: Element) {

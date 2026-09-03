@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import AlertHost from './alert.test-host.svelte'
+import AlertBindHost from './alert.bind.test-host.svelte'
 import type { AlertVariant } from './alert-variants'
 
 const TITLE = 'System message'
@@ -110,6 +111,19 @@ describe('Alert', () => {
     await waitFor(() => {
       expect(screen.queryByRole('alert')).toBeNull()
     })
+  })
+
+  it('closes via bind:open without onOpenChange', async () => {
+    const user = userEvent.setup()
+    render(AlertBindHost)
+
+    expect(screen.getByTestId('bound-open')).toHaveTextContent('true')
+
+    await user.click(screen.getByRole('button', { name: 'Dismiss' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('alert')).toBeNull()
+    })
+    expect(screen.getByTestId('bound-open')).toHaveTextContent('false')
   })
 
   it('persists dismissal via persistKey across remounts (localStorage)', async () => {

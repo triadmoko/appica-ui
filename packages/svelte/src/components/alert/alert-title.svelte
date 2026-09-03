@@ -5,7 +5,7 @@
 
   type HeadingEl = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type AlertTitleProps = HTMLAttributes<HTMLElement> & {
     /**
      * Heading level, so the alert fits the page's heading outline.
      * @default 'h5'
@@ -14,7 +14,7 @@
     children?: Snippet
   }
 
-  let { class: className, el = 'h5', children, ...rest }: Props = $props()
+  let { class: className, el = 'h5', children, ...rest }: AlertTitleProps = $props()
 </script>
 
 <svelte:element

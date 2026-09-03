@@ -3,8 +3,8 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLParagraphElement> & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type AlertDescriptionProps = HTMLAttributes<HTMLParagraphElement> & { children?: Snippet }
+  let { class: className, children, ...rest }: AlertDescriptionProps = $props()
 </script>
 
 <p
