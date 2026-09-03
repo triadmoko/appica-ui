@@ -6,7 +6,7 @@
 
   const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type CountdownSegmentProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     /** Which unit to read from the parent `Countdown`. */
     unit?: CountdownUnit
     /** Render this number directly instead of reading context (standalone display). */
@@ -18,7 +18,7 @@
     minDigits?: number
   }
 
-  let { unit, value, minDigits = 2, class: className, ...rest }: Props = $props()
+  let { unit, value, minDigits = 2, class: className, ...rest }: CountdownSegmentProps = $props()
 
   const parts = getCountdownContext()
   const reduced = useReducedMotion()

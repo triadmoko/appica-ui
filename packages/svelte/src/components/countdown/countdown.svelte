@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { getParts, setCountdownContext, toTimestamp, type CountdownParts } from './countdown-context'
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  export type CountdownProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /** Absolute instant to count down to (a `Date`, epoch-ms, or date string). */
     targetDate?: Date | number | string
     /** Relative length in **seconds** from mount. Ignored when `targetDate` is set. */
@@ -28,7 +28,7 @@
     class: className,
     children,
     ...rest
-  }: Props = $props()
+  }: CountdownProps = $props()
 
   const mountedAt = Date.now()
   let now = $state(Date.now())
