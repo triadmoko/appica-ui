@@ -2,12 +2,12 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToastProgressProps = HTMLAttributes<HTMLDivElement> & {
     /** Duration of the countdown animation, in milliseconds. */
     timeout: number
   }
 
-  let { timeout, class: className, ...rest }: Props = $props()
+  let { timeout, class: className, ...rest }: ToastProgressProps = $props()
 </script>
 
 <div

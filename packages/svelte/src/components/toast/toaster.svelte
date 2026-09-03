@@ -3,7 +3,7 @@
   import Thumbnail from '../thumbnail/thumbnail.svelte'
   import { asBitsAttrs } from '../../internal/utils'
   import { toastStackGapPx } from './toast-variants'
-  import { useToastManager, type ToastPosition } from './toast-manager.svelte'
+  import { isToastIconSnippet, useToastManager, type ToastPayload, type ToastPosition } from './toast-manager.svelte'
   import ToastPortal from './toast-portal.svelte'
   import ToastViewport from './toast-viewport.svelte'
   import Toast from './toast.svelte'
@@ -14,7 +14,7 @@
   import ToastAction from './toast-action.svelte'
   import ToastStatusIcon from './toast-status-icon.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToasterProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Where the stack is anchored; also sets the default swipe-to-dismiss directions.
      * @default 'bottom-right'
@@ -49,7 +49,7 @@
     container,
     portalProps,
     ...rest
-  }: Props = $props()
+  }: ToasterProps = $props()
 
   const manager = useToastManager()
   const providerTimeout = $derived(timeout ?? manager.timeout)
@@ -87,6 +87,20 @@
     const measured = list.reduce((sum, toast) => sum + (toast.height ?? 0), 0)
     return measured + Math.max(0, list.length - 1) * toastStackGapPx
   })
+
+  function leadingChrome(data: ToastPayload | undefined) {
+    if (!data) return undefined
+    if (data.thumbnail) {
+      return { type: 'thumbnail' as const, src: data.thumbnail, alt: data.thumbnailAlt ?? '' }
+    }
+    if (isToastIconSnippet(data.icon)) {
+      return { type: 'snippet' as const, snippet: data.icon }
+    }
+    if (data.icon) {
+      return { type: 'status' as const, kind: data.icon }
+    }
+    return undefined
+  }
 </script>
 
 <ToastPortal to={container} {...asBitsAttrs(portalProps ?? {})}>
@@ -97,6 +111,7 @@
     style="--stack-collapsed: {collapsedHeight}px; --stack-expanded: {expandedHeight}px"
   >
     {#each manager.toasts as toast, index (toast.id)}
+      {@const chrome = leadingChrome(toast.data)}
       <Toast
         {toast}
         {position}
@@ -108,13 +123,15 @@
         offsetY={offsetY(index)}
         onHeight={(height) => manager.setHeight(toast.id, height)}
       >
-        {#if toast.data?.thumbnail}
+        {#if chrome?.type === 'thumbnail'}
           <ToastIcon>
-            <Thumbnail size="sm" src={toast.data.thumbnail} alt={toast.data.thumbnailAlt ?? ''} />
+            <Thumbnail size="sm" src={chrome.src} alt={chrome.alt} />
           </ToastIcon>
-        {:else if toast.data?.icon}
+        {:else if chrome?.type === 'snippet'}
+          <ToastIcon>{@render chrome.snippet()}</ToastIcon>
+        {:else if chrome?.type === 'status'}
           <ToastIcon>
-            <ToastStatusIcon kind={toast.data.icon} />
+            <ToastStatusIcon kind={chrome.kind} />
           </ToastIcon>
         {/if}
         {#if toast.title}

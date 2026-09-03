@@ -11,8 +11,10 @@
   import ToastClose from './toast-close.svelte'
   import ToastProgress from './toast-progress.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToastProps = HTMLAttributes<HTMLDivElement> & {
+    /** The toast data from `toasts`. */
     toast: ToastData
+    /** Override the anchor and default swipe directions for this toast. */
     position?: ToastPosition
     /**
      * Show the dismiss button.
@@ -38,10 +40,15 @@
      * Direction(s) in which the toast can be swiped to dismiss.
      */
     swipeDirection?: ToastSwipeAxis | ToastSwipeAxis[]
+    /** Stack index among visible toasts. */
     index?: number
+    /** Measured height of this toast, in pixels. */
     ownHeight?: number
+    /** Height of the frontmost toast, in pixels. */
     frontmostHeight?: number
+    /** Cumulative height of toasts in front of this one, in pixels. */
     offsetY?: number
+    /** Reports the measured content height to the manager. */
     onHeight?: (height: number) => void
     children?: Snippet
   }
@@ -63,7 +70,7 @@
     onkeydown,
     children,
     ...rest
-  }: Props = $props()
+  }: ToastProps = $props()
 
   const manager = useToastManager()
   const view = getToastViewContext()

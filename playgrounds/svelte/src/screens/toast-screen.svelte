@@ -17,7 +17,7 @@
   <DirectionProvider {dir}>
     <ToastProvider>
       <ToastExamples bind:position />
-      <Toaster {position} />
+      <Toaster {position} progress />
     </ToastProvider>
   </DirectionProvider>
 </section>

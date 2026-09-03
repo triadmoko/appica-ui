@@ -6,7 +6,7 @@
   import { getToastItemContext } from './toast-item-context'
   import { useToastManager } from './toast-manager.svelte'
 
-  type Props = HTMLButtonAttributes & {
+  export type ToastCloseProps = HTMLButtonAttributes & {
     /**
      * Accessible label for the dismiss control.
      * @default 'Dismiss'
@@ -15,7 +15,7 @@
     children?: Snippet
   }
 
-  let { class: className, closeLabel = 'Dismiss', children, onclick, onfocus, onblur, ...rest }: Props = $props()
+  let { class: className, closeLabel = 'Dismiss', children, onclick, onfocus, onblur, ...rest }: ToastCloseProps = $props()
 
   const manager = useToastManager()
   const view = getToastViewContext()

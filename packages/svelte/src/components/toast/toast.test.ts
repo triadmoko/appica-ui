@@ -1,10 +1,13 @@
-import { render, screen, waitFor } from '@testing-library/svelte'
+import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import ToastHost from './toast.test-host.svelte'
 import ToastManual from './toast.test-manual.svelte'
+import ToastSnippet from './toast.test-snippet.svelte'
+import ToastManaged from './toast.test-managed.svelte'
 import { createToastManager, type ToastPosition } from './toast-manager.svelte'
+import { attachToastSwipe, swipeDisplacement } from './toast-swipe'
 
 afterEach(() => {
   vi.useRealTimers()
@@ -183,6 +186,65 @@ describe('Toast', () => {
     expect(document.activeElement).toBe(viewport)
   })
 
+  it('pauses auto-dismiss timers when F6 focuses the viewport', async () => {
+    const manager = createToastManager({ timeout: 1000 })
+    render(ToastManaged, { props: { manager } })
+    manager.add({ title: 'Timed' })
+    expect(await screen.findByText('Timed')).toBeInTheDocument()
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F6', bubbles: true }))
+    expect(manager.timersPaused).toBe(true)
+  })
+
+  it('renders a snippet passed through data.icon', async () => {
+    const user = userEvent.setup()
+    render(ToastSnippet)
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    expect(await screen.findByTestId('custom-icon')).toBeInTheDocument()
+    expect(document.querySelector('[data-slot="toast-icon"]')).toContainElement(screen.getByTestId('custom-icon'))
+  })
+
+  it('announces high-priority toasts with alertdialog and an alert live region', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0, priority: 'high' } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    const alert = await screen.findByRole('alert')
+    expect(document.querySelector('[data-slot="toast"]')).toHaveAttribute('role', 'alertdialog')
+    expect(alert).toHaveTextContent('Hello')
+    expect(alert).toHaveTextContent('World')
+  })
+
+  it('dismisses a toast when swiped past the threshold', async () => {
+    const manager = createToastManager()
+    render(ToastManaged, { props: { manager } })
+    const id = manager.add({ title: 'Swipe me', timeout: 0 })
+    expect(await screen.findByText('Swipe me')).toBeInTheDocument()
+    manager.close(id, 'right')
+    expect(manager.toasts[0]?.closing).toBe(true)
+    expect(manager.toasts[0]?.swipeDirection).toBe('right')
+    await waitFor(() => {
+      expect(document.querySelector('[data-slot="toast"]')).toHaveAttribute('data-swipe-direction', 'right')
+    })
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Swipe me')).toBeNull()
+      },
+      { timeout: 2000 },
+    )
+  })
+
+  it('ignores swipes that start on the close button', async () => {
+    const user = userEvent.setup()
+    render(ToastHost, { props: { timeout: 0 } })
+    await user.click(screen.getByRole('button', { name: 'Show toast' }))
+    await screen.findByText('Hello')
+    const close = document.querySelector('[data-slot="toast-close"]') as HTMLButtonElement
+    fireEvent.pointerDown(close, { button: 0, clientX: 100, clientY: 100, pointerId: 1 })
+    fireEvent.pointerMove(close, { pointerId: 1, clientX: 160, clientY: 100 })
+    fireEvent.pointerUp(close, { pointerId: 1, clientX: 160, clientY: 100 })
+    expect(document.querySelector('[data-slot="toast"]')).not.toHaveAttribute('data-swipe-direction')
+    expect(screen.getByText('Hello')).toBeInTheDocument()
+  })
+
   it('has no accessibility violations once a toast is shown', async () => {
     const user = userEvent.setup()
     const { container } = render(ToastHost, {
@@ -304,9 +366,78 @@ describe('createToastManager', () => {
       success: 'Done',
       error: 'Fail',
     })
-    expect(manager.toasts[0]?.description).toBe('Working')
+    expect(manager.toasts[0]?.title).toBe('Working')
     await result
-    expect(manager.toasts[0]?.description).toBe('Done')
+    expect(manager.toasts[0]?.title).toBe('Done')
     expect(manager.toasts[0]?.type).toBe('success')
+  })
+
+  it('drives toasts from an external manager passed as toastManager', async () => {
+    const manager = createToastManager()
+    render(ToastManaged, { props: { manager } })
+    manager.add({ title: 'External', timeout: 0 })
+    expect(await screen.findByText('External')).toBeInTheDocument()
+  })
+})
+
+describe('swipeDisplacement', () => {
+  it('returns the signed offset along each axis', () => {
+    expect(swipeDisplacement('right', 40, 0)).toBe(40)
+    expect(swipeDisplacement('left', -40, 0)).toBe(40)
+    expect(swipeDisplacement('down', 0, 50)).toBe(50)
+    expect(swipeDisplacement('up', 0, -50)).toBe(50)
+    expect(swipeDisplacement('right', -10, 0)).toBe(-10)
+  })
+})
+
+describe('attachToastSwipe', () => {
+  it('calls onDismiss when pointer travel exceeds 40px', () => {
+    const node = document.createElement('div')
+    document.body.append(node)
+    const onDismiss = vi.fn()
+    const onCancel = vi.fn()
+    const detach = attachToastSwipe(node, {
+      get enabled() {
+        return true
+      },
+      get directions() {
+        return ['right']
+      },
+      onMove: vi.fn(),
+      onDismiss,
+      onCancel,
+    })
+    node.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: 0, clientY: 0, pointerId: 1 }))
+    node.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 50, clientY: 0, pointerId: 1 }))
+    node.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: 50, clientY: 0, pointerId: 1 }))
+    expect(onDismiss).toHaveBeenCalledWith('right', 50, 0)
+    expect(onCancel).not.toHaveBeenCalled()
+    detach()
+    node.remove()
+  })
+
+  it('ignores pointerdown on buttons', () => {
+    const node = document.createElement('div')
+    const button = document.createElement('button')
+    node.append(button)
+    document.body.append(node)
+    const onDismiss = vi.fn()
+    const detach = attachToastSwipe(node, {
+      get enabled() {
+        return true
+      },
+      get directions() {
+        return ['right']
+      },
+      onMove: vi.fn(),
+      onDismiss,
+      onCancel: vi.fn(),
+    })
+    button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: 0, clientY: 0, pointerId: 1 }))
+    button.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 50, clientY: 0, pointerId: 1 }))
+    button.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: 50, clientY: 0, pointerId: 1 }))
+    expect(onDismiss).not.toHaveBeenCalled()
+    detach()
+    node.remove()
   })
 })

@@ -1,4 +1,4 @@
-import { getContext, setContext } from 'svelte'
+import { getContext, setContext, type Snippet } from 'svelte'
 import { SvelteMap } from 'svelte/reactivity'
 import type { HTMLButtonAttributes } from 'svelte/elements'
 import type { ToastSwipeAxis } from './toast-swipe'
@@ -16,7 +16,8 @@ export const TOAST_STATUS_ICONS = ['success', 'error', 'info', 'warning', 'loadi
 export type ToastStatusIcon = (typeof TOAST_STATUS_ICONS)[number]
 
 export type ToastPayload = {
-  icon?: ToastStatusIcon | (string & {})
+  /** Leading chrome: a status name, a snippet, or a fallback string. */
+  icon?: ToastStatusIcon | Snippet | (string & {})
   thumbnail?: string
   thumbnailAlt?: string
 }
@@ -26,7 +27,7 @@ export type ToastActionProps = Pick<HTMLButtonAttributes, 'onclick' | 'disabled'
   onClick?: (event: MouseEvent) => void
 }
 
-export type ToastData = {
+export type ToastData<Data = ToastPayload> = {
   id: string
   title?: string
   description?: string
@@ -44,7 +45,7 @@ export type ToastData = {
    * @default 'low'
    */
   priority?: 'low' | 'high'
-  data?: ToastPayload
+  data?: Data
   actionProps?: ToastActionProps
   onClose?: () => void
   onRemove?: () => void
@@ -58,20 +59,20 @@ export type ToastData = {
   closing?: boolean
 }
 
-export type AddToastOptions = Omit<
-  ToastData,
+export type AddToastOptions<Data = ToastPayload> = Omit<
+  ToastData<Data>,
   'id' | 'closing' | 'limited' | 'updateKey' | 'height' | 'swipeDirection'
 > & { id?: string }
 
-export type ToastPromiseMessage<T = unknown> =
+export type ToastPromiseMessage<T = unknown, Data = ToastPayload> =
   | string
-  | AddToastOptions
-  | ((value: T) => string | AddToastOptions)
+  | AddToastOptions<Data>
+  | ((value: T) => string | AddToastOptions<Data>)
 
-export type ToastPromiseMessages<T = unknown> = {
-  loading: ToastPromiseMessage
-  success: ToastPromiseMessage<T>
-  error: ToastPromiseMessage<unknown>
+export type ToastPromiseMessages<T = unknown, Data = ToastPayload> = {
+  loading: ToastPromiseMessage<unknown, Data>
+  success: ToastPromiseMessage<T, Data>
+  error: ToastPromiseMessage<unknown, Data>
 }
 
 export type ToastManagerOptions = {
@@ -79,17 +80,17 @@ export type ToastManagerOptions = {
   limit?: number
 }
 
-export type ToastManager = {
-  readonly toasts: ToastData[]
+export type ToastManager<Data = ToastPayload> = {
+  readonly toasts: ToastData<Data>[]
   readonly timeout: number
   readonly limit: number
   readonly timersPaused: boolean
-  add: (options: AddToastOptions) => string
+  add: (options: AddToastOptions<Data>) => string
   close: (id?: string, swipeDirection?: ToastSwipeAxis) => void
   /** Drop a toast immediately, skipping the exit animation. */
   remove: (id: string) => void
-  update: (id: string, options: Partial<AddToastOptions>) => void
-  promise: <T>(work: Promise<T>, messages: ToastPromiseMessages<T>) => Promise<T>
+  update: (id: string, options: Partial<AddToastOptions<Data>>) => void
+  promise: <T>(work: Promise<T>, messages: ToastPromiseMessages<T, Data>) => Promise<T>
   pauseTimers: () => void
   resumeTimers: () => void
   setHeight: (id: string, height: number) => void
@@ -115,9 +116,13 @@ export function isToastStatusIcon(value: string): value is ToastStatusIcon {
   return (TOAST_STATUS_ICONS as readonly string[]).includes(value)
 }
 
-function resolvePromiseMessage<T>(message: ToastPromiseMessage<T>, value?: T): AddToastOptions {
+export function isToastIconSnippet(value: unknown): value is Snippet {
+  return typeof value === 'function'
+}
+
+function resolvePromiseMessage<T, Data>(message: ToastPromiseMessage<T, Data>, value?: T): AddToastOptions<Data> {
   const resolved = typeof message === 'function' ? message(value as T) : message
-  return typeof resolved === 'string' ? { description: resolved } : resolved
+  return typeof resolved === 'string' ? { title: resolved } : resolved
 }
 
 type TimerEntry = {
@@ -128,7 +133,7 @@ type TimerEntry = {
   callback: () => void
 }
 
-function applyLimited(list: ToastData[], limit: number): ToastData[] {
+function applyLimited<Data>(list: ToastData<Data>[], limit: number): ToastData<Data>[] {
   let activeIndex = 0
   return list.map((toast) => {
     if (toast.closing) return toast
@@ -139,15 +144,15 @@ function applyLimited(list: ToastData[], limit: number): ToastData[] {
   })
 }
 
-export function createToastManager(options: ToastManagerOptions = {}): ToastManager {
-  let items = $state<ToastData[]>([])
+export function createToastManager<Data = ToastPayload>(options: ToastManagerOptions = {}): ToastManager<Data> {
+  let items = $state<ToastData<Data>[]>([])
   let timeout = $state(options.timeout ?? DEFAULT_TIMEOUT)
   let limit = $state(options.limit ?? DEFAULT_LIMIT)
   let timersPaused = false
   const timers = new SvelteMap<string, TimerEntry>()
   const exitTimers = new SvelteMap<string, ReturnType<typeof setTimeout>>()
 
-  function setItems(next: ToastData[]) {
+  function setItems(next: ToastData<Data>[]) {
     items = applyLimited(next, limit)
   }
 
@@ -246,7 +251,7 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
     setItems(items.filter((toast) => toast.id !== id))
   }
 
-  function add(addOptions: AddToastOptions) {
+  function add(addOptions: AddToastOptions<Data>) {
     const id = addOptions.id ?? `toast-${++idCount}`
     const existing = items.find((toast) => toast.id === id)
     if (existing) {
@@ -257,7 +262,7 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
         return id
       }
     }
-    const toast: ToastData = { ...addOptions, id, updateKey: 0 }
+    const toast: ToastData<Data> = { ...addOptions, id, updateKey: 0 }
     setItems([toast, ...items])
     const duration = toast.timeout ?? timeout
     if (toast.type !== 'loading' && duration > 0) {
@@ -268,12 +273,12 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
 
   function update(
     id: string,
-    updateOptions: Partial<AddToastOptions>,
+    updateOptions: Partial<AddToastOptions<Data>>,
     flags: { resetTimer?: boolean; bumpKey?: boolean } = {},
   ) {
     const current = items.find((toast) => toast.id === id)
     if (!current || current.closing) return
-    const next: ToastData = {
+    const next: ToastData<Data> = {
       ...current,
       ...updateOptions,
       id,
@@ -296,7 +301,7 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
     }
   }
 
-  function promise<T>(work: Promise<T>, messages: ToastPromiseMessages<T>): Promise<T> {
+  function promise<T>(work: Promise<T>, messages: ToastPromiseMessages<T, Data>): Promise<T> {
     const loading = resolvePromiseMessage(messages.loading)
     const id = add({ timeout: 0, ...loading, type: loading.type ?? 'loading' })
     return work.then(
@@ -387,12 +392,12 @@ export function createToastManager(options: ToastManagerOptions = {}): ToastMana
   }
 }
 
-export function setToastManager(manager: ToastManager) {
+export function setToastManager<Data = ToastPayload>(manager: ToastManager<Data>) {
   setContext(KEY, manager)
 }
 
-export function useToastManager(): ToastManager {
-  const ctx = getContext<ToastManager>(KEY)
+export function useToastManager<Data = ToastPayload>(): ToastManager<Data> {
+  const ctx = getContext<ToastManager<Data>>(KEY)
   if (!ctx) {
     throw new Error('useToastManager must be used within <ToastProvider>')
   }

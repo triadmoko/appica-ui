@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
+  export type ToastIconProps = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: ToastIconProps = $props()
 </script>
 
 <span

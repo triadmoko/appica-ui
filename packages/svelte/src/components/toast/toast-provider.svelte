@@ -3,11 +3,15 @@
   import { untrack } from 'svelte'
   import { createToastManager, setToastManager, type ToastManager } from './toast-manager.svelte'
 
-  type Props = {
+  export type ToastProviderProps = {
     /**
      * Existing manager. Created automatically when omitted.
      */
     manager?: ToastManager
+    /**
+     * A manager from `createToastManager()` to drive toasts from outside the component tree. Same as `manager`.
+     */
+    toastManager?: ToastManager
     /**
      * Default auto-dismiss duration in milliseconds. `0` disables auto-dismiss.
      * @default 5000
@@ -21,10 +25,10 @@
     children?: Snippet
   }
 
-  let { manager, timeout = 5000, limit = 3, children }: Props = $props()
+  let { manager, toastManager, timeout = 5000, limit = 3, children }: ToastProviderProps = $props()
 
   const fallback = createToastManager()
-  const active = untrack(() => manager ?? fallback)
+  const active = untrack(() => toastManager ?? manager ?? fallback)
   setToastManager(active)
 
   $effect(() => {

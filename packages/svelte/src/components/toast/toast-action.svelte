@@ -7,7 +7,15 @@
   import { getToastItemContext } from './toast-item-context'
 
   type Props = HTMLButtonAttributes & {
+    /**
+     * Visual style.
+     * @default 'primary'
+     */
     variant?: VariantProps<typeof buttonVariants>['variant']
+    /**
+     * Height and padding.
+     * @default 'sm'
+     */
     size?: VariantProps<typeof buttonVariants>['size']
     children?: Snippet
   }

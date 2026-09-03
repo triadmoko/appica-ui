@@ -7,7 +7,7 @@
   import { viewportPositionClasses } from './toast-variants'
   import { useToastManager, type ToastPosition } from './toast-manager.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToastViewportProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Where the stack is anchored.
      * @default 'bottom-right'
@@ -16,7 +16,8 @@
     children?: Snippet
   }
 
-  let { class: className, position: positionProp, children, onkeydown, onfocus, onblur, ...rest }: Props = $props()
+  let { class: className, position: positionProp, children, onkeydown, onfocus, onblur, ...rest }: ToastViewportProps =
+    $props()
 
   const parent = getToastViewContext()
   const manager = useToastManager()

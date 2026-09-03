@@ -3,7 +3,7 @@
   import { Portal } from 'bits-ui'
   import { asBitsAttrs } from '../../internal/utils'
 
-  type Props = {
+  export type ToastPortalProps = {
     /**
      * Portal target.
      * @default document.body
@@ -12,7 +12,7 @@
     children?: Snippet
   }
 
-  let { to, children, ...rest }: Props = $props()
+  let { to, children, ...rest }: ToastPortalProps = $props()
 </script>
 
 <Portal {to} {...asBitsAttrs(rest)}>

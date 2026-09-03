@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getToastItemContext } from './toast-item-context'
 
-  type Props = HTMLAttributes<HTMLHeadingElement> & { children?: Snippet }
+  export type ToastTitleProps = HTMLAttributes<HTMLHeadingElement> & { children?: Snippet }
 
-  let { class: className, id: idProp, children, ...rest }: Props = $props()
+  let { class: className, id: idProp, children, ...rest }: ToastTitleProps = $props()
 
   const item = getToastItemContext()
   const fallback = $derived(item ? `${item.toast.id}-title` : undefined)
