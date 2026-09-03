@@ -64,7 +64,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `skeleton` - Wave 1. Same `shimmer` / `pulse` / `none` classes as React.
 - [x] `slider` - Wave 2: bits-ui. Folded Root + track + thumbs. Infers `type` from number vs array. `tooltipVisibility`. RTL via closest `[dir]`.
 - [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL from closest `[dir]` (no DirectionProvider).
-- [x] `spinner` - Wave 1. Circular / dots / sparkle as CSS `@keyframes`, gated by `useReducedMotion`.
+- [x] `spinner` - Wave 1. Circular / dots as CSS `@keyframes`; sparkle morphs via rAF. Gated by `useReducedMotion`.
 - [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.
 - [x] `tabs` - Wave 2: bits-ui. Custom sliding indicator (`data-slot="tabs-indicator"`) because bits-ui has no Tabs.Indicator. `data-[state=active]:`.
