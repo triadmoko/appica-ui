@@ -11,7 +11,7 @@
     none: '',
   }
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type SkeletonProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Animation played while the placeholder is visible. All effects honor `prefers-reduced-motion`.
      * @default 'shimmer'
@@ -20,7 +20,7 @@
     children?: Snippet
   }
 
-  let { effect = 'shimmer', class: className, children, ...rest }: Props = $props()
+  let { effect = 'shimmer', class: className, children, ...rest }: SkeletonProps = $props()
 </script>
 
 <div

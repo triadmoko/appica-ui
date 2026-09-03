@@ -1,5 +1,6 @@
+import { tick } from 'svelte'
 import { render, screen } from '@testing-library/svelte'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import AvatarGroupHost from './avatar-group.test-host.svelte'
 import AvatarHost from './avatar.test-host.svelte'
@@ -116,6 +117,84 @@ describe('Avatar', () => {
     })
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('fires onLoadingStatusChange as the image loads and still calls consumer onload', async () => {
+    const onLoadingStatusChange = vi.fn()
+    const onload = vi.fn()
+    const { container } = render(AvatarHost, {
+      props: {
+        src: 'https://example.com/jane.jpg',
+        alt: 'Jane Doe',
+        onLoadingStatusChange,
+        onload,
+      },
+    })
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('loading')
+
+    const img = container.querySelector('[data-slot="avatar-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('load'))
+    await tick()
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('loaded')
+    expect(onload).toHaveBeenCalled()
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).toBeNull()
+  })
+
+  it('keeps the fallback visible when a consumer onload is provided', () => {
+    const onload = vi.fn()
+    const { container } = render(AvatarHost, {
+      props: { src: 'https://example.com/jane.jpg', alt: 'Jane Doe', onload },
+    })
+
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).not.toBeNull()
+    expect(onload).not.toHaveBeenCalled()
+  })
+
+  it('fires onLoadingStatusChange with error and still calls consumer onerror', async () => {
+    const onLoadingStatusChange = vi.fn()
+    const onerror = vi.fn()
+    const { container } = render(AvatarHost, {
+      props: {
+        src: 'https://example.com/broken.jpg',
+        alt: 'Broken',
+        onLoadingStatusChange,
+        onerror,
+      },
+    })
+
+    const img = container.querySelector('[data-slot="avatar-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('error'))
+    await tick()
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('error')
+    expect(onerror).toHaveBeenCalled()
+    expect(container.querySelector('[data-slot="avatar-image"]')).toBeNull()
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).not.toBeNull()
+  })
+
+  it('resets to idle when src is cleared so the fallback returns', async () => {
+    const onLoadingStatusChange = vi.fn()
+    const { container, rerender } = render(AvatarHost, {
+      props: {
+        src: 'https://example.com/jane.jpg',
+        alt: 'Jane Doe',
+        onLoadingStatusChange,
+      },
+    })
+
+    const img = container.querySelector('[data-slot="avatar-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('load'))
+    await tick()
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).toBeNull()
+
+    await rerender({ src: undefined, alt: 'Jane Doe', onLoadingStatusChange })
+    await tick()
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('idle')
+    expect(container.querySelector('[data-slot="avatar-image"]')).toBeNull()
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).not.toBeNull()
   })
 })
 

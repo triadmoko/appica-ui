@@ -1,34 +1,69 @@
 <script lang="ts">
   import type { HTMLImgAttributes } from 'svelte/elements'
+  import { untrack } from 'svelte'
   import { cn } from '../../internal/utils'
-  import { getAvatarContext } from './avatar-context'
+  import { getAvatarContext, type AvatarStatus } from './avatar-context'
+
+  const UNSET = Symbol('avatar-src')
 
   type Props = HTMLImgAttributes & {
     src?: string
     alt?: string
+    /**
+     * Fires as the image moves through its loading lifecycle.
+     */
+    onLoadingStatusChange?: (status: AvatarStatus) => void
   }
 
-  let { class: className, src, alt = '', ...rest }: Props = $props()
+  let {
+    class: className,
+    src,
+    alt = '',
+    onload,
+    onerror,
+    onLoadingStatusChange,
+    ...rest
+  }: Props = $props()
 
   const avatar = getAvatarContext()
 
-  function handleLoad() {
+  let seenSrc: string | undefined | typeof UNSET = UNSET
+
+  // Reset when `src` changes. Loaded/error come from img events, so this cannot be $derived.
+  $effect.pre(() => {
+    const current = src
+    if (current === seenSrc) return
+    seenSrc = current
+    const next: AvatarStatus = current ? 'loading' : 'idle'
+    untrack(() => {
+      avatar?.setStatus(next)
+      onLoadingStatusChange?.(next)
+    })
+  })
+
+  function handleLoad(event: Event & { currentTarget: EventTarget & HTMLImageElement }) {
     avatar?.setStatus('loaded')
+    onLoadingStatusChange?.('loaded')
+    onload?.(event)
   }
 
-  function handleError() {
+  function handleError(event: Event & { currentTarget: EventTarget & HTMLImageElement }) {
     avatar?.setStatus('error')
+    onLoadingStatusChange?.('error')
+    onerror?.(event)
   }
 </script>
 
 {#if src && avatar?.status !== 'error'}
-  <img
-    data-slot="avatar-image"
-    {src}
-    {alt}
-    class={cn('size-full rounded-[inherit] object-cover', className)}
-    onload={handleLoad}
-    onerror={handleError}
-    {...rest}
-  />
+  {#key src}
+    <img
+      data-slot="avatar-image"
+      {src}
+      {alt}
+      class={cn('size-full rounded-[inherit] object-cover', className)}
+      {...rest}
+      onload={handleLoad}
+      onerror={handleError}
+    />
+  {/key}
 {/if}
