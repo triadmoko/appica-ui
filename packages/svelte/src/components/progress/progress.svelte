@@ -9,7 +9,7 @@
     type ProgressVariant,
   } from './progress-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ProgressProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Horizontal track or SVG ring.
      * @default 'bar'
@@ -42,6 +42,12 @@
      * @default 100
      */
     max?: number
+    /** Formatting passed to `Intl.NumberFormat` for the displayed value. */
+    format?: Intl.NumberFormatOptions
+    /** Locale used by `Intl.NumberFormat`. */
+    locale?: Intl.LocalesArgument
+    /** Build the human-readable `aria-valuetext`. */
+    getAriaValueText?: (formatted: string, value: number) => string
     children?: Snippet
   }
 
@@ -53,11 +59,14 @@
     value = null,
     min = 0,
     max = 100,
+    format,
+    locale,
+    getAriaValueText,
     class: className,
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: ProgressProps = $props()
 
   let labelId = $state<string | undefined>(undefined)
 
@@ -65,6 +74,8 @@
     value: () => value,
     min: () => min,
     max: () => max,
+    format: () => format,
+    locale: () => locale,
     labelId: () => labelId,
     setLabelId: (id) => {
       labelId = id
@@ -75,8 +86,10 @@
   const resolvedSize = $derived(size ?? 56)
   const pct = $derived(percentOf(value, min, max))
   const complete = $derived(value != null && value >= max)
-  const rootStyle = $derived(
-    `--progress-color: ${indicatorColor ?? 'var(--primary)'};${style ? ` ${style}` : ''}`,
+  const progressing = $derived(value != null && value < max)
+  const formatted = $derived(formatPercent(value, min, max, format, locale))
+  const valueText = $derived(
+    value == null ? undefined : (getAriaValueText?.(formatted, value) ?? formatted),
   )
 
   const center = $derived(resolvedSize / 2)
@@ -88,13 +101,16 @@
 <div
   data-slot="progress"
   data-variant={variant}
+  data-complete={complete ? '' : undefined}
+  data-progressing={progressing ? '' : undefined}
   role="progressbar"
   aria-valuemin={min}
   aria-valuemax={max}
   aria-valuenow={value == null ? undefined : value}
-  aria-valuetext={value == null ? undefined : formatPercent(value, min, max)}
+  aria-valuetext={valueText}
   aria-labelledby={labelId}
-  style={rootStyle}
+  style:--progress-color={indicatorColor ?? 'var(--primary)'}
+  {style}
   class={cn(
     'grid w-full gap-x-2 gap-y-1.5',
     'data-[variant=bar]:grid-cols-[1fr_auto]',
@@ -114,13 +130,13 @@
     <div
       data-slot="progress-track"
       class="bg-background-strong relative w-full overflow-hidden rounded-full"
-      style={`height: ${resolvedThickness}px`}
+      style:height="{resolvedThickness}px"
     >
       <div
         data-slot="progress-indicator"
         data-complete={complete ? '' : undefined}
-        class="rounded-full bg-(--progress-color) transition-[width] duration-300 motion-reduce:transition-none"
-        style={`width: ${pct}%`}
+        class="h-full rounded-full bg-(--progress-color) transition-[width] duration-300 motion-reduce:transition-none"
+        style:width="{pct}%"
       ></div>
     </div>
   {:else}
@@ -153,7 +169,7 @@
         stroke-dasharray={circumference}
         stroke-dashoffset={offset}
         transform={`rotate(-90 ${center} ${center})`}
-        style="stroke: var(--progress-color)"
+        style:stroke="var(--progress-color)"
         class="transition-[stroke-dashoffset] duration-300 motion-reduce:transition-none"
       />
     </svg>

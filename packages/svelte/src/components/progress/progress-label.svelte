@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getProgressContext } from './progress-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
+  export type ProgressLabelProps = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
 
-  let { class: className, id, children, ...rest }: Props = $props()
+  let { class: className, id, children, ...rest }: ProgressLabelProps = $props()
 
   const ctx = getProgressContext()
   const uid = $props.id()

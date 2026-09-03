@@ -67,10 +67,50 @@ describe('Progress', () => {
     expect(screen.getByText('42%')).toBeInTheDocument()
   })
 
+  it('formats ProgressValue and aria-valuetext with format and locale', () => {
+    render(ProgressHost, {
+      props: {
+        value: 60,
+        showValue: true,
+        format: { minimumFractionDigits: 1, maximumFractionDigits: 1 },
+        locale: 'en-US',
+      },
+    })
+    expect(screen.getByText('60.0%')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '60.0%')
+  })
+
+  it('uses getAriaValueText for aria-valuetext without changing ProgressValue', () => {
+    render(ProgressHost, {
+      props: {
+        value: 40,
+        showValue: true,
+        getAriaValueText: (formatted, current) => `${current} of 100 (${formatted})`,
+      },
+    })
+    expect(screen.getByText('40%')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '40 of 100 (40%)')
+  })
+
+  it('passes formatted text and the numeric value to a custom ProgressValue snippet', () => {
+    render(ProgressHost, { props: { value: 42, customValue: true } })
+    expect(screen.getByText('42 (42%)')).toBeInTheDocument()
+  })
+
   it('marks complete state on parts when value reaches max', () => {
     const { container } = render(Progress, { props: { value: 100 } })
+    const root = screen.getByRole('progressbar')
     const indicator = container.querySelector('[data-slot=progress-indicator]') as HTMLElement
+    expect(root).toHaveAttribute('data-complete')
+    expect(root).not.toHaveAttribute('data-progressing')
     expect(indicator).toHaveAttribute('data-complete')
+  })
+
+  it('marks progressing on the root when value is below max', () => {
+    render(Progress, { props: { value: 40 } })
+    const root = screen.getByRole('progressbar')
+    expect(root).toHaveAttribute('data-progressing')
+    expect(root).not.toHaveAttribute('data-complete')
   })
 
   it('forwards class alongside the layout classes', () => {
