@@ -496,6 +496,35 @@
   initial-value: 0deg;
 }
 
+/*
+  Registered so the popup transform can read them before any inline value lands,
+  and so descendants don't pay the style recalc for high-frequency swipe updates.
+  Mirrors the `CSS.registerProperty` calls Base UI makes for the React drawer.
+*/
+@property --drawer-swipe-movement-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --drawer-swipe-movement-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --drawer-snap-point-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --drawer-swipe-progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 @utility animate-gradient-glow {
   animation-name: gradient-glow;
   animation-duration: var(--gradient-glow-duration, 4s);
