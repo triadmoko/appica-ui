@@ -2,7 +2,10 @@ import { render, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
+import { Popover } from './index'
 import PopoverHost from './popover.test-host.svelte'
+
+const overlayText = { hidden: true as const }
 
 describe('Popover', () => {
   it('renders the trigger and tags it with data-slot', () => {
@@ -34,6 +37,7 @@ describe('Popover', () => {
     expect(popup).not.toBeNull()
     expect(popup.className).toContain('bg-background')
     expect(popup.className).toContain('rounded-xl')
+    expect(popup.className).toContain('border-border-overlay')
 
     await user.keyboard('{Escape}')
     await waitFor(() => {
@@ -56,6 +60,18 @@ describe('Popover', () => {
     })
   })
 
+  it('does not trap focus by default', async () => {
+    const user = userEvent.setup()
+    render(PopoverHost)
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    await screen.findByText('You are all caught up.')
+
+    const outside = screen.getByRole('button', { name: 'Outside' })
+    outside.focus()
+    expect(document.activeElement).toBe(outside)
+  })
+
   it('renders the title with intense foreground styles', async () => {
     const user = userEvent.setup()
     render(PopoverHost, { props: { title: 'Heading' } })
@@ -67,25 +83,53 @@ describe('Popover', () => {
     expect(title.className).toContain('font-semibold')
   })
 
-  it('renders the arrow svg inside the popup', async () => {
+  it('renders the arrow as a sibling of the inner card', async () => {
     const user = userEvent.setup()
     render(PopoverHost)
     await user.click(screen.getByRole('button', { name: 'Open' }))
     await screen.findByText('You are all caught up.')
 
+    const card = document.querySelector('[data-slot="popover-content"]') as HTMLElement
     const arrow = document.querySelector('[data-slot="popover-arrow"]') as HTMLElement | null
     expect(arrow).not.toBeNull()
     expect(arrow!.querySelector('svg')).not.toBeNull()
+    expect(card.contains(arrow)).toBe(false)
+    expect(card.parentElement?.contains(arrow)).toBe(true)
   })
 
-  it('omits the arrow when arrow is false', async () => {
+  it('omits the arrow and the thicker side border when arrow is false', async () => {
     const user = userEvent.setup()
     render(PopoverHost, { props: { arrow: false, description: 'No arrow here.' } })
 
     await user.click(screen.getByRole('button', { name: 'Open' }))
-    await screen.findByText('No arrow here.')
+    const description = await screen.findByText('No arrow here.')
 
     expect(document.querySelector('[data-slot="popover-arrow"]')).toBeNull()
+
+    const popup = description.closest('[data-slot="popover-content"]') as HTMLElement
+    expect(popup.className).not.toMatch(/border-[a-z]-2/)
+  })
+
+  it('opens on hover when openOnHover is set', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    render(PopoverHost, { props: { openOnHover: true, delay: 0, description: 'Hover opened.' } })
+
+    await user.hover(screen.getByRole('button', { name: 'Open' }))
+    expect(await screen.findByText('Hover opened.', overlayText)).toBeTruthy()
+  })
+
+  it('forwards DirectionProvider dir onto the portaled popup', async () => {
+    const user = userEvent.setup()
+    render(PopoverHost, { props: { dir: 'rtl', description: 'RTL popup' } })
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    const content = await screen.findByText('RTL popup')
+    const popup = content.closest('[data-slot="popover-content"]') as HTMLElement
+    expect(popup.closest('[dir]')?.getAttribute('dir')).toBe('rtl')
+  })
+
+  it('exposes createHandle for detached trigger patterns', () => {
+    expect(typeof Popover.createHandle).toBe('function')
   })
 
   it('has no accessibility violations (closed state)', async () => {
