@@ -94,15 +94,49 @@
   // stops the panel growing with its own content.
   const pinHeight = $derived(ctx.nestedPresentCount > 0 || !ctx.open)
   const backdropStyle = $derived(`--drawer-swipe-progress: ${ctx.swipeProgress}`)
-  const popupStyle = $derived(typeof style === 'string' ? style : undefined)
+  const popupStyle = $derived.by(() => {
+    const parts: string[] = []
+    if ((pinHeight || snapSide) && ctx.drawerHeight > 0) {
+      parts.push(`--drawer-height: ${ctx.drawerHeight}px`)
+    }
+    parts.push(`--drawer-frontmost-height: ${ctx.frontmostHeight || ctx.drawerHeight || 0}px`)
+    if (snapSide) {
+      // Inline so the first paint already peeks at 0.4. `--drawer-snap-point-offset`
+      // does not inherit, so a class fallback of 0px would open the sheet full-height.
+      parts.push(`--drawer-snap-point-offset: ${snapPointOffset}px`)
+      parts.push(`--snap-offset: ${ctx.snapOffset}px`)
+      parts.push(`--drawer-swipe-movement-x: ${ctx.swipeMovementX}px`)
+      parts.push(`--drawer-swipe-movement-y: ${ctx.swipeMovementY}px`)
+    }
+    if (typeof style === 'string' && style.length > 0) parts.push(style)
+    return parts.length > 0 ? parts.join('; ') : undefined
+  })
 
-  function assignShellVars(node: HTMLElement) {
-    if (pinHeight && ctx.drawerHeight > 0) {
+  function assignHeightVars(node: HTMLElement) {
+    // Snap drawers keep a measured height so enter/exit can mix px-to-px instead of
+    // 100% vs the snap offset. Without it, `--snap-offset` also collapses to 0.
+    if ((pinHeight || snapSide) && ctx.drawerHeight > 0) {
       node.style.setProperty('--drawer-height', `${ctx.drawerHeight}px`)
     } else {
       node.style.removeProperty('--drawer-height')
     }
     node.style.setProperty('--drawer-frontmost-height', `${ctx.frontmostHeight || ctx.drawerHeight || 0}px`)
+  }
+
+  function assignSnapVars(node: HTMLElement) {
+    // `--drawer-snap-point-offset` is registered `inherits: false`, so both the shell
+    // (`--snap-offset` / content height) and the panel (translate) need the value.
+    node.style.setProperty('--drawer-snap-point-offset', `${snapPointOffset}px`)
+    node.style.setProperty('--snap-offset', `${ctx.snapOffset}px`)
+  }
+
+  function assignShellVars(node: HTMLElement) {
+    assignHeightVars(node)
+    assignSnapVars(node)
+    if (snapSide) {
+      node.style.setProperty('--drawer-swipe-movement-x', `${ctx.swipeMovementX}px`)
+      node.style.setProperty('--drawer-swipe-movement-y', `${ctx.swipeMovementY}px`)
+    }
   }
 
   function assignPanelVars(node: HTMLElement) {
@@ -112,14 +146,27 @@
     node.style.setProperty('--drawer-swipe-movement-x', `${ctx.swipeMovementX}px`)
     node.style.setProperty('--drawer-swipe-movement-y', `${ctx.swipeMovementY}px`)
     node.style.setProperty('--nested-drawers', String(ctx.nestedCount))
-    node.style.setProperty('--drawer-snap-point-offset', `${snapPointOffset}px`)
+    assignHeightVars(node)
+    assignSnapVars(node)
+    // Percent-off-screen vs pixel rest does not interpolate on the positive axis
+    // (right/bottom). Mix px-to-px using the measured edge size.
+    const along =
+      ctx.side === 'left' || ctx.side === 'right' ? node.offsetWidth : node.offsetHeight
+    const offSize = along > 0 ? along : ctx.drawerHeight
+    if (offSize > 0) node.style.setProperty('--drawer-off-size', `${offSize}px`)
+  }
+
+  function syncPanelEnter(panel: HTMLElement, shell: HTMLElement | null) {
+    if (!(shell instanceof HTMLElement)) return
+    const offScreen = shell.hasAttribute('data-starting-style') || shell.hasAttribute('data-ending-style')
+    panel.toggleAttribute('data-enter', offScreen)
   }
 
   const shellClasses = $derived(
     cn(
       'relative flex min-h-0 flex-col pointer-events-auto isolate outline-none contain-none!',
-      'motion-safe:transition-[height] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
-      'data-ending-style:motion-safe:duration-300 data-nested-drawer-swiping:duration-0',
+      'motion-safe:transition-[height,translate] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
+      'data-ending-style:motion-safe:duration-300 data-nested-drawer-swiping:duration-0 data-swiping:duration-0',
       snapSide ? cn('touch-none', POPUP_SNAP_SIDE[snapSide]) : POPUP_SIDE[side],
       className,
     ),
@@ -127,7 +174,8 @@
 
   const panelClasses = $derived(
     cn(
-      'relative flex h-full min-h-0 w-full flex-col rounded-2xl border',
+      'relative flex w-full flex-col rounded-2xl border',
+      snapSide ? 'h-full min-h-full' : 'h-full min-h-0',
       snapSide
         ? cn(
             'bg-background border-border-overlay before:bg-background-strong',
@@ -161,6 +209,7 @@
   }
 
   function attachPanel(node: HTMLElement) {
+    assignPanelVars(node)
     $effect(() => {
       assignPanelVars(node)
     })
@@ -169,12 +218,35 @@
       // clipped to the frontmost drawer's height then, so remeasuring would latch that value.
       if (ctx.nestedPresentCount > 0) return
       const currentSide = ctx.side
+      // Snap peeks by shrinking the shell. Measuring that peeked height would feed back into
+      // `--snap-offset` and collapse 0.4 to a full-height sheet. Use the same full size the
+      // React popup keeps at `100dvh - 1rem`.
+      if (ctx.hasSnap && (currentSide === 'top' || currentSide === 'bottom')) {
+        ctx.setDrawerHeight(Math.max(window.innerHeight - 16, 0))
+        return
+      }
       const size = currentSide === 'left' || currentSide === 'right' ? node.offsetWidth : node.offsetHeight
       ctx.setDrawerHeight(size)
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(node)
+    window.addEventListener('resize', measure)
+
+    const shell = node.parentElement
+    syncPanelEnter(node, shell)
+    const enterObserver =
+      shell instanceof HTMLElement
+        ? new MutationObserver(() => {
+            syncPanelEnter(node, shell)
+          })
+        : null
+    if (enterObserver && shell instanceof HTMLElement) {
+      enterObserver.observe(shell, {
+        attributes: true,
+        attributeFilter: ['data-starting-style', 'data-ending-style'],
+      })
+    }
 
     const stopGesture = attachDrawerGesture(node, {
       get enabled() {
@@ -218,6 +290,8 @@
 
     return () => {
       ro.disconnect()
+      enterObserver?.disconnect()
+      window.removeEventListener('resize', measure)
       stopGesture()
     }
   }
@@ -288,7 +362,7 @@
             showFrame || snapSide
               ? 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]'
               : CONTENT_RECLAIM_SIDE[side],
-            snapSide ? 'h-[calc(100dvh-1.5rem-var(--snap-offset,0px))]' : 'flex-1',
+            snapSide ? 'h-full min-h-0' : 'flex-1',
           )}
         >
           {@render children?.()}
@@ -314,8 +388,10 @@
 <style>
   /*
     Mix off-screen and rest in one `translate`. Only `--drawer-enter` is interpolated
-    (1 off-screen, 0 rest), so right/bottom do not depend on percent-vs-px transform lists.
-    bits-ui starting/ending attributes stay on the dialog shell.
+    (1 off-screen, 0 rest). Off-screen distances are measured px, not 100%: percent-to-px
+    does not interpolate on the positive axis, so right/bottom used to pop in while
+    top/left slid. bits-ui starting/ending attributes stay on the dialog shell; `data-enter`
+    on the panel is the same state so `--drawer-enter` transitions on this node.
   */
   :global {
     [data-slot='drawer-panel'] {
@@ -331,7 +407,8 @@
       scale: var(--stack-scale, 1);
     }
 
-    [data-slot='drawer-popup']:is([data-starting-style], [data-ending-style]) [data-slot='drawer-panel'] {
+    [data-slot='drawer-popup']:is([data-starting-style], [data-ending-style]) [data-slot='drawer-panel'],
+    [data-slot='drawer-panel'][data-enter] {
       --drawer-enter: 1;
     }
 
@@ -342,36 +419,42 @@
 
     [data-slot='drawer-panel'][data-side='bottom'] {
       --drawer-off-x: 0px;
-      --drawer-off-y: calc(100% + 0.5rem);
+      --drawer-off-y: calc(var(--drawer-off-size, 100dvh) + 0.5rem);
       --drawer-rest-x: 0px;
       --drawer-rest-y: calc(var(--drawer-swipe-movement-y) - var(--stack-offset, 0px));
     }
 
     [data-slot='drawer-panel'][data-side='top'] {
       --drawer-off-x: 0px;
-      --drawer-off-y: calc(-100% - 0.5rem);
+      --drawer-off-y: calc(-1 * var(--drawer-off-size, 100dvh) - 0.5rem);
       --drawer-rest-x: 0px;
       --drawer-rest-y: calc(var(--drawer-swipe-movement-y) + var(--stack-offset, 0px));
     }
 
     [data-slot='drawer-panel'][data-side='left'] {
-      --drawer-off-x: calc(-100% - 0.5rem);
+      --drawer-off-x: calc(-1 * var(--drawer-off-size, 100dvw) - 0.5rem);
       --drawer-off-y: 0px;
       --drawer-rest-x: calc(var(--drawer-swipe-movement-x) + var(--stack-offset, 0px));
       --drawer-rest-y: 0px;
     }
 
     [data-slot='drawer-panel'][data-side='right'] {
-      --drawer-off-x: calc(100% + 0.5rem);
+      --drawer-off-x: calc(var(--drawer-off-size, 100dvw) + 0.5rem);
       --drawer-off-y: 0px;
       --drawer-rest-x: calc(var(--drawer-swipe-movement-x) - var(--stack-offset, 0px));
       --drawer-rest-y: 0px;
     }
 
-    [data-slot='drawer-panel'][data-snap][data-side='bottom'],
-    [data-slot='drawer-panel'][data-snap][data-side='top'] {
+    [data-slot='drawer-panel'][data-snap][data-side='bottom'] {
+      --drawer-off-y: calc(var(--drawer-off-size, var(--drawer-height, 100dvh)) + 0.5rem);
       --drawer-rest-x: 0px;
-      --drawer-rest-y: calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y));
+      --drawer-rest-y: 0px;
+    }
+
+    [data-slot='drawer-panel'][data-snap][data-side='top'] {
+      --drawer-off-y: calc(-1 * var(--drawer-off-size, var(--drawer-height, 100dvh)) - 0.5rem);
+      --drawer-rest-x: 0px;
+      --drawer-rest-y: 0px;
     }
   }
 </style>

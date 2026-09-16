@@ -23,11 +23,11 @@ export const POPUP_SIDE: Record<DrawerSide, string> = {
 
 export const POPUP_SNAP_SIDE: Record<'top' | 'bottom', string> = {
   bottom: cn(
-    'h-[calc(100dvh-1rem)] w-full min-h-0',
+    'h-[calc(100dvh-1rem-var(--snap-offset,0px)-var(--drawer-swipe-movement-y,0px))] w-full min-h-0',
     '[--snap-offset:var(--drawer-snap-point-offset,0px)]',
   ),
   top: cn(
-    'h-[calc(100dvh-1rem)] w-full min-h-0',
+    'h-[calc(100dvh-1rem-var(--snap-offset,0px)+var(--drawer-swipe-movement-y,0px))] w-full min-h-0',
     '[--snap-offset:var(--drawer-snap-point-offset,0px)]',
   ),
 }

@@ -180,7 +180,7 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveAttribute('data-side', 'bottom')
-    expect(dialog.className).toContain('h-[calc(100dvh-1rem)]')
+    expect(dialog.className).toContain('h-[calc(100dvh-1rem-var(--snap-offset,0px)')
     const panel = document.querySelector('[data-slot="drawer-panel"]')
     const style = panel?.getAttribute('style') ?? ''
     expect(style).toMatch(/--drawer-snap-point-offset:\s*[1-9]/)

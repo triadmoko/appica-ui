@@ -283,6 +283,11 @@ export function attachDrawerGesture(node: HTMLElement, handlers: DrawerGestureHa
 
   function drawerSize(): number {
     const side = handlers.side
+    if (isSnapGesture()) {
+      // Snap peeks shrink the panel. Gesture math still needs the full sheet
+      // (`100dvh - 1rem`), or 0.4 and 1 collapse to the same offset.
+      return Math.max(viewportSize() - 16, 1)
+    }
     return side === 'left' || side === 'right' ? node.offsetWidth : node.offsetHeight
   }
 
