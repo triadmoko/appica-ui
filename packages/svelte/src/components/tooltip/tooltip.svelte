@@ -20,6 +20,11 @@
      */
     disabled?: boolean
     /**
+     * Close the tooltip when the pointer enters its content.
+     * @default false
+     */
+    disableHoverablePopup?: boolean
+    /**
      * Make the bubble follow the cursor along the given axis.
      * @default 'none'
      */
@@ -32,6 +37,7 @@
     onOpenChange,
     delay,
     disabled = false,
+    disableHoverablePopup = false,
     trackCursorAxis = 'none',
     children,
   }: Props = $props()
@@ -91,6 +97,12 @@
   })
 </script>
 
-<BitsTooltip.Root bind:open={innerOpen} onOpenChange={handleOpenChange} delayDuration={delay} {disabled}>
+<BitsTooltip.Root
+  bind:open={innerOpen}
+  onOpenChange={handleOpenChange}
+  delayDuration={delay}
+  {disabled}
+  disableHoverableContent={disableHoverablePopup}
+>
   {@render children?.()}
 </BitsTooltip.Root>

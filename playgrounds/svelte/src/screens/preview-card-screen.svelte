@@ -24,7 +24,13 @@
 </script>
 
 {#snippet starIcon()}
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-warning-emphasis size-4" aria-hidden="true">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    class="text-warning-emphasis size-4"
+    aria-hidden="true"
+  >
     <path
       d="M12 2.25l2.66 6.36 6.91.63-5.24 4.55 1.56 6.76L12 17.27l-6.89 3.28 1.56-6.76-5.24-4.55 6.91-.63L12 2.25z"
     ></path>
@@ -130,6 +136,21 @@
         </PreviewCardContent>
       </PreviewCard>
       guide.
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Positioner theming</p>
+    <p class="text-foreground-muted text-center">
+      Opened from a light region, the popup still renders dark via
+      <PreviewCard>
+        <PreviewCardTrigger href="#!" class={LINK_CLASS}>positionerProps</PreviewCardTrigger>
+        <PreviewCardContent positionerProps={{ class: 'dark' }}>
+          <p class="text-foreground-intense font-semibold">Dark popup</p>
+          <p class="text-sm">The class lands on the positioner so tokens inherit inside the portal.</p>
+        </PreviewCardContent>
+      </PreviewCard>
+      .
     </p>
   </div>
 

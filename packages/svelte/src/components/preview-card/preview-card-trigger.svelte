@@ -36,7 +36,11 @@
     {@render children?.()}
   </a>
 {:else}
-  <BitsLinkPreview.Trigger data-slot="preview-card-trigger" {href} class={cn(className)} {...asBitsAttrs(rest)}>
-    {@render children?.()}
+  <BitsLinkPreview.Trigger {href} class={cn(className)} {...asBitsAttrs(rest)}>
+    {#snippet child({ props })}
+      <a {...asBitsAttrs(props)} data-slot="preview-card-trigger" role="link">
+        {@render children?.()}
+      </a>
+    {/snippet}
   </BitsLinkPreview.Trigger>
 {/if}

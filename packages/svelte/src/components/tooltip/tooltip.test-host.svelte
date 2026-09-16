@@ -12,6 +12,7 @@
     arrow = true,
     content = 'Add to library',
     disabled = false,
+    disableHoverablePopup = false,
     trackCursorAxis = 'none',
     dir,
   }: {
@@ -19,6 +20,7 @@
     arrow?: boolean
     content?: string
     disabled?: boolean
+    disableHoverablePopup?: boolean
     trackCursorAxis?: 'none' | 'x' | 'y' | 'both'
     dir?: Direction
   } = $props()
@@ -26,7 +28,7 @@
 
 {#snippet tree()}
   <TooltipProvider {delay}>
-    <Tooltip {disabled} {trackCursorAxis}>
+    <Tooltip {disabled} {disableHoverablePopup} {trackCursorAxis}>
       <TooltipTrigger class={buttonVariants({ variant: 'outline' })}>Hover</TooltipTrigger>
       <TooltipContent {arrow}>
         <p>{content}</p>

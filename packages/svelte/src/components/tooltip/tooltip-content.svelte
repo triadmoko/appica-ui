@@ -36,6 +36,23 @@
      * @default false
      */
     keepMounted?: boolean
+    /**
+     * Minimum gap kept from the viewport edge when flipping/shifting.
+     * @default 5
+     */
+    collisionPadding?: number
+    /**
+     * Minimum gap between the arrow and the popup's corners.
+     * @default 5
+     */
+    arrowPadding?: number
+    /**
+     * Portal target. Maps to bits-ui Portal `to`.
+     * @default document.body
+     */
+    container?: Element | string
+    /** Escape hatch forwarded to the bits-ui Portal. */
+    portalProps?: Record<string, unknown>
     children?: Snippet
   }
 
@@ -47,6 +64,10 @@
     alignOffset = 0,
     arrow = true,
     keepMounted = false,
+    collisionPadding = 5,
+    arrowPadding = 5,
+    container,
+    portalProps,
     dir,
     children,
     ...rest
@@ -63,12 +84,17 @@
       return getTrackCursorVirtualRect(ctx.getTrackCursorAxis(), ctx.getTriggerEl(), ctx.cursor)
     },
   }
+  const portal = $derived({
+    ...portalProps,
+    ...(container !== undefined ? { to: container } : {}),
+  })
   const classes = $derived(
     cn(
       'isolate z-50 overflow-visible bg-background-inverse text-foreground-inverse rounded-xs px-3 py-1.5 text-xs shadow-md',
       'motion-safe:origin-(--bits-tooltip-content-transform-origin) motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
       'data-[state=closed]:motion-safe:scale-95 data-[state=closed]:motion-safe:opacity-0',
-      'data-[state=delayed-open]:motion-safe:scale-100',
+      'data-starting-style:motion-safe:scale-90 data-starting-style:motion-safe:opacity-0',
+      'data-ending-style:motion-safe:scale-95 data-ending-style:motion-safe:opacity-0 data-ending-style:motion-safe:duration-100 data-ending-style:motion-safe:ease-out',
       'data-[state=instant-open]:motion-safe:transition-none',
       className,
     ),
@@ -114,7 +140,7 @@
   }
 </script>
 
-<BitsTooltip.Portal>
+<BitsTooltip.Portal {...asBitsAttrs(portal)}>
   <BitsTooltip.Content
     data-slot="tooltip-content"
     class={classes}
@@ -122,6 +148,8 @@
     sideOffset={resolvedOffset}
     {align}
     {alignOffset}
+    {collisionPadding}
+    {arrowPadding}
     dir={resolvedDir}
     customAnchor={tracking ? cursorAnchor : undefined}
     updatePositionStrategy={tracking ? 'always' : 'optimized'}

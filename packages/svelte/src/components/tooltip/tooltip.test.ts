@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
 import TooltipHost from './tooltip.test-host.svelte'
+import TooltipToolbarHost from './tooltip.toolbar-host.svelte'
 
 describe('Tooltip', () => {
   it('renders the trigger and tags it with data-slot', () => {
@@ -16,9 +17,9 @@ describe('Tooltip', () => {
     expect(screen.queryByText('Hidden until hover')).toBeNull()
   })
 
-  it('shows content on hover and hides on Escape', async () => {
+  it('shows content on hover and hides on unhover', async () => {
     const user = userEvent.setup()
-    render(TooltipHost, { props: { content: 'Add to library' } })
+    render(TooltipHost, { props: { content: 'Add to library', disableHoverablePopup: true } })
 
     await user.hover(screen.getByRole('button', { name: 'Hover' }))
     const content = await screen.findByText('Add to library')
@@ -27,10 +28,11 @@ describe('Tooltip', () => {
     expect(popup).not.toBeNull()
     expect(popup.className).toContain('bg-background-inverse')
     expect(popup.className).toContain('text-foreground-inverse')
+    expect(popup.className).toContain('data-starting-style:motion-safe:scale-90')
+    expect(popup.className).toContain('data-ending-style:motion-safe:duration-100')
     expect(popup.className).toContain('data-[state=instant-open]:motion-safe:transition-none')
 
     await user.unhover(screen.getByRole('button', { name: 'Hover' }))
-    await user.keyboard('{Escape}')
     await waitFor(() => {
       expect(screen.queryByText('Add to library')).toBeNull()
     })
@@ -73,6 +75,14 @@ describe('Tooltip', () => {
     expect(screen.queryByText('Should stay hidden')).toBeNull()
   })
 
+  it('opens when disableHoverablePopup is set', async () => {
+    const user = userEvent.setup()
+    render(TooltipHost, { props: { disableHoverablePopup: true, content: 'Pointer-proof' } })
+
+    await user.hover(screen.getByRole('button', { name: 'Hover' }))
+    expect(await screen.findByText('Pointer-proof')).toBeTruthy()
+  })
+
   it('tracks the cursor when trackCursorAxis is set', async () => {
     const user = userEvent.setup()
     render(TooltipHost, { props: { trackCursorAxis: 'x', content: 'Following the cursor' } })
@@ -94,5 +104,19 @@ describe('Tooltip', () => {
   it('has no accessibility violations (closed state)', async () => {
     const { container } = render(TooltipHost)
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('joins toolbar roving tabindex when rendered inside Toolbar', async () => {
+    const user = userEvent.setup()
+    render(TooltipToolbarHost)
+
+    const bold = screen.getByRole('button', { name: 'Bold' })
+    const italic = screen.getByRole('button', { name: 'Italic' })
+    expect(bold).toHaveAttribute('tabindex', '0')
+    expect(italic).toHaveAttribute('tabindex', '-1')
+
+    bold.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(italic).toHaveFocus()
   })
 })

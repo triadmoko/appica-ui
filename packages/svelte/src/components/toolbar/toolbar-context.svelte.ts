@@ -68,9 +68,13 @@ export function setToolbarContext(value: ToolbarState) {
 }
 
 export function getToolbarContext(): ToolbarState {
-  const ctx = getContext<ToolbarState>(KEY)
+  const ctx = tryGetToolbarContext()
   if (!ctx) {
     throw new Error('Toolbar sub-components must be rendered inside <Toolbar>')
   }
   return ctx
+}
+
+export function tryGetToolbarContext(): ToolbarState | undefined {
+  return getContext<ToolbarState>(KEY)
 }
