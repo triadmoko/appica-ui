@@ -181,7 +181,8 @@ describe('Drawer', () => {
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveAttribute('data-side', 'bottom')
     expect(dialog.className).toContain('h-[calc(100dvh-1rem)]')
-    const style = dialog.getAttribute('style') ?? ''
+    const panel = document.querySelector('[data-slot="drawer-panel"]')
+    const style = panel?.getAttribute('style') ?? ''
     expect(style).toMatch(/--drawer-snap-point-offset:\s*[1-9]/)
   })
 
@@ -238,7 +239,8 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Open drawer' }))
     const dialog = await screen.findByRole('dialog')
     expect(dialog.className).toContain('h-full')
-    expect(dialog.className).toContain('ps-4')
+    const panel = document.querySelector('[data-slot="drawer-panel"]')
+    expect(panel?.className).toContain('ps-4')
   })
 
   it('exposes createHandle', async () => {

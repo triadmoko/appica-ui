@@ -12,6 +12,7 @@
     CONTENT_RECLAIM_SIDE,
     FRAME_PAD_SIDE,
     HANDLE_SIDE,
+    PANEL_ORIGIN,
     POPUP_SIDE,
     POPUP_SNAP_SIDE,
     SHADOW_SIDE,
@@ -95,25 +96,38 @@
   const backdropStyle = $derived(`--drawer-swipe-progress: ${ctx.swipeProgress}`)
   const popupStyle = $derived(typeof style === 'string' ? style : undefined)
 
-  function assignDrawerVars(node: HTMLElement) {
-    // `--drawer-swipe-progress` on the popup tracks the *nested* drawer's swipe: it un-stacks
-    // this panel as the drawer in front of it is swiped away.
-    node.style.setProperty('--drawer-swipe-progress', String(ctx.nestedSwipeProgress))
-    node.style.setProperty('--drawer-swipe-movement-x', `${ctx.swipeMovementX}px`)
-    node.style.setProperty('--drawer-swipe-movement-y', `${ctx.swipeMovementY}px`)
-    node.style.setProperty('--nested-drawers', String(ctx.nestedCount))
+  function assignShellVars(node: HTMLElement) {
     if (pinHeight && ctx.drawerHeight > 0) {
       node.style.setProperty('--drawer-height', `${ctx.drawerHeight}px`)
     } else {
       node.style.removeProperty('--drawer-height')
     }
     node.style.setProperty('--drawer-frontmost-height', `${ctx.frontmostHeight || ctx.drawerHeight || 0}px`)
+  }
+
+  function assignPanelVars(node: HTMLElement) {
+    // `--drawer-swipe-progress` on the panel tracks the *nested* drawer's swipe: it un-stacks
+    // this panel as the drawer in front of it is swiped away.
+    node.style.setProperty('--drawer-swipe-progress', String(ctx.nestedSwipeProgress))
+    node.style.setProperty('--drawer-swipe-movement-x', `${ctx.swipeMovementX}px`)
+    node.style.setProperty('--drawer-swipe-movement-y', `${ctx.swipeMovementY}px`)
+    node.style.setProperty('--nested-drawers', String(ctx.nestedCount))
     node.style.setProperty('--drawer-snap-point-offset', `${snapPointOffset}px`)
   }
 
-  const classes = $derived(
+  const shellClasses = $derived(
     cn(
-      'relative flex min-h-0 flex-col rounded-2xl border pointer-events-auto',
+      'relative flex min-h-0 flex-col pointer-events-auto isolate outline-none contain-none!',
+      'motion-safe:transition-[height] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
+      'data-ending-style:motion-safe:duration-300 data-nested-drawer-swiping:duration-0',
+      snapSide ? cn('touch-none', POPUP_SNAP_SIDE[snapSide]) : POPUP_SIDE[side],
+      className,
+    ),
+  )
+
+  const panelClasses = $derived(
+    cn(
+      'relative flex h-full min-h-0 w-full flex-col rounded-2xl border',
       snapSide
         ? cn(
             'bg-background border-border-overlay before:bg-background-strong',
@@ -126,15 +140,13 @@
         : showFrame
           ? 'before:bg-background border-white/15 bg-white/10 p-1.5 backdrop-blur-sm'
           : 'bg-background border-border-overlay before:bg-background-strong',
-      'isolate outline-none contain-none!',
       (hasSnap || !showFrame) && SHADOW_SIDE[side],
       FRAME_PAD_SIDE[side],
       HANDLE_SIDE[side],
-      'motion-safe:transition-[transform,height] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
-      'data-ending-style:motion-safe:duration-300 data-ending-style:motion-safe:ease-out',
-      'data-nested-drawer-swiping:duration-0 data-swiping:duration-0 data-swiping:select-none',
-      snapSide ? cn('touch-none', POPUP_SNAP_SIDE[snapSide]) : cn(STACK_VARS, POPUP_SIDE[side]),
-      className,
+      PANEL_ORIGIN[side],
+      'motion-safe:transition-[--drawer-enter,scale,height] motion-safe:duration-400 motion-safe:ease-[cubic-bezier(0.32,1.2,0.4,1)]',
+      'data-swiping:duration-0 data-swiping:select-none data-nested-drawer-swiping:duration-0',
+      snapSide ? 'touch-none' : STACK_VARS,
     ),
   )
 
@@ -142,9 +154,15 @@
     if (ctx.disablePointerDismissal) event.preventDefault()
   }
 
-  function attachPopup(node: HTMLElement) {
+  function attachShell(node: HTMLElement) {
     $effect(() => {
-      assignDrawerVars(node)
+      assignShellVars(node)
+    })
+  }
+
+  function attachPanel(node: HTMLElement) {
+    $effect(() => {
+      assignPanelVars(node)
     })
     const measure = () => {
       // Hold the last measured height while a nested drawer is stacked on top: the panel is
@@ -242,41 +260,118 @@
       data-nested-drawer-open={ctx.nestedCount > 0 ? '' : undefined}
       data-nested-drawer-swiping={ctx.nestedSwiping ? '' : undefined}
       data-expanded={ctx.isExpanded ? '' : undefined}
-      class={classes}
+      class={shellClasses}
       dir={resolvedDir}
       style={popupStyle}
       forceMount={keepMounted ? true : undefined}
       {trapFocus}
       {preventScroll}
       {onInteractOutside}
-      {@attach attachPopup}
+      {@attach attachShell}
       {...asBitsAttrs(split.popup)}
     >
       <div
-        data-slot="drawer-content"
-        class={cn(
-          'relative flex min-h-0 flex-col not-has-[>[data-slot=drawer-footer]]:pb-6 not-has-[>[data-slot=drawer-header]]:pt-6 [&>[data-slot=drawer-header]+[data-slot=drawer-footer]]:pt-0',
-          showFrame || snapSide
-            ? 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]'
-            : CONTENT_RECLAIM_SIDE[side],
-          snapSide ? 'h-[calc(100dvh-1.5rem-var(--snap-offset,0px))]' : 'flex-1',
-        )}
+        data-slot="drawer-panel"
+        data-side={side}
+        data-snap={snapSide ? '' : undefined}
+        data-expanded={ctx.isExpanded ? '' : undefined}
+        data-swiping={ctx.swiping ? '' : undefined}
+        data-nested-drawer-open={ctx.nestedCount > 0 ? '' : undefined}
+        data-nested-drawer-swiping={ctx.nestedSwiping ? '' : undefined}
+        class={panelClasses}
+        {@attach attachPanel}
       >
-        {@render children?.()}
-        {#if closeButton}
-          <BitsDialog.Close
-            aria-label={closeLabel}
-            data-slot="drawer-close-button"
-            class={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }), 'absolute inset-e-3 top-3 z-10')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path
-                d="M11.594 3.594c.225-.225.588-.225.813 0s.225.588 0 .812L8.813 8l3.594 3.594c.225.225.225.588 0 .813s-.588.225-.812 0L8 8.812l-3.594 3.594c-.225.225-.588.225-.812 0s-.225-.588 0-.812L7.188 8 3.594 4.406c-.225-.225-.225-.588 0-.812s.588-.225.813 0L8 7.187l3.594-3.594z"
-              />
-            </svg>
-          </BitsDialog.Close>
-        {/if}
+        <div
+          data-slot="drawer-content"
+          class={cn(
+            'relative flex min-h-0 flex-col not-has-[>[data-slot=drawer-footer]]:pb-6 not-has-[>[data-slot=drawer-header]]:pt-6 [&>[data-slot=drawer-header]+[data-slot=drawer-footer]]:pt-0',
+            showFrame || snapSide
+              ? 'bg-background rounded-[calc(var(--radius-2xl)*5/6)]'
+              : CONTENT_RECLAIM_SIDE[side],
+            snapSide ? 'h-[calc(100dvh-1.5rem-var(--snap-offset,0px))]' : 'flex-1',
+          )}
+        >
+          {@render children?.()}
+          {#if closeButton}
+            <BitsDialog.Close
+              aria-label={closeLabel}
+              data-slot="drawer-close-button"
+              class={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }), 'absolute inset-e-3 top-3 z-10')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M11.594 3.594c.225-.225.588-.225.813 0s.225.588 0 .812L8.813 8l3.594 3.594c.225.225.225.588 0 .813s-.588.225-.812 0L8 8.812l-3.594 3.594c-.225.225-.588.225-.812 0s-.225-.588 0-.812L7.188 8 3.594 4.406c-.225-.225-.225-.588 0-.812s.588-.225.813 0L8 7.187l3.594-3.594z"
+                />
+              </svg>
+            </BitsDialog.Close>
+          {/if}
+        </div>
       </div>
     </BitsDialog.Content>
   </div>
 </BitsDialog.Portal>
+
+<style>
+  /*
+    Mix off-screen and rest in one `translate`. Only `--drawer-enter` is interpolated
+    (1 off-screen, 0 rest), so right/bottom do not depend on percent-vs-px transform lists.
+    bits-ui starting/ending attributes stay on the dialog shell.
+  */
+  :global {
+    [data-slot='drawer-panel'] {
+      --drawer-enter: 0;
+      --drawer-off-x: 0px;
+      --drawer-off-y: 0px;
+      --drawer-rest-x: 0px;
+      --drawer-rest-y: 0px;
+      translate: calc(
+          (var(--drawer-enter) * var(--drawer-off-x)) + ((1 - var(--drawer-enter)) * var(--drawer-rest-x))
+        )
+        calc((var(--drawer-enter) * var(--drawer-off-y)) + ((1 - var(--drawer-enter)) * var(--drawer-rest-y)));
+      scale: var(--stack-scale, 1);
+    }
+
+    [data-slot='drawer-popup']:is([data-starting-style], [data-ending-style]) [data-slot='drawer-panel'] {
+      --drawer-enter: 1;
+    }
+
+    [data-slot='drawer-popup'][data-ending-style] [data-slot='drawer-panel'] {
+      transition-duration: 300ms;
+      transition-timing-function: ease-out;
+    }
+
+    [data-slot='drawer-panel'][data-side='bottom'] {
+      --drawer-off-x: 0px;
+      --drawer-off-y: calc(100% + 0.5rem);
+      --drawer-rest-x: 0px;
+      --drawer-rest-y: calc(var(--drawer-swipe-movement-y) - var(--stack-offset, 0px));
+    }
+
+    [data-slot='drawer-panel'][data-side='top'] {
+      --drawer-off-x: 0px;
+      --drawer-off-y: calc(-100% - 0.5rem);
+      --drawer-rest-x: 0px;
+      --drawer-rest-y: calc(var(--drawer-swipe-movement-y) + var(--stack-offset, 0px));
+    }
+
+    [data-slot='drawer-panel'][data-side='left'] {
+      --drawer-off-x: calc(-100% - 0.5rem);
+      --drawer-off-y: 0px;
+      --drawer-rest-x: calc(var(--drawer-swipe-movement-x) + var(--stack-offset, 0px));
+      --drawer-rest-y: 0px;
+    }
+
+    [data-slot='drawer-panel'][data-side='right'] {
+      --drawer-off-x: calc(100% + 0.5rem);
+      --drawer-off-y: 0px;
+      --drawer-rest-x: calc(var(--drawer-swipe-movement-x) - var(--stack-offset, 0px));
+      --drawer-rest-y: 0px;
+    }
+
+    [data-slot='drawer-panel'][data-snap][data-side='bottom'],
+    [data-slot='drawer-panel'][data-snap][data-side='top'] {
+      --drawer-rest-x: 0px;
+      --drawer-rest-y: calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y));
+    }
+  }
+</style>

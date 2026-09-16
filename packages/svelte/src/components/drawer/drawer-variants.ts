@@ -10,42 +10,33 @@ export const VIEWPORT_SIDE: Record<DrawerSide, string> = {
 
 export const POPUP_SIDE: Record<DrawerSide, string> = {
   bottom: cn(
-    'w-full origin-bottom [height:var(--drawer-height,auto)] max-h-full [--stack-extent:var(--drawer-frontmost-height,var(--drawer-height,0px))]',
-    'data-nested-drawer-open:[height:var(--drawer-frontmost-height,auto)] data-nested-drawer-open:overflow-hidden',
-    '[transform:translateY(calc(var(--drawer-swipe-movement-y)-var(--stack-offset)))_scale(var(--stack-scale))]',
-    'data-starting-style:[transform:translateY(calc(100%+0.5rem))] data-ending-style:[transform:translateY(calc(100%+0.5rem))]',
+    'w-full [height:var(--drawer-height,auto)] max-h-full [--stack-extent:var(--drawer-frontmost-height,var(--drawer-height,0px))]',
+    'data-nested-drawer-open:[height:var(--drawer-frontmost-height,auto)]',
   ),
   top: cn(
-    'w-full origin-top [height:var(--drawer-height,auto)] max-h-full [--stack-extent:var(--drawer-frontmost-height,var(--drawer-height,0px))]',
-    'data-nested-drawer-open:[height:var(--drawer-frontmost-height,auto)] data-nested-drawer-open:overflow-hidden',
-    '[transform:translateY(calc(var(--drawer-swipe-movement-y)+var(--stack-offset)))_scale(var(--stack-scale))]',
-    'data-starting-style:[transform:translateY(calc(-100%-0.5rem))] data-ending-style:[transform:translateY(calc(-100%-0.5rem))]',
+    'w-full [height:var(--drawer-height,auto)] max-h-full [--stack-extent:var(--drawer-frontmost-height,var(--drawer-height,0px))]',
+    'data-nested-drawer-open:[height:var(--drawer-frontmost-height,auto)]',
   ),
-  left: cn(
-    'h-full w-96 max-w-full origin-left [--stack-extent:25rem]',
-    '[transform:translateX(calc(var(--drawer-swipe-movement-x)+var(--stack-offset)))_scale(var(--stack-scale))]',
-    'data-starting-style:[transform:translateX(calc(-100%-0.5rem))] data-ending-style:[transform:translateX(calc(-100%-0.5rem))]',
-  ),
-  right: cn(
-    'h-full w-96 max-w-full origin-right [--stack-extent:25rem]',
-    '[transform:translateX(calc(var(--drawer-swipe-movement-x)-var(--stack-offset)))_scale(var(--stack-scale))]',
-    'data-starting-style:[transform:translateX(calc(100%+0.5rem))] data-ending-style:[transform:translateX(calc(100%+0.5rem))]',
-  ),
+  left: 'h-full w-96 max-w-full [--stack-extent:25rem]',
+  right: 'h-full w-96 max-w-full [--stack-extent:25rem]',
 }
 
 export const POPUP_SNAP_SIDE: Record<'top' | 'bottom', string> = {
   bottom: cn(
-    'h-[calc(100dvh-1rem)] w-full min-h-0 origin-bottom shadow-[0_-24px_32px_-12px_var(--shadow-color)]',
+    'h-[calc(100dvh-1rem)] w-full min-h-0',
     '[--snap-offset:var(--drawer-snap-point-offset,0px)]',
-    '[transform:translateY(calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y)))]',
-    'data-starting-style:[transform:translateY(calc(100%+0.5rem))] data-ending-style:[transform:translateY(calc(100%+0.5rem))]',
   ),
   top: cn(
-    'h-[calc(100dvh-1rem)] w-full min-h-0 origin-top',
+    'h-[calc(100dvh-1rem)] w-full min-h-0',
     '[--snap-offset:var(--drawer-snap-point-offset,0px)]',
-    '[transform:translateY(calc(var(--drawer-snap-point-offset,0px)+var(--drawer-swipe-movement-y)))]',
-    'data-starting-style:[transform:translateY(calc(-100%-0.5rem))] data-ending-style:[transform:translateY(calc(-100%-0.5rem))]',
   ),
+}
+
+export const PANEL_ORIGIN: Record<DrawerSide, string> = {
+  bottom: 'data-nested-drawer-open:origin-bottom data-nested-drawer-open:overflow-hidden',
+  top: 'data-nested-drawer-open:origin-top data-nested-drawer-open:overflow-hidden',
+  left: 'data-nested-drawer-open:origin-left',
+  right: 'data-nested-drawer-open:origin-right',
 }
 
 export const SHADOW_SIDE: Record<DrawerSide, string> = {
