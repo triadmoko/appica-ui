@@ -6,7 +6,7 @@
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getDropdownMenuContext } from './dropdown-menu-context'
-  import { ITEM_BASE, ITEM_TEXT } from './dropdown-menu-variants'
+  import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_TEXT } from './dropdown-menu-variants'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
@@ -15,6 +15,11 @@
     onCheckedChange?: (checked: boolean) => void
     /** Value used inside a `DropdownMenuCheckboxGroup`. */
     value?: string
+    /**
+     * Close the menu when toggled.
+     * @default false
+     */
+    closeOnClick?: boolean
     disabled?: boolean
     children?: Snippet
   }
@@ -24,6 +29,7 @@
     checked = $bindable(),
     onCheckedChange,
     value,
+    closeOnClick = false,
     disabled,
     children: label,
     ...rest
@@ -58,9 +64,11 @@
 
 <BitsDropdownMenu.CheckboxItem
   data-slot="dropdown-menu-checkbox-item"
+  data-orientation={ctx.orientation}
   bind:checked={inner}
   {value}
   {disabled}
+  closeOnSelect={closeOnClick}
   onCheckedChange={handleCheckedChange}
   class={classes}
   {...asBitsAttrs(rest)}
@@ -83,16 +91,7 @@
         aria-hidden="true"
         class="me-0.5 size-[1.125em] stroke-2"
       >
-        <path
-          d="M4.3 12.55 L9.25 17.5 L19.7 6.5"
-          pathLength={1}
-          stroke-dasharray="1 2"
-          class={cn(
-            'opacity-0 [stroke-dashoffset:1.02]',
-            isChecked && 'opacity-100 [stroke-dashoffset:0]',
-            'motion-safe:transition-[opacity,stroke-dashoffset] motion-safe:ease-out',
-          )}
-        />
+        <path d="M4.3 12.55 L9.25 17.5 L19.7 6.5" pathLength={1} stroke-dasharray="1 2" class={CHECK_PATH_CLASS} />
       </svg>
     </span>
   {/snippet}

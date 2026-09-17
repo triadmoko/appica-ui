@@ -5,7 +5,7 @@
 
   type BreadcrumbLinkEl = 'a' | 'button'
 
-  type Props = HTMLAnchorAttributes &
+  export type BreadcrumbLinkProps = HTMLAnchorAttributes &
     HTMLButtonAttributes &
     HTMLAttributes<HTMLSpanElement> & {
       /**
@@ -34,7 +34,7 @@
     href,
     children,
     ...rest
-  }: Props = $props()
+  }: BreadcrumbLinkProps = $props()
 
   const tag = $derived(active ? 'span' : el)
   const extra = $derived(focusableProps(active || disabled))

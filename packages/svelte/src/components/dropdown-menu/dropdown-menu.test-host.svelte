@@ -12,16 +12,31 @@
   import DropdownMenuSub from './dropdown-menu-sub.svelte'
   import DropdownMenuSubTrigger from './dropdown-menu-sub-trigger.svelte'
   import DropdownMenuSubContent from './dropdown-menu-sub-content.svelte'
+  import type { DropdownMenuAlign, DropdownMenuSide } from './dropdown-menu-variants'
 
-  let { radio = $bindable('one') }: { radio?: string } = $props()
+  let {
+    radio = $bindable('one'),
+    closeOnClick = true,
+    openOnHover = false,
+    delay = 100,
+    side = 'bottom',
+    align = 'start',
+  }: {
+    radio?: string
+    closeOnClick?: boolean
+    openOnHover?: boolean
+    delay?: number
+    side?: DropdownMenuSide
+    align?: DropdownMenuAlign
+  } = $props()
 </script>
 
 <DropdownMenu>
-  <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-  <DropdownMenuContent>
+  <DropdownMenuTrigger {openOnHover} {delay}>Open</DropdownMenuTrigger>
+  <DropdownMenuContent {side} {align}>
     <DropdownMenuGroup>
       <DropdownMenuGroupLabel>Actions</DropdownMenuGroupLabel>
-      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem {closeOnClick}>Profile</DropdownMenuItem>
       <DropdownMenuItem>Settings</DropdownMenuItem>
       <DropdownMenuItem disabled>Disabled</DropdownMenuItem>
     </DropdownMenuGroup>

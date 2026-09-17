@@ -1,9 +1,24 @@
 import { getContext, setContext } from 'svelte'
 
 export type DropdownMenuSize = 'sm' | 'md' | 'lg'
+export type DropdownMenuOrientation = 'horizontal' | 'vertical'
+
+export type DropdownMenuHoverConfig = {
+  enabled: boolean
+  delay: number
+  closeDelay: number
+}
 
 export interface DropdownMenuContextValue {
   size: DropdownMenuSize
+  orientation: DropdownMenuOrientation
+  open: boolean
+  disabled: boolean
+  modal: boolean
+  setOpen: (open: boolean) => void
+  hoverEnter: () => void
+  hoverLeave: () => void
+  setHoverConfig: (config: DropdownMenuHoverConfig | null) => void
 }
 
 const KEY = Symbol('appica-dropdown-menu')

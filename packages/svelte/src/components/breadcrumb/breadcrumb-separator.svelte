@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLLiAttributes & { children?: Snippet }
+  export type BreadcrumbSeparatorProps = HTMLLiAttributes & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: BreadcrumbSeparatorProps = $props()
 </script>
 
 <li
