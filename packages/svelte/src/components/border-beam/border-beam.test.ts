@@ -67,10 +67,11 @@ describe('BorderBeam', () => {
     expect(root(container)).toHaveAttribute('data-show-on-touch')
   })
 
-  it('groups and scales the ring on press when pressScale is set', () => {
+  it('groups and scales the wrapper on press when pressScale is set', () => {
     const { container } = render(BorderBeam, { props: { pressScale: true } })
     expect(root(container).className).toContain('group/beam')
-    expect(ring(container).className).toContain('group-active/beam:scale-[0.97]')
+    expect(root(container).className).toContain('active:scale-[0.97]')
+    expect(ring(container).className).not.toContain('group-active/beam:scale-[0.97]')
   })
 
   it('merges a consumer class onto the wrapper', () => {

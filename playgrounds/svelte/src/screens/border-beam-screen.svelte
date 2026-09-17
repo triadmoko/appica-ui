@@ -100,6 +100,7 @@
     <p class="text-foreground-muted text-sm">Controlled (loading state)</p>
     <BorderBeam
       reveal={loading}
+      pressScale
       color="#A78BFA"
       length={15}
       thickness={1.5}

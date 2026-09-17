@@ -105,7 +105,13 @@
   data-reveal={managed ? triggers.join(' ') : undefined}
   data-revealed={reveal ? '' : undefined}
   data-show-on-touch={showOnTouch ? '' : undefined}
-  class={cn('relative w-fit rounded-xl', grouped && 'group/beam', className)}
+  class={cn(
+    'relative w-fit rounded-xl',
+    grouped && 'group/beam',
+    pressScale &&
+      'transform-gpu transition duration-250 ease-[cubic-bezier(0.175,0.885,0.32,1.5)] active:translate-y-px active:scale-[0.97] active:duration-100 active:ease-in-out motion-reduce:transition-none [&_button]:not-data-popup-open:active:translate-y-0 [&_button]:not-data-popup-open:active:scale-100',
+    className,
+  )}
   style={rootStyle}
   {...rest}
 >
