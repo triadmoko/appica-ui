@@ -119,6 +119,52 @@ describe('Dialog', () => {
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
   })
 
+  it('opens when defaultOpen is true', () => {
+    render(DialogHost, { props: { defaultOpen: true } })
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('forwards class to the content popup', async () => {
+    const user = setupUser()
+    render(DialogHost, { props: { contentClass: 'w-200' } })
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog.className).toContain('w-200')
+    expect(dialog.className).not.toContain('w-150')
+  })
+
+  it('keeps the dialog open on a backdrop click when disablePointerDismissal is set', async () => {
+    const user = setupUser()
+    render(DialogHost, { props: { disablePointerDismissal: true } })
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    await screen.findByRole('dialog')
+
+    await user.click(document.querySelector('[data-slot="dialog-backdrop"]')!)
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('retracts the parent and hides the nested backdrop', async () => {
+    const user = setupUser()
+    render(DialogHost, { props: { nested: true } })
+
+    await user.click(screen.getByRole('button', { name: 'Open dialog' }))
+    await screen.findByText('Body content')
+
+    await user.click(screen.getByRole('button', { name: 'Nested' }))
+    await screen.findByText('Nested body')
+
+    const popups = document.querySelectorAll('[data-slot="dialog-popup"]')
+    expect(popups[0]).toHaveAttribute('data-nested-open')
+
+    const backdrops = document.querySelectorAll('[data-slot="dialog-backdrop"]')
+    expect(backdrops).toHaveLength(2)
+    expect(backdrops[1]).toHaveAttribute('data-nested')
+    expect(backdrops[1].className).toContain('data-nested:hidden')
+  })
+
   it('has no accessibility violations when closed', async () => {
     const { container } = render(DialogHost)
     expect(await axe(container)).toHaveNoViolations()

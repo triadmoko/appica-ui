@@ -5,6 +5,7 @@
   import { splitModalProps } from '../../internal/modal'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { buttonVariants } from '../button/button-variants'
+  import { getDialogContext } from './dialog-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /**
@@ -56,9 +57,24 @@
     ...rest
   }: Props = $props()
 
+  const ctx = getDialogContext()
+  const modal = $derived(ctx?.getModal() ?? true)
+  const trapFocus = $derived(modal === true || modal === 'trap-focus')
+  const preventScroll = $derived(modal === true)
+  const disablePointerDismissal = $derived(ctx?.getDisablePointerDismissal() ?? false)
+
+  const forceBackdrop = $derived(backdropProps?.forceRender === true)
+  const showBackdrop = $derived(forceBackdrop || backdrop)
   const showFrame = $derived(frame && backdrop)
   const split = $derived(splitModalProps(rest))
   const keepMounted = $derived(split.keepMounted)
+  const overlayAttrs = $derived.by(() => {
+    if (!backdropProps) return {}
+    const restAttrs = { ...backdropProps }
+    delete restAttrs.forceRender
+    delete restAttrs.class
+    return restAttrs
+  })
   const classes = $derived(
     cn(
       'group/dialog-popup relative flex max-h-full min-h-0 w-150 max-w-full flex-col pointer-events-auto',
@@ -69,14 +85,18 @@
       'motion-safe:transition-[opacity,scale] motion-safe:duration-250 motion-safe:ease-[cubic-bezier(0.175,0.885,0.32,1.5)]',
       'data-starting-style:motion-safe:scale-95 data-starting-style:motion-safe:opacity-0',
       'data-ending-style:motion-safe:scale-95 data-ending-style:motion-safe:opacity-0 data-ending-style:motion-safe:duration-100 data-ending-style:motion-safe:ease-out',
-      'data-nested-open:pointer-events-none data-nested-open:scale-95 data-nested-open:opacity-0',
+      'data-nested-open:!pointer-events-none data-nested-open:scale-95 data-nested-open:opacity-0',
       className,
     ),
   )
+
+  function onInteractOutside(event: Event) {
+    if (disablePointerDismissal) event.preventDefault()
+  }
 </script>
 
 <BitsDialog.Portal {...asBitsAttrs(split.portal)}>
-  {#if backdrop}
+  {#if showBackdrop}
     <BitsDialog.Overlay
       data-slot="dialog-backdrop"
       forceMount={keepMounted ? true : undefined}
@@ -84,9 +104,10 @@
         'fixed inset-0 z-50 bg-black/30 backdrop-blur-sm supports-[-webkit-touch-callout:none]:absolute',
         'motion-safe:transition-opacity motion-safe:duration-250 motion-safe:ease-out',
         'data-ending-style:motion-safe:opacity-0 data-starting-style:motion-safe:opacity-0',
+        !forceBackdrop && 'data-nested:hidden',
         backdropProps?.class as string | undefined,
       )}
-      {...asBitsAttrs(backdropProps ?? {})}
+      {...asBitsAttrs(overlayAttrs)}
     />
   {/if}
   <div
@@ -102,6 +123,9 @@
       data-frame={showFrame ? '' : undefined}
       class={classes}
       forceMount={keepMounted ? true : undefined}
+      {trapFocus}
+      {preventScroll}
+      {onInteractOutside}
       {...asBitsAttrs(split.popup)}
     >
       <div
@@ -120,7 +144,7 @@
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path
-                d="M11.594 3.594c.225-.225.588-.225.813 0s.225.588 0 .812L8.813 8l3.594 3.594c.225.225.225.588 0 .813s-.588.225-.812 0L8 8.812l-3.594 3.594c-.225.225-.588.225-.812 0s-.225-.588 0-.812L7.188 8 3.594 4.406c-.225-.225-.225-.588 0-.812s.588-.225.813 0L8 7.187l3.594-3.594z"
+                d="M11.594 3.594c.225-.225.588-.225.813 0s.225.588 0 .812L8.813 8l3.594 3.594c.225.225.225.588 0 .813s-.588.225-.812 0L8 8.812l-3.594 3.594c-.225.225-.588.225-.812 0s-.225-.588 0-.812L7.188 8 3.594 4.406c-.225-.225-.225-.588 0-.812s.588.225.813 0L8 7.187l3.594-3.594z"
               />
             </svg>
           </BitsDialog.Close>
