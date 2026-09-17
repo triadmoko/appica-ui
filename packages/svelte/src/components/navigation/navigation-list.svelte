@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getNavigationContext, HORIZONTAL_GAP, VERTICAL_GAP } from './navigation-context'
 
-  type Props = HTMLAttributes<HTMLUListElement> & { children?: Snippet }
+  export type NavigationListProps = HTMLAttributes<HTMLUListElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: NavigationListProps = $props()
 
   const ctx = getNavigationContext()
   const orientation = $derived(ctx?.orientation() ?? 'horizontal')

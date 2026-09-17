@@ -1,38 +1,324 @@
 <script lang="ts">
-  import { Navigation, NavigationItem, NavigationLink, NavigationList } from '@appica/ui-svelte'
+  import {
+    Badge,
+    DirectionProvider,
+    Navigation,
+    NavigationItem,
+    NavigationLink,
+    NavigationList,
+    Switch,
+  } from '@appica/ui-svelte'
 
-  let active = $state('home')
+  const SIZES = ['sm', 'md', 'lg'] as const
+  const BASIC = [
+    { value: 'dashboard', label: 'Dashboard' },
+    { value: 'projects', label: 'Projects' },
+    { value: 'team', label: 'Team' },
+    { value: 'settings', label: 'Settings' },
+  ] as const
+  const VARIANT_ITEMS = [
+    { value: 'overview', label: 'Overview' },
+    { value: 'analytics', label: 'Analytics' },
+    { value: 'reports', label: 'Reports' },
+    { value: 'notifications', label: 'Notifications' },
+  ] as const
+  const SIZE_ITEMS = [
+    { value: 'home', label: 'Home' },
+    { value: 'docs', label: 'Docs' },
+    { value: 'pricing', label: 'Pricing' },
+  ] as const
+  const SIDEBAR = [
+    { value: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+    { value: 'projects', label: 'Projects', icon: 'folder' },
+    { value: 'team', label: 'Team', icon: 'users' },
+    { value: 'settings', label: 'Settings', icon: 'settings' },
+  ] as const
+  const INDICATOR_ITEMS = [
+    { value: 'getting-started', label: 'Getting started' },
+    { value: 'installation', label: 'Installation' },
+    { value: 'theming', label: 'Theming' },
+    { value: 'components', label: 'Components' },
+  ] as const
+  const CONTROLLED_ITEMS = [
+    { value: 'account', label: 'Account' },
+    { value: 'security', label: 'Security' },
+    { value: 'billing', label: 'Billing' },
+    { value: 'team', label: 'Team' },
+  ] as const
+
+  let controlled = $state('account')
+  let dir: 'ltr' | 'rtl' = $state('ltr')
+
+  function stay(event: MouseEvent) {
+    event.preventDefault()
+  }
 </script>
+
+{#snippet dashboardIcon()}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    data-icon="start"
+  >
+    <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+    <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+    <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+    <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+  </svg>
+{/snippet}
+
+{#snippet folderIcon()}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    data-icon="start"
+  >
+    <path
+      d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"
+    ></path>
+  </svg>
+{/snippet}
+
+{#snippet usersIcon()}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    data-icon="start"
+  >
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+  </svg>
+{/snippet}
+
+{#snippet settingsIcon()}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    data-icon="start"
+  >
+    <path
+      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+    ></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+{/snippet}
+
+{#snippet startIcon(name: string)}
+  {#if name === 'dashboard'}
+    {@render dashboardIcon()}
+  {:else if name === 'folder'}
+    {@render folderIcon()}
+  {:else if name === 'users'}
+    {@render usersIcon()}
+  {:else}
+    {@render settingsIcon()}
+  {/if}
+{/snippet}
 
 <section class="flex flex-col gap-8">
   <h2 class="text-foreground-emphasis text-lg font-semibold">Navigation</h2>
 
-  <Navigation aria-label="Main" activeLink={active}>
-    <NavigationList>
-      {#each ['home', 'about', 'contact'] as item (item)}
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Basic</p>
+    <Navigation aria-label="Main" activeLink="dashboard" class="max-w-full">
+      <NavigationList class="scrollbar-none overflow-x-auto">
+        {#each BASIC as item (item.value)}
+          <NavigationItem>
+            <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+          </NavigationItem>
+        {/each}
+      </NavigationList>
+    </Navigation>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Variants</p>
+    <div class="flex w-full max-w-full flex-col items-center gap-8">
+      <Navigation aria-label="Pill" variant="pill" activeLink="overview" class="max-w-full">
+        <NavigationList class="scrollbar-none overflow-x-auto">
+          {#each VARIANT_ITEMS as item (item.value)}
+            <NavigationItem>
+              <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+            </NavigationItem>
+          {/each}
+        </NavigationList>
+      </Navigation>
+      <Navigation aria-label="Line" variant="line" activeLink="overview" class="max-w-full">
+        <NavigationList class="scrollbar-none overflow-x-auto">
+          {#each VARIANT_ITEMS as item (item.value)}
+            <NavigationItem>
+              <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+            </NavigationItem>
+          {/each}
+        </NavigationList>
+      </Navigation>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Sizes</p>
+    <div class="flex flex-col gap-6">
+      {#each SIZES as size (size)}
+        <Navigation aria-label={size} {size} activeLink="home">
+          <NavigationList>
+            {#each SIZE_ITEMS as item (item.value)}
+              <NavigationItem>
+                <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+              </NavigationItem>
+            {/each}
+          </NavigationList>
+        </Navigation>
+      {/each}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">With icons and badges</p>
+    <Navigation aria-label="Main" activeLink="dashboard" class="max-w-full">
+      <NavigationList class="scrollbar-none overflow-x-auto">
         <NavigationItem>
-          <NavigationLink href={`#${item}`} value={item} onclick={() => (active = item)}>
-            {item}
+          <NavigationLink href="#!" value="dashboard" onclick={stay}>
+            {@render dashboardIcon()}
+            Dashboard
           </NavigationLink>
         </NavigationItem>
-      {/each}
-      <NavigationItem>
-        <NavigationLink href="#disabled" disabled>Disabled</NavigationLink>
-      </NavigationItem>
-    </NavigationList>
-  </Navigation>
+        <NavigationItem>
+          <NavigationLink href="#!" value="projects" onclick={stay}>
+            {@render folderIcon()}
+            Projects
+          </NavigationLink>
+        </NavigationItem>
+        <NavigationItem>
+          <NavigationLink href="#!" value="team" onclick={stay}>
+            {@render usersIcon()}
+            Team
+            <Badge variant="outline" size="sm" data-icon="end">4</Badge>
+          </NavigationLink>
+        </NavigationItem>
+        <NavigationItem>
+          <NavigationLink href="#!" value="settings" onclick={stay}>
+            {@render settingsIcon()}
+            Settings
+          </NavigationLink>
+        </NavigationItem>
+      </NavigationList>
+    </Navigation>
+  </div>
 
-  <Navigation aria-label="Side" orientation="vertical" variant="indicator" activeLink="usage" class="w-48">
-    <NavigationList>
-      <NavigationItem>
-        <NavigationLink href="#intro" value="intro">Intro</NavigationLink>
-      </NavigationItem>
-      <NavigationItem>
-        <NavigationLink href="#usage" value="usage">Usage</NavigationLink>
-      </NavigationItem>
-      <NavigationItem>
-        <NavigationLink href="#api" value="api">API</NavigationLink>
-      </NavigationItem>
-    </NavigationList>
-  </Navigation>
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Vertical sidebar</p>
+    <Navigation aria-label="Sidebar" orientation="vertical" variant="pill" activeLink="projects" class="w-48">
+      <NavigationList>
+        {#each SIDEBAR as item (item.value)}
+          <NavigationItem>
+            <NavigationLink href="#!" value={item.value} class="w-full" onclick={stay}>
+              {@render startIcon(item.icon)}
+              {item.label}
+            </NavigationLink>
+          </NavigationItem>
+        {/each}
+      </NavigationList>
+    </Navigation>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Indicator</p>
+    <Navigation aria-label="Docs" orientation="vertical" variant="indicator" activeLink="theming" class="w-56">
+      <NavigationList>
+        {#each INDICATOR_ITEMS as item (item.value)}
+          <NavigationItem>
+            <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+          </NavigationItem>
+        {/each}
+      </NavigationList>
+    </Navigation>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Controlled</p>
+    <Navigation aria-label="Settings" variant="line" activeLink={controlled} class="max-w-full">
+      <NavigationList class="scrollbar-none overflow-x-auto">
+        {#each CONTROLLED_ITEMS as item (item.value)}
+          <NavigationItem>
+            <NavigationLink value={item.value} el="button" onclick={() => (controlled = item.value)}>
+              {item.label}
+            </NavigationLink>
+          </NavigationItem>
+        {/each}
+      </NavigationList>
+    </Navigation>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Links</p>
+    <Navigation aria-label="Main" activeLink="overview">
+      <NavigationList>
+        <NavigationItem>
+          <NavigationLink href="#!" value="overview" onclick={stay}>Overview</NavigationLink>
+        </NavigationItem>
+        <NavigationItem>
+          <NavigationLink href="#!" value="changelog" onclick={stay}>Changelog</NavigationLink>
+        </NavigationItem>
+        <NavigationItem>
+          <NavigationLink href="#!" value="roadmap" disabled>Roadmap</NavigationLink>
+        </NavigationItem>
+      </NavigationList>
+    </Navigation>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir} class="flex w-full max-w-full flex-col gap-8">
+        <Navigation aria-label="Line" variant="line" activeLink="overview" class="max-w-full">
+          <NavigationList class="scrollbar-none overflow-x-auto">
+            {#each VARIANT_ITEMS as item (item.value)}
+              <NavigationItem>
+                <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+              </NavigationItem>
+            {/each}
+          </NavigationList>
+        </Navigation>
+        <Navigation aria-label="Docs" orientation="vertical" variant="indicator" activeLink="theming" class="w-56">
+          <NavigationList>
+            {#each INDICATOR_ITEMS as item (item.value)}
+              <NavigationItem>
+                <NavigationLink href="#!" value={item.value} onclick={stay}>{item.label}</NavigationLink>
+              </NavigationItem>
+            {/each}
+          </NavigationList>
+        </Navigation>
+      </div>
+    </DirectionProvider>
+  </div>
 </section>

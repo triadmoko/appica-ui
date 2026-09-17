@@ -3,9 +3,7 @@ export { default as NavigationList } from './navigation-list.svelte'
 export { default as NavigationItem } from './navigation-item.svelte'
 export { default as NavigationLink } from './navigation-link.svelte'
 export { navigationLinkVariants } from './navigation-link-variants'
-export type {
-  NavigationActiveLink,
-  NavigationOrientation,
-  NavigationSize,
-  NavigationVariant,
-} from './navigation-context'
+export type { NavigationProps } from './navigation.svelte'
+export type { NavigationListProps } from './navigation-list.svelte'
+export type { NavigationItemProps } from './navigation-item.svelte'
+export type { NavigationLinkProps } from './navigation-link.svelte'

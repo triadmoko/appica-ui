@@ -23,7 +23,7 @@
     children?: Snippet
   }
 
-  type Props = NavigationBaseProps &
+  export type NavigationProps = NavigationBaseProps &
     (
       | {
           /** Lay the links out as a row or a column. @default 'horizontal' */
@@ -47,7 +47,7 @@
     activeLink = null,
     children,
     ...rest
-  }: Props = $props()
+  }: NavigationProps = $props()
 
   setNavigationContext({
     orientation: () => orientation,

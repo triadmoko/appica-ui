@@ -13,7 +13,7 @@
 
   type NavigationLinkEl = 'a' | 'button'
 
-  type Props = HTMLAnchorAttributes &
+  export type NavigationLinkProps = HTMLAnchorAttributes &
     HTMLButtonAttributes & {
       /**
        * Override the root's variant for this link.
@@ -65,7 +65,7 @@
     href,
     children,
     ...rest
-  }: Props = $props()
+  }: NavigationLinkProps = $props()
 
   const ctx = getNavigationContext()
   const variant = $derived(variantProp ?? ctx?.variant() ?? 'pill')
