@@ -7,7 +7,7 @@
 
   type PaginationLinkEl = 'a' | 'button'
 
-  type Props = HTMLAnchorAttributes &
+  export type PaginationLinkProps = HTMLAnchorAttributes &
     HTMLButtonAttributes & {
       /**
        * Mark the current page. Renders a non-interactive, filled link with `aria-current="page"`.
@@ -35,7 +35,7 @@
     href,
     children,
     ...rest
-  }: Props = $props()
+  }: PaginationLinkProps = $props()
 
   const ctx = getPaginationContext()
   const variant = $derived(ctx.variant())

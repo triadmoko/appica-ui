@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { ELLIPSIS_SIZE, getPaginationContext } from './pagination-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
+  export type PaginationEllipsisProps = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: PaginationEllipsisProps = $props()
 
   const ctx = getPaginationContext()
   const size = $derived(ctx.size())

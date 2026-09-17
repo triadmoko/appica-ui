@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { setPaginationContext, type PaginationSize, type PaginationVariant } from './pagination-context'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type PaginationProps = HTMLAttributes<HTMLElement> & {
     /**
      * Link style, shared with every link via context.
      * @default 'outline'
@@ -25,7 +25,7 @@
     'aria-label': ariaLabel = 'pagination',
     children,
     ...rest
-  }: Props = $props()
+  }: PaginationProps = $props()
 
   setPaginationContext({
     variant: () => variant,
