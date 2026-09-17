@@ -193,14 +193,17 @@
     }
   })
 
+  const onControlledSelect = () => {
+    current += 1
+  }
+
   const bindControlledApi = (api: CarouselApi) => {
+    if (controlledApi === api) return
+    controlledApi?.off('select', onControlledSelect)
     controlledApi = api
     count = api.snapList().length
     current = api.selectedSnap()
-  }
-
-  const onControlledSelect = (api: CarouselApi) => {
-    current = current + 1
+    api.on('select', onControlledSelect)
   }
 </script>
 
@@ -644,7 +647,7 @@
   <div class="flex flex-col gap-3">
     <p class="text-foreground-muted text-sm">Controlled with the api</p>
     <div class="w-full max-w-xl">
-      <Carousel loop setApi={bindControlledApi} onSelect={onControlledSelect}>
+      <Carousel loop setApi={bindControlledApi}>
         <CarouselContent>
           {#each DEFAULT_SLIDES as n (n)}
             <CarouselSlide>
