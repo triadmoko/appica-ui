@@ -10,14 +10,12 @@
 
   const provider = getDrawerProviderContext()
   const active = $derived((provider?.openCount ?? 0) > 0)
-  const mergedStyle = $derived(
-    [
-      `--drawer-swipe-progress: ${provider?.swipeProgress ?? 0}`,
-      typeof style === 'string' ? style : '',
-    ]
-      .filter(Boolean)
-      .join('; '),
-  )
+
+  function attachIndent(node: HTMLElement) {
+    $effect(() => {
+      node.style.setProperty('--drawer-swipe-progress', String(provider?.swipeProgress ?? 0))
+    })
+  }
 </script>
 
 <div
@@ -31,8 +29,9 @@
     'data-active:transform-[scale(calc(0.95+0.03*var(--drawer-swipe-progress)))] data-active:rounded-2xl',
     className,
   )}
-  style={mergedStyle}
   {...rest}
+  {style}
+  {@attach attachIndent}
 >
   {@render children?.()}
 </div>
