@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getSelectContext } from './select-context'
 
@@ -21,7 +20,7 @@
     'bg-background text-foreground z-1 flex h-6 w-[calc(100%-var(--border-width)*2)] cursor-default items-center justify-center',
   )
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type SelectContentProps = WithoutChildrenOrChild<BitsSelect.ContentProps> & {
     /** Per-popup override of the root's alignment setting. */
     alignItemWithTrigger?: boolean
     /**
@@ -38,7 +37,7 @@
     keepMounted = false,
     children,
     ...rest
-  }: Props = $props()
+  }: SelectContentProps = $props()
 
   const ctx = getSelectContext()
   const alignWithTrigger = $derived(alignOverride ?? ctx.alignItemWithTrigger)

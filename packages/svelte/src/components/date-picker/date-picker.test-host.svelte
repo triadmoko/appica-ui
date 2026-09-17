@@ -3,16 +3,16 @@
   import Field from '../field/field.svelte'
   import FieldLabel from '../field/field-label.svelte'
   import DatePicker from './date-picker.svelte'
-  import type { DatePickerType } from './date-picker.svelte'
+  import type { DatePickerMode } from './date-picker.svelte'
   import type { DateRange } from '../calendar/calendar-tokens'
 
   let {
-    type = 'single',
+    mode = 'single',
     showTime = false,
     defaultValue,
     value,
     onValueChange,
-    defaultPlaceholder = new CalendarDate(2026, 6, 10),
+    defaultMonth = new CalendarDate(2026, 6, 10),
     defaultOpen,
     open,
     onOpenChange,
@@ -24,12 +24,12 @@
     placeholder,
     hourCycle,
   }: {
-    type?: DatePickerType
+    mode?: DatePickerMode
     showTime?: boolean
     defaultValue?: DateValue | DateValue[] | DateRange
     value?: DateValue | DateValue[] | DateRange
     onValueChange?: (value: DateValue | DateValue[] | DateRange | undefined) => void
-    defaultPlaceholder?: DateValue
+    defaultMonth?: DateValue
     defaultOpen?: boolean
     open?: boolean
     onOpenChange?: (open: boolean) => void
@@ -47,12 +47,12 @@
   <Field {invalid} {disabled} {name}>
     <FieldLabel>Date</FieldLabel>
     <DatePicker
-      {type}
+      {mode}
       {showTime}
       {defaultValue}
       {value}
       {onValueChange}
-      {defaultPlaceholder}
+      {defaultMonth}
       {defaultOpen}
       {open}
       {onOpenChange}
@@ -65,12 +65,12 @@
   </Field>
 {:else}
   <DatePicker
-    {type}
+    {mode}
     {showTime}
     {defaultValue}
     {value}
     {onValueChange}
-    {defaultPlaceholder}
+    {defaultMonth}
     {defaultOpen}
     {open}
     {onOpenChange}

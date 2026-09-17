@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
@@ -14,7 +13,7 @@
     lg: 'size-5',
   } as const
 
-  type Props = HTMLButtonAttributes & {
+  export type SelectTriggerProps = WithoutChildrenOrChild<BitsSelect.TriggerProps> & {
     /**
      * Render a clear control inside the trigger when a value is present.
      * @default false
@@ -40,7 +39,7 @@
     'aria-describedby': ariaDescribedby,
     children,
     ...rest
-  }: Props = $props()
+  }: SelectTriggerProps = $props()
 
   const ctx = getSelectContext()
   const field = getFieldContext()

@@ -29,31 +29,31 @@
     <p class="text-foreground-muted text-sm">Single</p>
     <Field class="max-w-sm">
       <FieldLabel>Date</FieldLabel>
-      <DatePicker bind:value={picked} defaultPlaceholder={today} />
+      <DatePicker bind:value={picked} defaultMonth={today} />
     </Field>
     <p class="text-foreground-subtle text-xs">Value: {picked?.toString() ?? 'none'}</p>
   </div>
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">With time</p>
-    <DatePicker class="max-w-sm" bind:value={withTime} showTime hourCycle={24} defaultPlaceholder={today} />
+    <DatePicker class="max-w-sm" bind:value={withTime} showTime hourCycle={24} defaultMonth={today} />
     <p class="text-foreground-subtle text-xs">{withTime?.toString() ?? 'none'}</p>
   </div>
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Range</p>
-    <DatePicker class="max-w-sm" type="range" bind:value={trip} defaultPlaceholder={today} />
+    <DatePicker class="max-w-sm" mode="range" bind:value={trip} defaultMonth={today} />
   </div>
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Multiple</p>
     <DatePicker
       class="max-w-sm"
-      type="multiple"
+      mode="multiple"
       bind:value={many}
       clearable
       placeholder="Pick dates"
-      defaultPlaceholder={today}
+      defaultMonth={today}
     />
   </div>
 
@@ -61,7 +61,7 @@
     <p class="text-foreground-muted text-sm">Disabled dates</p>
     <DatePicker
       class="max-w-sm"
-      defaultPlaceholder={today}
+      defaultMonth={today}
       disabledDates={[{ before: today }, { dayOfWeek: [0, 6] }]}
     />
   </div>
@@ -70,7 +70,7 @@
     <p class="text-foreground-muted text-sm">Caption and months</p>
     <DatePicker
       class="max-w-sm"
-      defaultPlaceholder={today}
+      defaultMonth={today}
       captionLayout="dropdown"
       numberOfMonths={2}
       pagedNavigation
@@ -97,7 +97,7 @@
     </label>
     <DirectionProvider {dir}>
       <div {dir} class="max-w-sm">
-        <DatePicker defaultPlaceholder={today} defaultValue={today} />
+        <DatePicker defaultMonth={today} defaultValue={today} />
       </div>
     </DirectionProvider>
   </div>

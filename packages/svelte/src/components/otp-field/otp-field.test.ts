@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import OTPFieldHost from './otp-field.test-host.svelte'
 
@@ -47,6 +47,21 @@ describe('OTPField', () => {
   it('renders a separator between slot groups', () => {
     render(OTPFieldHost)
     expect(document.querySelector('[data-slot="otp-field-separator"]')).not.toBeNull()
+  })
+
+  it('fires onValueComplete when every slot is filled', async () => {
+    const user = userEvent.setup()
+    const onValueComplete = vi.fn()
+    render(OTPFieldHost, { props: { onValueComplete } })
+    const input = screen.getByLabelText('Verification code')
+    input.focus()
+    await user.keyboard('9876')
+    expect(onValueComplete).toHaveBeenCalledWith('9876')
+  })
+
+  it('keeps the hidden input readable when readOnly', () => {
+    render(OTPFieldHost, { props: { readOnly: true, defaultValue: '1234' } })
+    expect(screen.getByLabelText('Verification code')).toHaveAttribute('readonly')
   })
 
   it('has no accessibility violations', async () => {

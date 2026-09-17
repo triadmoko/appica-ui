@@ -14,7 +14,7 @@
 
   export type DatePickerSize = CalendarSize
   export type DatePickerVariant = DateFieldVariant
-  export type DatePickerType = CalendarMode
+  export type DatePickerMode = CalendarMode
   export type { DateRange }
 
   type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -31,17 +31,17 @@
      * Selection behavior. `range` uses a start/end pair.
      * @default 'single'
      */
-    type?: DatePickerType
+    mode?: DatePickerMode
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
      */
     variant?: DatePickerVariant
-    /** Controlled value. Shape matches `type`. Pair with `onValueChange` or `bind:value`. */
+    /** Controlled value. Shape matches `mode`. Pair with `onValueChange` or `bind:value`. */
     value?: DateValue | DateValue[] | DateRange
     /** Uncontrolled initial value. */
     defaultValue?: DateValue | DateValue[] | DateRange
-    /** Fires when the selection changes. The argument shape matches `type`. */
+    /** Fires when the selection changes. The argument shape matches `mode`. */
     onValueChange?: (value: DateValue | DateValue[] | DateRange | undefined) => void
     /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
     open?: boolean
@@ -53,12 +53,12 @@
     /** Fires when the popover opens or closes. */
     onOpenChange?: (open: boolean) => void
     /**
-     * Add a `TimeField` (single and range types).
+     * Add a `TimeField` (single and range modes).
      * @default false
      */
     showTime?: boolean
     /**
-     * Show a clear button (multiple type).
+     * Show a clear button (multiple mode).
      * @default false
      */
     clearable?: boolean
@@ -93,7 +93,7 @@
     /** Extra props forwarded to `PopoverContent` (`class`, `keepMounted`, …). */
     popoverProps?: { class?: string; keepMounted?: boolean; [key: string]: unknown }
     /**
-     * Override auto-close. By default only single type closes on pick; range and multiple stay open.
+     * Override auto-close. By default only single mode closes on pick; range and multiple stay open.
      */
     closeOnSelect?: boolean
     /** Icon rendered inside the calendar trigger button. */
@@ -103,12 +103,12 @@
      * @default 'Open calendar'
      */
     triggerAriaLabel?: string
-    /** Placeholder for the multiple-type summary field. */
+    /** Placeholder for the multiple-mode summary field. */
     placeholder?: string
-    /** Customize the multiple-type summary text. */
+    /** Customize the multiple-mode summary text. */
     formatValue?: (value: DateValue[] | undefined) => string
     /** Visible month when the calendar opens, if no value is selected. */
-    defaultPlaceholder?: DateValue
+    defaultMonth?: DateValue
     /** Locale used to format field segments and the calendar. */
     locale?: string
     /**
@@ -223,7 +223,7 @@
   }
 
   function derivePlaceholder(
-    selection: DatePickerType,
+    selection: DatePickerMode,
     next: DateValue | DateValue[] | DateRange | undefined,
     fallback?: DateValue,
   ): DateValue | undefined {
@@ -251,7 +251,7 @@
   }
 
   function shouldAutoClose(
-    selection: DatePickerType,
+    selection: DatePickerMode,
     next: DateValue | DateValue[] | DateRange | undefined,
     override?: boolean,
   ): boolean {
@@ -263,7 +263,7 @@
   let {
     class: className,
     size = 'md',
-    type = 'single',
+    mode = 'single',
     variant = 'outline',
     value = $bindable(),
     defaultValue,
@@ -289,7 +289,7 @@
     triggerAriaLabel = 'Open calendar',
     placeholder,
     formatValue,
-    defaultPlaceholder,
+    defaultMonth,
     locale,
     weekStartsOn = 1,
     minValue,
@@ -336,7 +336,7 @@
   innerOpen = untrack(() => open ?? defaultOpen)
 
   let calendarPlaceholder = $state<DateValue | undefined>(undefined)
-  calendarPlaceholder = untrack(() => derivePlaceholder(type, value ?? defaultValue, defaultPlaceholder))
+  calendarPlaceholder = untrack(() => derivePlaceholder(mode, value ?? defaultValue, defaultMonth))
   let lastDerivedKey = untrack(() => monthKey(calendarPlaceholder))
 
   $effect(() => {
@@ -350,7 +350,7 @@
   const current = $derived(value !== undefined ? value : inner)
 
   $effect(() => {
-    const derived = derivePlaceholder(type, current)
+    const derived = derivePlaceholder(mode, current)
     const key = monthKey(derived)
     if (key && key !== lastDerivedKey) {
       lastDerivedKey = key
@@ -384,11 +384,11 @@
       },
       onChange: onValueChange,
     })
-    if (shouldAutoClose(type, next, closeOnSelect)) setOpen(false)
+    if (shouldAutoClose(mode, next, closeOnSelect)) setOpen(false)
   }
 
   function handleDateFieldChange(nextDate: DateValue | undefined) {
-    if (type !== 'single') return
+    if (mode !== 'single') return
     if (!nextDate) {
       setValue(undefined)
       return
@@ -398,14 +398,14 @@
   }
 
   function handleTimeFieldChange(nextTime: TimeValue | undefined) {
-    if (type !== 'single' || !showTime) return
+    if (mode !== 'single' || !showTime) return
     const cur = isDateValue(current) ? current : undefined
     if (!cur) return
     setValue(applyTime(cur, nextTime))
   }
 
   function handleRangeFromDateChange(nextDate: DateValue | undefined) {
-    if (type !== 'range') return
+    if (mode !== 'range') return
     const cur = isRange(current) ? current : undefined
     setValue({
       from: nextDate ? mergeDateAndTime(nextDate, cur?.from, showTime) : undefined,
@@ -414,7 +414,7 @@
   }
 
   function handleRangeToDateChange(nextDate: DateValue | undefined) {
-    if (type !== 'range') return
+    if (mode !== 'range') return
     const cur = isRange(current) ? current : undefined
     setValue({
       from: cur?.from,
@@ -423,21 +423,21 @@
   }
 
   function handleRangeFromTimeChange(nextTime: TimeValue | undefined) {
-    if (type !== 'range' || !showTime) return
+    if (mode !== 'range' || !showTime) return
     const cur = isRange(current) ? current : undefined
     if (!cur?.from) return
     setValue({ from: applyTime(cur.from, nextTime), to: cur.to })
   }
 
   function handleRangeToTimeChange(nextTime: TimeValue | undefined) {
-    if (type !== 'range' || !showTime) return
+    if (mode !== 'range' || !showTime) return
     const cur = isRange(current) ? current : undefined
     if (!cur?.to) return
     setValue({ from: cur.from, to: applyTime(cur.to, nextTime) })
   }
 
   function handleCalendarSelect(next: DateValue | DateValue[] | DateRange | undefined) {
-    if (type === 'single') {
+    if (mode === 'single') {
       if (!isDateValue(next)) {
         setValue(undefined)
         return
@@ -446,7 +446,7 @@
       setValue(mergeDateAndTime(next, cur, showTime))
       return
     }
-    if (type === 'range') {
+    if (mode === 'range') {
       if (next !== undefined && !isRange(next)) return
       const cur = isRange(current) ? current : undefined
       setValue({
@@ -463,11 +463,11 @@
     calendarPlaceholder = next
   }
 
-  const singleDate = $derived(type === 'single' && isDateValue(current) ? current : undefined)
-  const rangeValue = $derived(type === 'range' && isRange(current) ? current : undefined)
-  const multipleDays = $derived(type === 'multiple' && Array.isArray(current) ? current : undefined)
+  const singleDate = $derived(mode === 'single' && isDateValue(current) ? current : undefined)
+  const rangeValue = $derived(mode === 'range' && isRange(current) ? current : undefined)
+  const multipleDays = $derived(mode === 'multiple' && Array.isArray(current) ? current : undefined)
   const multipleDisplay = $derived(
-    type === 'multiple' ? (formatValue ? formatValue(multipleDays) : defaultMultipleFormat(multipleDays)) : '',
+    mode === 'multiple' ? (formatValue ? formatValue(multipleDays) : defaultMultipleFormat(multipleDays)) : '',
   )
 
   const wrapperClass = $derived(
@@ -479,7 +479,7 @@
     ),
   )
 
-  const emitHidden = $derived(Boolean(control.name) && (type === 'range' || (type === 'single' && showTime)))
+  const emitHidden = $derived(Boolean(control.name) && (mode === 'range' || (mode === 'single' && showTime)))
   const popoverClassName = $derived(typeof popoverProps?.class === 'string' ? popoverProps.class : undefined)
   const popoverKeepMounted = $derived(popoverProps?.keepMounted === true)
   const popoverRest = $derived.by(() => {
@@ -524,7 +524,7 @@
 {#snippet calendarPanel()}
   <Calendar
     {size}
-    mode={type}
+    {mode}
     selected={current}
     onSelect={handleCalendarSelect}
     month={calendarPlaceholder}
@@ -556,7 +556,7 @@
     class={cn('flex w-full', className)}
     {...rest}
   >
-    {#if type === 'single' && !showTime}
+    {#if mode === 'single' && !showTime}
       <DateField
         value={singleDate}
         onValueChange={handleDateFieldChange}
@@ -574,7 +574,7 @@
         {maxValue}
         class={inputClassName}
       />
-    {:else if type === 'single' && showTime}
+    {:else if mode === 'single' && showTime}
       <div
         data-slot="date-picker-field"
         data-disabled={control.disabled ? '' : undefined}
@@ -608,7 +608,7 @@
           {@render calendarTrigger()}
         </div>
       </div>
-    {:else if type === 'range'}
+    {:else if mode === 'range'}
       <div
         data-slot="date-picker-field"
         data-disabled={control.disabled ? '' : undefined}
@@ -704,9 +704,9 @@
         class={inputClassName}
       />
     {/if}
-    {#if emitHidden && type === 'single'}
+    {#if emitHidden && mode === 'single'}
       <input type="hidden" name={control.name} value={toFormValue(singleDate, showTime)} />
-    {:else if emitHidden && type === 'range'}
+    {:else if emitHidden && mode === 'range'}
       <input type="hidden" name={`${control.name}[from]`} value={toFormValue(rangeValue?.from, showTime)} />
       <input type="hidden" name={`${control.name}[to]`} value={toFormValue(rangeValue?.to, showTime)} />
     {/if}

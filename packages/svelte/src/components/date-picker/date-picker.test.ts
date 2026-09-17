@@ -66,13 +66,13 @@ describe('DatePicker', () => {
   describe('range', () => {
     it('renders two DateFields with a separator', () => {
       const range: DateRange = { from: JUN_10, to: JUN_17 }
-      render(DatePickerHost, { props: { type: 'range', defaultValue: range } })
+      render(DatePickerHost, { props: { mode: 'range', defaultValue: range } })
       expect(screen.getAllByRole('spinbutton', { name: /day/i })).toHaveLength(2)
     })
 
     it('does not auto-close after both ends are picked', async () => {
       const user = userEvent.setup()
-      render(DatePickerHost, { props: { type: 'range' } })
+      render(DatePickerHost, { props: { mode: 'range' } })
       await user.click(screen.getByRole('button', { name: /open calendar/i }))
       const grid = await screen.findByRole('grid', overlay)
       await user.click(await screen.findByRole('button', { name: /June 10, 2026/, ...overlay }))
@@ -84,7 +84,7 @@ describe('DatePicker', () => {
   describe('multiple', () => {
     it('renders a read-only summary input', () => {
       render(DatePickerHost, {
-        props: { type: 'multiple', defaultValue: [JUN_10, JUN_17, new CalendarDate(2026, 6, 24)] },
+        props: { mode: 'multiple', defaultValue: [JUN_10, JUN_17, new CalendarDate(2026, 6, 24)] },
       })
       const input = screen.getByRole('textbox') as HTMLInputElement
       expect(input).toHaveAttribute('readonly')
@@ -93,7 +93,7 @@ describe('DatePicker', () => {
 
     it('does not auto-close when picking days', async () => {
       const user = userEvent.setup()
-      render(DatePickerHost, { props: { type: 'multiple' } })
+      render(DatePickerHost, { props: { mode: 'multiple' } })
       await user.click(screen.getByRole('button', { name: /open calendar/i }))
       const grid = await screen.findByRole('grid', overlay)
       await user.click(await screen.findByRole('button', { name: /June 10, 2026/, ...overlay }))

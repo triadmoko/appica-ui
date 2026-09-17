@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getSelectContext } from './select-context'
 
@@ -17,16 +16,11 @@
     lg: 'gap-1.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
-    /** Value submitted when this item is selected. */
-    value: string
-    /** Typeahead label. Defaults to the item text. */
-    label?: string
-    disabled?: boolean
+  export type SelectItemProps = WithoutChildrenOrChild<BitsSelect.ItemProps> & {
     children?: Snippet
   }
 
-  let { class: className, value, label, disabled, children: itemLabel, ...rest }: Props = $props()
+  let { class: className, value, label, disabled, children: itemLabel, ...rest }: SelectItemProps = $props()
 
   const ctx = getSelectContext()
   const classes = $derived(

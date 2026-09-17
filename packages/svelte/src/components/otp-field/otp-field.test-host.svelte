@@ -11,23 +11,29 @@
     length = LENGTH,
     disabled = false,
     invalid = false,
+    readOnly = false,
+    mask = false,
     size,
     variant,
     defaultValue,
+    onValueComplete,
   }: {
     length?: number
     disabled?: boolean
     invalid?: boolean
+    readOnly?: boolean
+    mask?: boolean
     size?: 'sm' | 'md' | 'lg'
     variant?: 'outline' | 'soft'
     defaultValue?: string
+    onValueComplete?: (value: string) => void
   } = $props()
 </script>
 
 {#if invalid}
   <Field {invalid}>
     <FieldLabel>Code</FieldLabel>
-    <OTPField {length} {disabled} {size} {variant} {defaultValue} aria-label="Verification code">
+    <OTPField {length} {disabled} {readOnly} {mask} {size} {variant} {defaultValue} {onValueComplete} aria-label="Verification code">
       {#snippet children({ cells })}
         {#each cells as cell, index (index)}
           {#if index === 2}
@@ -39,7 +45,7 @@
     </OTPField>
   </Field>
 {:else}
-  <OTPField {length} {disabled} {size} {variant} {defaultValue} aria-label="Verification code">
+  <OTPField {length} {disabled} {readOnly} {mask} {size} {variant} {defaultValue} {onValueComplete} aria-label="Verification code">
     {#snippet children({ cells })}
       {#each cells as cell, index (index)}
         {#if index === 2}

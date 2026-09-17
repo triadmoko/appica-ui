@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
-  import { cn } from '../../internal/utils'
+  import { type SelectSeparatorProps as BitsSelectSeparatorProps, type WithoutChildrenOrChild } from 'bits-ui'
+  import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement>
+  export type SelectSeparatorProps = WithoutChildrenOrChild<BitsSelectSeparatorProps>
 
-  let { class: className, ...rest }: Props = $props()
+  let { class: className, ...rest }: SelectSeparatorProps = $props()
 </script>
 
 <div
   data-slot="select-separator"
   role="separator"
   class={cn('bg-border -mx-2 my-1.5 h-px shrink-0', className)}
-  {...rest}
+  {...asBitsAttrs(rest)}
 ></div>

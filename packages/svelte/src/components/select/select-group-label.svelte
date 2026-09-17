@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getSelectContext } from './select-context'
 
@@ -11,9 +10,11 @@
     lg: 'px-3.5 pt-2.5 pb-1.5 text-base',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type SelectGroupLabelProps = WithoutChildrenOrChild<BitsSelect.GroupHeadingProps> & {
+    children?: Snippet
+  }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: SelectGroupLabelProps = $props()
 
   const ctx = getSelectContext()
 </script>

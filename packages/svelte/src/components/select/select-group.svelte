@@ -1,12 +1,11 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type SelectGroupProps = WithoutChildrenOrChild<BitsSelect.GroupProps> & { children?: Snippet }
 
-  let { children, ...rest }: Props = $props()
+  let { children, ...rest }: SelectGroupProps = $props()
 </script>
 
 <BitsSelect.Group data-slot="select-group" {...asBitsAttrs(rest)}>

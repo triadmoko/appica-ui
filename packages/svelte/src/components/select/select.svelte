@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Select as BitsSelect } from 'bits-ui'
+  import { Select as BitsSelect, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setSelectContext, type SelectSize, type SelectVariant } from './select-context'
 
-  type Props = {
+  export type SelectProps = Omit<
+    WithoutChildrenOrChild<BitsSelect.RootProps>,
+    'type' | 'value' | 'onValueChange' | 'items'
+  > & {
     /** Controlled value. A string when single-select, an array when `multiple`. */
     value?: string | string[]
     /** Uncontrolled initial value. */
@@ -33,9 +36,6 @@
      * @default false
      */
     multiple?: boolean
-    /** Field name submitted with a form, via a hidden input. */
-    name?: string
-    disabled?: boolean
     /**
      * Map values to labels for the closed trigger. Use when item children are richer than the label text.
      */
@@ -56,7 +56,7 @@
     items,
     children,
     ...rest
-  }: Props = $props()
+  }: SelectProps = $props()
 
   const field = getFieldContext()
   const control = $derived(mergeFieldControl({ field, name, disabled, omitId: true }))
@@ -118,6 +118,9 @@
   }
 
   const hasValue = $derived(multiple ? innerMultiple.length > 0 : innerSingle !== '')
+  const bitsItems = $derived(
+    items ? Object.entries(items).map(([itemValue, label]) => ({ value: itemValue, label })) : undefined,
+  )
 
   setSelectContext({
     get size() {
@@ -144,7 +147,7 @@
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleMultipleChange}
-    {items}
+    items={bitsItems}
     {...asBitsAttrs({ ...rest, 'data-slot': 'select' })}
   >
     {@render children?.()}
@@ -156,7 +159,7 @@
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleSingleChange}
-    {items}
+    items={bitsItems}
     {...asBitsAttrs({ ...rest, 'data-slot': 'select' })}
   >
     {@render children?.()}
