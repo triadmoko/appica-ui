@@ -2,6 +2,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { Menubar as BitsMenubar } from 'bits-ui'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import {
     setMenubarContext,
@@ -36,10 +37,15 @@
      */
     orientation?: MenubarOrientation
     /**
-     * When `true`, roving focus wraps from the last trigger to the first.
+     * Wrap arrow-key focus from the last trigger back to the first.
      * @default true
      */
-    loop?: boolean
+    loopFocus?: boolean
+    /**
+     * Trap focus and block outside scroll/interaction while a menu is open.
+     * @default true
+     */
+    modal?: boolean
     children?: Snippet
   }
 
@@ -48,10 +54,15 @@
     variant = 'pill',
     size = 'md',
     orientation = 'horizontal',
-    loop = true,
+    loopFocus = true,
+    modal = true,
+    dir,
     children,
     ...rest
   }: Props = $props()
+
+  const direction = useDirection()
+  const resolvedDir = $derived(dir === 'rtl' || dir === 'ltr' ? dir : direction.current)
 
   setMenubarContext({
     get variant() {
@@ -62,6 +73,9 @@
     },
     get orientation() {
       return orientation
+    },
+    get modal() {
+      return modal
     },
   })
 
@@ -80,7 +94,8 @@
   data-slot="menubar"
   data-orientation={orientation}
   class={classes}
-  {loop}
+  loop={loopFocus}
+  dir={resolvedDir}
   {...asBitsAttrs(rest)}
 >
   {@render children?.()}

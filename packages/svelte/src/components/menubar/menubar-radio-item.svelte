@@ -5,16 +5,21 @@
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
-  import { ITEM_BASE, ITEM_TEXT } from './menubar-variants'
+  import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_ORIENTATION, ITEM_TEXT } from './menubar-variants'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /** Value of this radio option. */
     value: string
+    /**
+     * Close the menu when chosen.
+     * @default false
+     */
+    closeOnClick?: boolean
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, value, disabled, children: label, ...rest }: Props = $props()
+  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: Props = $props()
 
   const ctx = getMenubarContext()
   const classes = $derived(
@@ -22,10 +27,22 @@
   )
 </script>
 
-<BitsMenubar.RadioItem data-slot="menubar-radio-item" {value} {disabled} class={classes} {...asBitsAttrs(rest)}>
+<BitsMenubar.RadioItem
+  data-slot="menubar-radio-item"
+  data-orientation={ITEM_ORIENTATION}
+  {value}
+  {disabled}
+  closeOnSelect={closeOnClick}
+  class={classes}
+  {...asBitsAttrs(rest)}
+>
   {#snippet children({ checked })}
     <span class={cn('flex items-center', ITEM_TEXT[ctx.size])}>{@render label?.()}</span>
-    <span data-slot="menubar-radio-item-indicator" class="group/check text-foreground-intense shrink-0" data-checked={checked ? '' : undefined}>
+    <span
+      data-slot="menubar-radio-item-indicator"
+      class="group/check text-foreground-intense shrink-0"
+      data-checked={checked ? '' : undefined}
+    >
       <svg
         data-icon="end"
         xmlns="http://www.w3.org/2000/svg"
@@ -37,16 +54,7 @@
         aria-hidden="true"
         class="me-0.5 size-[1.125em] stroke-2"
       >
-        <path
-          d="M4.3 12.55 L9.25 17.5 L19.7 6.5"
-          pathLength={1}
-          stroke-dasharray="1 2"
-          class={cn(
-            'opacity-0 [stroke-dashoffset:1.02]',
-            checked && 'opacity-100 [stroke-dashoffset:0]',
-            'motion-safe:transition-[opacity,stroke-dashoffset] motion-safe:ease-out',
-          )}
-        />
+        <path d="M4.3 12.55 L9.25 17.5 L19.7 6.5" pathLength={1} stroke-dasharray="1 2" class={CHECK_PATH_CLASS} />
       </svg>
     </span>
   {/snippet}

@@ -10,19 +10,35 @@
 
   type Props = HTMLAnchorAttributes & {
     href: string
+    /**
+     * Close the menu when the item is clicked.
+     * @default false
+     */
+    closeOnClick?: boolean
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, href, disabled, children, ...rest }: Props = $props()
+  let { class: className, href, closeOnClick = false, disabled, children, ...rest }: Props = $props()
 
   const ctx = getContextMenuContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))
+
+  function handleSelect(event: Event) {
+    if (!closeOnClick) event.preventDefault()
+  }
 </script>
 
-<BitsContextMenu.Item {disabled}>
+<BitsContextMenu.Item {disabled} onSelect={handleSelect}>
   {#snippet child({ props })}
-    <a {...props} {href} data-slot="context-menu-link-item" class={cn(props.class as ClassValue, classes)} {...rest}>
+    <a
+      {...props}
+      {href}
+      data-slot="context-menu-link-item"
+      data-orientation={ctx.orientation}
+      class={cn(props.class as ClassValue, classes)}
+      {...rest}
+    >
       {@render children?.()}
     </a>
   {/snippet}

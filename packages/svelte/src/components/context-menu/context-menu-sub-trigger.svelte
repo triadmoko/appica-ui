@@ -17,6 +17,7 @@
 <BitsContextMenu.SubTrigger class="group/submenu-trigger outline-hidden" disabled={disabled ?? undefined} {...asBitsAttrs(rest)}>
   <span
     data-slot="context-menu-sub-trigger"
+    data-orientation={ctx.orientation}
     class={cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, 'justify-between', className)}
   >
     <span class={cn('flex flex-1 items-center', ITEM_TEXT[ctx.size])}>{@render children?.()}</span>

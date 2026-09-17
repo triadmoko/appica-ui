@@ -30,7 +30,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `color-swatch` - Wave 2: custom. Picker-context preview when `color` is omitted.
 - [x] `color-swatch-picker` - Wave 2: custom. Roving listbox, sliding indicator. `bind:value`. RTL via `useDirection()`.
 - [x] `combobox` - Wave 2: bits-ui Combobox. `multiple` → `type`. Chips are Appica chrome (`ComboboxChips` / `ComboboxChip`). No Collection / `useFilteredItems`; filtering is consumer-side. Clear is an Appica button (bits-ui has no `.Clear`).
-- [x] `context-menu` - Wave 2: bits-ui. Clone of DropdownMenu chrome. Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
+- [x] `context-menu` - Wave 2: bits-ui. DropdownMenu chrome with context-menu defaults (`sideOffset=2`, no trigger-width lock, submenu `inline-end`). Extra `ContextMenuCheckboxGroup`. Trigger is right-click / long-press.
 - [x] `copy-button` - Built on `Button`. Children swap to `copiedLabel` on success. `value` is a string, HTMLElement (`bind:this`), or getter.
 - [x] `countdown` - Wave 1. Timer + context. Digit roll is CSS `translateY`, not Motion. Children snippet receives `parts`.
 - [x] `date-field` - Wave 2: bits-ui DateField wrap (`bind:value`, `bind:placeholder`). Format comes from `locale` + value/placeholder type (`CalendarDate` vs `CalendarDateTime` vs `ZonedDateTime`); `granularity` is inferred when omitted. Appica chrome: `variant` / `size` / `start` / `end` / `unstyled` / Field. No React `format` tokens. Hidden input is ISO `yyyy-MM-dd`.
@@ -45,7 +45,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `input` - Wave 1. `bind:value`, `clearable`, `start` / `end` snippets. `htmlSize` maps to the native `size` attribute. Reads Field context (`invalid` / `disabled` / `name` / `aria-describedby`).
 - [x] `kbd` - Wave 1. Size via context on `KbdGroup`.
 - [x] `loader` - Wave 1. Bar / dots as CSS `@keyframes`, gated by `useReducedMotion` (no Motion).
-- [x] `menubar` - Wave 2: bits-ui `Menubar.Root` + `Menu` (not a DropdownMenu wrap). Extra `MenubarCheckboxGroup`. Vertical uses `side=right`.
+- [x] `menubar` - Wave 2: bits-ui `Menubar.Root` + `Menu` (not a DropdownMenu wrap). Extra `MenubarCheckboxGroup`. Vertical defaults to `side=inline-end` via `physicalSide`.
 - [x] `meter` - Wave 1. Native ARIA `role="meter"` (no bits-ui). Threshold status classes on the indicator.
 - [x] `navigation` - Wave 1. Native `<nav>` / list / `el` on `NavigationLink` (`a` / `button`). No `render` / `child`.
 - [x] `navigation-menu` - Wave 2: bits-ui. Nested `<NavigationMenu>` inside Content maps to bits `Sub`. Viewport auto-rendered via Appica `NavigationMenuPositioner` (portal, backdrop, trigger-following morph; `viewport` default `true`). `delayDuration` default 50. Appica `NavigationMenuIcon`. `useDirection()` for `dir`.

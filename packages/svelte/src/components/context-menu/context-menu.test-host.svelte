@@ -6,29 +6,48 @@
   import ContextMenuGroupLabel from './context-menu-group-label.svelte'
   import ContextMenuItem from './context-menu-item.svelte'
   import ContextMenuLinkItem from './context-menu-link-item.svelte'
+  import ContextMenuCheckboxItem from './context-menu-checkbox-item.svelte'
   import ContextMenuRadioGroup from './context-menu-radio-group.svelte'
   import ContextMenuRadioItem from './context-menu-radio-item.svelte'
   import ContextMenuSeparator from './context-menu-separator.svelte'
   import ContextMenuSub from './context-menu-sub.svelte'
   import ContextMenuSubTrigger from './context-menu-sub-trigger.svelte'
   import ContextMenuSubContent from './context-menu-sub-content.svelte'
+  import type { ContextMenuSize } from './context-menu-context'
+  import type { ContextMenuAlign, ContextMenuSide } from './context-menu-variants'
 
-  let { radio = $bindable('one') }: { radio?: string } = $props()
+  let {
+    radio = $bindable('one'),
+    checked = $bindable(false),
+    closeOnClick = true,
+    size = 'md',
+    side = 'bottom',
+    align = 'start',
+  }: {
+    radio?: string
+    checked?: boolean
+    closeOnClick?: boolean
+    size?: ContextMenuSize
+    side?: ContextMenuSide
+    align?: ContextMenuAlign
+  } = $props()
 </script>
 
-<ContextMenu>
+<ContextMenu {size}>
   <ContextMenuTrigger data-testid="trigger" class="border-border bg-background-muted inline-flex rounded-md border px-3 py-2 text-sm">
     Right click here
   </ContextMenuTrigger>
-  <ContextMenuContent>
+  <ContextMenuContent {side} {align}>
     <ContextMenuGroup>
       <ContextMenuGroupLabel>Actions</ContextMenuGroupLabel>
-      <ContextMenuItem>Profile</ContextMenuItem>
+      <ContextMenuItem {closeOnClick}>Profile</ContextMenuItem>
       <ContextMenuItem>Settings</ContextMenuItem>
       <ContextMenuItem disabled>Disabled</ContextMenuItem>
     </ContextMenuGroup>
     <ContextMenuSeparator />
     <ContextMenuLinkItem href="https://example.com">Docs</ContextMenuLinkItem>
+    <ContextMenuSeparator />
+    <ContextMenuCheckboxItem bind:checked>Notifications</ContextMenuCheckboxItem>
     <ContextMenuSeparator />
     <ContextMenuRadioGroup bind:value={radio}>
       <ContextMenuRadioItem value="one">One</ContextMenuRadioItem>

@@ -8,6 +8,7 @@ export interface MenubarContextValue {
   size: MenubarSize
   variant: MenubarVariant
   orientation: MenubarOrientation
+  modal: boolean
 }
 
 const KEY = Symbol('appica-menubar')

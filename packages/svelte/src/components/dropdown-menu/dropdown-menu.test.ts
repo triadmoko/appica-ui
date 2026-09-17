@@ -80,7 +80,6 @@ describe('DropdownMenu', () => {
     render(DropdownMenuHost)
     await user.click(screen.getByRole('button', { name: 'Open' }))
     await user.click(await screen.findByText('Two', overlayText))
-    await user.click(screen.getByRole('button', { name: 'Open' }))
     const radio = (await screen.findByText('Two', overlayText)).closest('[data-slot="dropdown-menu-radio-item"]')
     expect(radio).toHaveAttribute('aria-checked', 'true')
   })

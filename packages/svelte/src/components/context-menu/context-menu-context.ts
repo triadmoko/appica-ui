@@ -1,9 +1,12 @@
 import { getContext, setContext } from 'svelte'
 
 export type ContextMenuSize = 'sm' | 'md' | 'lg'
+export type ContextMenuOrientation = 'horizontal' | 'vertical'
 
 export interface ContextMenuContextValue {
   size: ContextMenuSize
+  orientation: ContextMenuOrientation
+  disabled: boolean
 }
 
 const KEY = Symbol('appica-context-menu')

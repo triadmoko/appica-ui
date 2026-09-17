@@ -5,20 +5,36 @@
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
-  import { ITEM_BASE } from './menubar-variants'
+  import { ITEM_BASE, ITEM_ORIENTATION } from './menubar-variants'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
+    /**
+     * Close the menu after the item is selected.
+     * @default true
+     */
+    closeOnClick?: boolean
     /** When `true`, the item cannot be selected. */
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, closeOnClick = true, disabled, children, ...rest }: Props = $props()
 
   const ctx = getMenubarContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))
+
+  function handleSelect(event: Event) {
+    if (!closeOnClick) event.preventDefault()
+  }
 </script>
 
-<BitsMenubar.Item data-slot="menubar-item" {disabled} class={classes} {...asBitsAttrs(rest)}>
+<BitsMenubar.Item
+  data-slot="menubar-item"
+  data-orientation={ITEM_ORIENTATION}
+  {disabled}
+  onSelect={handleSelect}
+  class={classes}
+  {...asBitsAttrs(rest)}
+>
   {@render children?.()}
 </BitsMenubar.Item>

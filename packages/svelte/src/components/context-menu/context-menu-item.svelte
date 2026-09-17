@@ -8,17 +8,32 @@
   import { ITEM_BASE } from './context-menu-variants'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
-    /** When `true`, the item cannot be selected. */
+    /**
+     * Close the menu after the item is selected.
+     * @default true
+     */
+    closeOnClick?: boolean
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, closeOnClick = true, disabled, children, ...rest }: Props = $props()
 
   const ctx = getContextMenuContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))
+
+  function handleSelect(event: Event) {
+    if (!closeOnClick) event.preventDefault()
+  }
 </script>
 
-<BitsContextMenu.Item data-slot="context-menu-item" {disabled} class={classes} {...asBitsAttrs(rest)}>
+<BitsContextMenu.Item
+  data-slot="context-menu-item"
+  data-orientation={ctx.orientation}
+  {disabled}
+  onSelect={handleSelect}
+  class={classes}
+  {...asBitsAttrs(rest)}
+>
   {@render children?.()}
 </BitsContextMenu.Item>

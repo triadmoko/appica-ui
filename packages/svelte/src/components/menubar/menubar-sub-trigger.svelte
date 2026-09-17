@@ -5,7 +5,7 @@
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
-  import { ICON_SIZE, ITEM_BASE, ITEM_TEXT } from './menubar-variants'
+  import { ICON_SIZE, ITEM_BASE, ITEM_ORIENTATION, ITEM_TEXT } from './menubar-variants'
 
   type Props = HTMLButtonAttributes & { children?: Snippet }
 
@@ -17,6 +17,7 @@
 <BitsMenubar.SubTrigger class="group/submenu-trigger outline-hidden" disabled={disabled ?? undefined} {...asBitsAttrs(rest)}>
   <span
     data-slot="menubar-sub-trigger"
+    data-orientation={ITEM_ORIENTATION}
     class={cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, 'justify-between', className)}
   >
     <span class={cn('flex flex-1 items-center', ITEM_TEXT[ctx.size])}>{@render children?.()}</span>
