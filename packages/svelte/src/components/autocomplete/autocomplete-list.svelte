@@ -1,18 +1,18 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAutocompleteContext } from './autocomplete-context'
   import { itemKey } from './autocomplete-filter'
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  export type AutocompleteListProps = WithoutChildrenOrChild<BitsCombobox.ViewportProps> & {
     /** Items per row in grid mode (defaults to 2 when `grid` is set). */
     cols?: number
     children?: Snippet<[item: unknown, index: number]>
   }
 
-  let { class: className, cols, children, ...rest }: Props = $props()
+  let { class: className, cols, children, ...rest }: AutocompleteListProps = $props()
 
   const ctx = getAutocompleteContext()
   const effectiveCols = $derived(cols ?? (ctx.grid ? 2 : undefined))

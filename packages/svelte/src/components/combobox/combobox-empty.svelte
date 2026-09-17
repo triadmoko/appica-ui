@@ -10,9 +10,9 @@
     lg: 'px-3.5 py-3 text-base',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type ComboboxEmptyProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: ComboboxEmptyProps = $props()
 
   const ctx = getComboboxContext()
 </script>

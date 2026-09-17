@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type DrawerHeaderProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: DrawerHeaderProps = $props()
 </script>
 
 <div data-slot="drawer-header" class={cn('flex shrink-0 flex-col gap-2 p-6', className)} {...rest}>

@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getNavigationMenuContext, getNavigationMenuInContent } from './navigation-menu-context'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type NavigationMenuTriggerProps = WithoutChildrenOrChild<BitsNavigationMenu.TriggerProps> & { children?: Snippet }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, disabled, children, ...rest }: NavigationMenuTriggerProps = $props()
 
   const ctx = getNavigationMenuContext()
   const inContent = getNavigationMenuInContent()

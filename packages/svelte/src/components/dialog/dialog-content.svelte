@@ -1,13 +1,12 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Dialog as BitsDialog } from 'bits-ui'
+  import { Dialog as BitsDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import { splitModalProps } from '../../internal/modal'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { buttonVariants } from '../button/button-variants'
   import { getDialogContext } from './dialog-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DialogContentProps = WithoutChildrenOrChild<BitsDialog.ContentProps> & {
     /**
      * Render the × button in the corner.
      * @default true
@@ -55,7 +54,7 @@
     viewportProps,
     children,
     ...rest
-  }: Props = $props()
+  }: DialogContentProps = $props()
 
   const ctx = getDialogContext()
   const modal = $derived(ctx?.getModal() ?? true)

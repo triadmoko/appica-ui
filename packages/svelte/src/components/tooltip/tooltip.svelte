@@ -1,24 +1,18 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Tooltip as BitsTooltip } from 'bits-ui'
+  import { Tooltip as BitsTooltip, type WithoutChildrenOrChild } from 'bits-ui'
   import { commitBindableChange } from '../../internal/utils'
   import { setTooltipContext, type TrackCursorAxis } from './tooltip-context'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
+  export type TooltipProps = Omit<
+    WithoutChildrenOrChild<BitsTooltip.RootProps>,
+    'delayDuration' | 'disableHoverableContent'
+  > & {
     /**
      * Delay in milliseconds before this tooltip opens. Overrides the provider delay.
      */
     delay?: number
-    /**
-     * Prevent the tooltip from opening.
-     * @default false
-     */
-    disabled?: boolean
     /**
      * Close the tooltip when the pointer enters its content.
      * @default false
@@ -40,7 +34,7 @@
     disableHoverablePopup = false,
     trackCursorAxis = 'none',
     children,
-  }: Props = $props()
+  }: TooltipProps = $props()
 
   let innerOpen = $state(false)
   innerOpen = untrack(() => open ?? false)

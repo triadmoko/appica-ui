@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Accordion as BitsAccordion } from 'bits-ui'
+  import { Accordion as BitsAccordion, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAccordionContext, setAccordionItemContext, type AccordionVariant } from './accordion-context'
   import { itemVariants } from './accordion-variants'
 
-  export type AccordionItemProps = HTMLAttributes<HTMLDivElement> & {
+  export type AccordionItemProps = WithoutChildrenOrChild<BitsAccordion.ItemProps> & {
     /** Identity of this item. Required for controlled `value`. */
     value: string
     /** Override the root's `variant` for this item. */

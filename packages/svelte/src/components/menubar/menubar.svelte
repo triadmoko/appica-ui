@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import {
@@ -20,7 +20,7 @@
     pill: 'gap-0.5',
   }
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarProps = WithoutChildrenOrChild<BitsMenubar.RootProps> & {
     /**
      * Trigger appearance - hover/active pill, or an animated underline.
      * @default 'pill'
@@ -59,7 +59,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: MenubarProps = $props()
 
   const direction = useDirection()
   const resolvedDir = $derived(dir === 'rtl' || dir === 'ltr' ? dir : direction.current)

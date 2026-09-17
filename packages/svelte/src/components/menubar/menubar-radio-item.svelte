@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_ORIENTATION, ITEM_TEXT } from './menubar-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarRadioItemProps = WithoutChildrenOrChild<BitsMenubar.RadioItemProps> & {
     /** Value of this radio option. */
     value: string
     /**
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: Props = $props()
+  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: MenubarRadioItemProps = $props()
 
   const ctx = getMenubarContext()
   const classes = $derived(

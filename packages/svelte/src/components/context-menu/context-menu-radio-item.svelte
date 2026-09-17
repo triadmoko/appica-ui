@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getContextMenuContext } from './context-menu-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_TEXT } from './context-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ContextMenuRadioItemProps = WithoutChildrenOrChild<BitsContextMenu.RadioItemProps> & {
     /** Value of this radio option. */
     value: string
     /**
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: Props = $props()
+  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: ContextMenuRadioItemProps = $props()
 
   const ctx = getContextMenuContext()
   const classes = $derived(

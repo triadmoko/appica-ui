@@ -2,13 +2,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getContextMenuContext } from './context-menu-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_TEXT } from './context-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ContextMenuCheckboxItemProps = WithoutChildrenOrChild<BitsContextMenu.CheckboxItemProps> & {
     /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
     checked?: boolean
     /** Fires when the checked state changes. */
@@ -33,7 +33,7 @@
     disabled,
     children: label,
     ...rest
-  }: Props = $props()
+  }: ContextMenuCheckboxItemProps = $props()
 
   const ctx = getContextMenuContext()
   let inner = $state(false)

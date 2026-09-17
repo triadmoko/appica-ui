@@ -16,13 +16,13 @@
     soft: 'outline',
   } as const
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type ComboboxChipProps = HTMLAttributes<HTMLSpanElement> & {
     /** Value this chip represents. Removing it updates the root selection. */
     value: string
     children?: Snippet
   }
 
-  let { class: className, value, children, ...rest }: Props = $props()
+  let { class: className, value, children, ...rest }: ComboboxChipProps = $props()
 
   const ctx = getComboboxContext()
 </script>

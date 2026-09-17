@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getDrawerProviderContext } from './drawer-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type DrawerIndentProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, style, children, ...rest }: Props = $props()
+  let { class: className, style, children, ...rest }: DrawerIndentProps = $props()
 
   const provider = getDrawerProviderContext()
   const active = $derived((provider?.openCount ?? 0) > 0)

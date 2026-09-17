@@ -3,11 +3,11 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLLegendElement> & {
+  export type FieldsetLegendProps = HTMLAttributes<HTMLLegendElement> & {
     children?: Snippet
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: FieldsetLegendProps = $props()
 </script>
 
 <legend data-slot="fieldset-legend" class={cn('text-foreground-intense text-lg font-medium', className)} {...rest}>

@@ -1,8 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import { Tooltip as BitsTooltip } from 'bits-ui'
+  import { Tooltip as BitsTooltip, type WithoutChildrenOrChild } from 'bits-ui'
 
-  type Props = {
+  export type TooltipProviderProps = Omit<
+    WithoutChildrenOrChild<BitsTooltip.ProviderProps>,
+    'delayDuration' | 'skipDelayDuration'
+  > & {
     /**
      * Delay in milliseconds before a tooltip opens.
      * @default 200
@@ -16,7 +19,7 @@
     children?: Snippet
   }
 
-  let { delay = 200, timeout = 400, children }: Props = $props()
+  let { delay = 200, timeout = 400, children }: TooltipProviderProps = $props()
 </script>
 
 <BitsTooltip.Provider delayDuration={delay} skipDelayDuration={timeout}>

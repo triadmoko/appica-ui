@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getDropdownMenuContext } from './dropdown-menu-context'
@@ -13,7 +13,7 @@
     type DropdownMenuSide,
   } from './dropdown-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DropdownMenuSubContentProps = Omit<WithoutChildrenOrChild<BitsDropdownMenu.SubContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side of the parent item.
      * @default 'inline-end'
@@ -70,7 +70,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: DropdownMenuSubContentProps = $props()
 
   const ctx = getDropdownMenuContext()
   const direction = useDirection()

@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Collapsible as BitsCollapsible } from 'bits-ui'
+  import { Collapsible as BitsCollapsible, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type CollapsibleContentProps = WithoutChildrenOrChild<BitsCollapsible.ContentProps> & {
     /**
      * Keep the panel in the DOM while closed so find-in-page and search-engine crawlers can still reach the hidden text.
      * @default false
@@ -18,7 +18,7 @@
     children?: Snippet
   }
 
-  let { class: className, keepMounted = false, hiddenUntilFound = false, children, ...rest }: Props = $props()
+  let { class: className, keepMounted = false, hiddenUntilFound = false, children, ...rest }: CollapsibleContentProps = $props()
 
   const persist = $derived(keepMounted || hiddenUntilFound)
   const classes = $derived(

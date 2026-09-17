@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
   import { ICON_SIZE, ITEM_BASE, ITEM_ORIENTATION, ITEM_TEXT } from './menubar-variants'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type MenubarSubTriggerProps = WithoutChildrenOrChild<BitsMenubar.SubTriggerProps> & { children?: Snippet }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, disabled, children, ...rest }: MenubarSubTriggerProps = $props()
 
   const ctx = getMenubarContext()
 </script>

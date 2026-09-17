@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAutocompleteContext } from './autocomplete-context'
 
@@ -24,7 +24,7 @@
   type Side = 'top' | 'bottom' | 'left' | 'right'
   type Align = 'start' | 'center' | 'end'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AutocompleteContentProps = WithoutChildrenOrChild<BitsCombobox.ContentProps> & {
     /**
      * Preferred side of the input to open on.
      * @default 'bottom'
@@ -56,7 +56,7 @@
     keepMounted = false,
     children,
     ...rest
-  }: Props = $props()
+  }: AutocompleteContentProps = $props()
 
   const ctx = getAutocompleteContext()
   const classes = $derived(

@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getDropdownMenuContext } from './dropdown-menu-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_TEXT } from './dropdown-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DropdownMenuRadioItemProps = WithoutChildrenOrChild<BitsDropdownMenu.RadioItemProps> & {
     /** Value of this radio option. */
     value: string
     /**
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: Props = $props()
+  let { class: className, value, closeOnClick = false, disabled, children: label, ...rest }: DropdownMenuRadioItemProps = $props()
 
   const ctx = getDropdownMenuContext()
   const classes = $derived(

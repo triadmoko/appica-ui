@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Dialog as BitsDialog } from 'bits-ui'
+  import { Dialog as BitsDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
   import {
@@ -14,18 +14,12 @@
   } from './drawer-context'
   import { snapOffsetForPoint } from './drawer-gesture'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
+  export type DrawerProps = WithoutChildrenOrChild<BitsDialog.RootProps> & {
     /**
      * Uncontrolled initial open state.
      * @default false
      */
     defaultOpen?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
-    /** Fires after the open/close transition finishes. */
-    onOpenChangeComplete?: (open: boolean) => void
     /** Programmatic handle from `Drawer.createHandle()`. */
     handle?: OverlayHandle
     /**
@@ -76,7 +70,7 @@
     onSnapPointChange,
     snapToSequentialPoints = false,
     children,
-  }: Props = $props()
+  }: DrawerProps = $props()
 
   const parent = getDrawerContext()
   const indent = getDrawerProviderContext()

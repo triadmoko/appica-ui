@@ -2,9 +2,9 @@
   import type { Snippet } from 'svelte'
   import { setDrawerProviderContext } from './drawer-context'
 
-  type Props = { children?: Snippet }
+  export type DrawerProviderProps = { children?: Snippet }
 
-  let { children }: Props = $props()
+  let { children }: DrawerProviderProps = $props()
 
   let openCount = $state(0)
   let swipeProgress = $state(0)

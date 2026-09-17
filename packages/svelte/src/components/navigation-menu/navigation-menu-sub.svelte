@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getNavigationMenuContext, setNavigationMenuContext } from './navigation-menu-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type NavigationMenuSubProps = WithoutChildrenOrChild<BitsNavigationMenu.SubProps> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: NavigationMenuSubProps = $props()
 
   const parent = getNavigationMenuContext()
   let subEl = $state<HTMLElement | null>(null)

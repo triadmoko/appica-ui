@@ -8,7 +8,7 @@
   import { getContextMenuContext } from './context-menu-context'
   import { ITEM_BASE } from './context-menu-variants'
 
-  type Props = HTMLAnchorAttributes & {
+  export type ContextMenuLinkItemProps = HTMLAnchorAttributes & {
     href: string
     /**
      * Close the menu when the item is clicked.
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, href, closeOnClick = false, disabled, children, ...rest }: Props = $props()
+  let { class: className, href, closeOnClick = false, disabled, children, ...rest }: ContextMenuLinkItemProps = $props()
 
   const ctx = getContextMenuContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))

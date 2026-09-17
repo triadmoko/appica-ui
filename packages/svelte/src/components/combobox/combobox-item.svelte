@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getComboboxContext } from './combobox-context'
 
@@ -17,14 +17,14 @@
     lg: 'gap-1.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ComboboxItemProps = WithoutChildrenOrChild<BitsCombobox.ItemProps> & {
     value: string
     label?: string
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, value, label, disabled, children: itemLabel, ...rest }: Props = $props()
+  let { class: className, value, label, disabled, children: itemLabel, ...rest }: ComboboxItemProps = $props()
 
   const ctx = getComboboxContext()
   const classes = $derived(

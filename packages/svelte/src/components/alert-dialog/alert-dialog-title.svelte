@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { AlertDialog as BitsAlertDialog } from 'bits-ui'
+  import { AlertDialog as BitsAlertDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLHeadingElement> & { children?: Snippet }
+  export type AlertDialogTitleProps = WithoutChildrenOrChild<BitsAlertDialog.TitleProps> & {
+    children?: Snippet
+  }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: AlertDialogTitleProps = $props()
 </script>
 
 <BitsAlertDialog.Title

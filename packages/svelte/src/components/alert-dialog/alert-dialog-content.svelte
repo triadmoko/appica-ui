@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { AlertDialog as BitsAlertDialog } from 'bits-ui'
+  import { AlertDialog as BitsAlertDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import { splitModalProps } from '../../internal/modal'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AlertDialogContentProps = WithoutChildrenOrChild<BitsAlertDialog.ContentProps> & {
     /**
      * Render the dimmed, blurred backdrop behind the popup.
      * @default true
@@ -41,7 +40,7 @@
     viewportProps,
     children,
     ...rest
-  }: Props = $props()
+  }: AlertDialogContentProps = $props()
 
   const forceBackdrop = $derived(backdropProps?.forceRender === true)
   const showFrame = $derived(frame && backdrop)

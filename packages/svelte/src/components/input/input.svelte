@@ -9,7 +9,7 @@
   type InputVariant = NonNullable<VariantProps<typeof inputVariants>['variant']>
   type InputSize = NonNullable<VariantProps<typeof inputVariants>['size']>
 
-  type Props = Omit<HTMLInputAttributes, 'size'> & {
+  export type InputProps = Omit<HTMLInputAttributes, 'size'> & {
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
@@ -59,7 +59,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: InputProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

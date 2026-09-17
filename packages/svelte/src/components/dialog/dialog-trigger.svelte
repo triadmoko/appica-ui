@@ -1,17 +1,16 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Dialog as BitsDialog } from 'bits-ui'
+  import { Dialog as BitsDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLButtonAttributes & {
+  export type DialogTriggerProps = WithoutChildrenOrChild<BitsDialog.TriggerProps> & {
     /** Detached trigger: pair with `Dialog.createHandle()` when rendered outside Root. */
     handle?: OverlayHandle
     children?: Snippet
   }
 
-  let { class: className, disabled, handle, children, ...rest }: Props = $props()
+  let { class: className, disabled, handle, children, ...rest }: DialogTriggerProps = $props()
 </script>
 
 {#if handle}
@@ -23,7 +22,7 @@
     onclick={() => {
       handle.open = true
     }}
-    {...rest}
+    {...asBitsAttrs(rest)}
   >
     {@render children?.()}
   </button>

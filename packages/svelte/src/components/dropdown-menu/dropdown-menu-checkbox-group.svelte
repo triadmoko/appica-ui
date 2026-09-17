@@ -2,10 +2,10 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DropdownMenuCheckboxGroupProps = WithoutChildrenOrChild<BitsDropdownMenu.CheckboxGroupProps> & {
     /** Controlled selected values. Pair with `onValueChange` or `bind:value`. */
     value?: string[]
     /** Fires when the selected values change. */
@@ -13,7 +13,7 @@
     children?: Snippet
   }
 
-  let { value = $bindable(), onValueChange, children, ...rest }: Props = $props()
+  let { value = $bindable(), onValueChange, children, ...rest }: DropdownMenuCheckboxGroupProps = $props()
 
   let inner = $state<string[]>([])
   inner = untrack(() => value ?? [])

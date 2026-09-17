@@ -3,11 +3,11 @@
   import { cn } from '../../internal/utils'
   import { isToastStatusIcon, type ToastStatusIcon } from './toast-manager.svelte'
 
-  type Props = {
+  export type ToastStatusIconProps = {
     kind: string
   }
 
-  let { kind }: Props = $props()
+  let { kind }: ToastStatusIconProps = $props()
 
   const status = $derived(isToastStatusIcon(kind) ? kind : null)
   const iconClass =

@@ -1,12 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import {
-    BorderBeam,
-    DirectionProvider,
-    Spinner,
-    Switch,
-    buttonVariants,
-  } from '@appica/ui-svelte'
+  import { BorderBeam, Button, DirectionProvider, Spinner, Switch } from '@appica/ui-svelte'
 
   const CARD =
     'bg-background border-border text-foreground flex min-h-24 items-center justify-center rounded-2xl border px-5 text-center text-sm'
@@ -94,20 +88,10 @@
     <p class="text-foreground-muted text-sm">Reveal on interaction</p>
     <div class="flex flex-wrap items-center justify-center gap-8">
       <BorderBeam revealOn="hover" showOnTouch pressScale class="rounded-full">
-        <button
-          type="button"
-          class={[buttonVariants({ variant: 'outline', size: 'lg' }), 'rounded-full']}
-        >
-          Hover me
-        </button>
+        <Button variant="outline" size="lg" class="rounded-full">Hover me</Button>
       </BorderBeam>
       <BorderBeam revealOn="press" pressScale class="rounded-full">
-        <button
-          type="button"
-          class={[buttonVariants({ variant: 'outline', size: 'lg' }), 'rounded-full']}
-        >
-          Press me
-        </button>
+        <Button variant="outline" size="lg" class="rounded-full">Press me</Button>
       </BorderBeam>
     </div>
   </div>
@@ -122,11 +106,7 @@
       speed={2}
       class="rounded-full"
     >
-      <button
-        type="button"
-        onclick={run}
-        class={[buttonVariants({ variant: 'outline', size: 'lg' }), 'rounded-full']}
-      >
+      <Button variant="outline" size="lg" class="rounded-full" onclick={run}>
         {#if loading}
           <Spinner variant="sparkle" currentColor data-icon="start" class="text-xl" />
         {:else}
@@ -151,7 +131,7 @@
           </svg>
         {/if}
         {loading ? 'Thinking…' : 'Ask AI'}
-      </button>
+      </Button>
     </BorderBeam>
   </div>
 

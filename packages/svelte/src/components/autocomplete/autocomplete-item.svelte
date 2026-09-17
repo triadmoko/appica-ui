@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAutocompleteContext } from './autocomplete-context'
 
@@ -17,14 +17,14 @@
     lg: 'gap-1.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AutocompleteItemProps = Omit<WithoutChildrenOrChild<BitsCombobox.ItemProps>, 'value'> & {
     value: unknown
     label?: string
     disabled?: boolean
     children?: Snippet
   }
 
-  let { class: className, value, label, disabled, children, ...rest }: Props = $props()
+  let { class: className, value, label, disabled, children, ...rest }: AutocompleteItemProps = $props()
 
   const ctx = getAutocompleteContext()
   const stringValue = $derived(ctx.stringify(value))

@@ -5,7 +5,7 @@
   import { cn } from '../../internal/utils'
   import { DEPTH_INDENT, getTocContext } from './toc-context'
 
-  type Props = HTMLAnchorAttributes & {
+  export type TocLinkProps = HTMLAnchorAttributes & {
     /** **Required.** The target heading, as a hash (`#id`). The `id` after `#` is the heading observed. */
     href: string
     /**
@@ -16,7 +16,7 @@
     children?: Snippet
   }
 
-  let { class: className, depth = 2, href, children, ...rest }: Props = $props()
+  let { class: className, depth = 2, href, children, ...rest }: TocLinkProps = $props()
 
   const ctx = getTocContext('TocLink')
   const id = $derived(href.startsWith('#') ? href.slice(1) : null)

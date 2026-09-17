@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Tooltip as BitsTooltip } from 'bits-ui'
+  import { Tooltip as BitsTooltip, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getTooltipContext, getTrackCursorVirtualRect } from './tooltip-context'
@@ -9,7 +9,7 @@
   type Side = 'top' | 'bottom' | 'left' | 'right'
   type Align = 'start' | 'center' | 'end'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type TooltipContentProps = Omit<WithoutChildrenOrChild<BitsTooltip.ContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side of the trigger.
      * @default 'top'
@@ -71,7 +71,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: TooltipContentProps = $props()
 
   const direction = useDirection()
   const ctx = getTooltipContext()

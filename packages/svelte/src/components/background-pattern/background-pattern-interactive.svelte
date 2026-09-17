@@ -4,13 +4,13 @@
   import { patternSpotlight, type BackgroundPatternVariant } from './background-pattern-shared'
   import BackgroundPatternLayer from './background-pattern-layer.svelte'
 
-  type Props = {
+  export type BackgroundPatternInteractiveProps = {
     variant: BackgroundPatternVariant
     persistent?: boolean
     track?: 'self' | 'window'
   }
 
-  let { variant, persistent: persistentProp = false, track = 'self' }: Props = $props()
+  let { variant, persistent: persistentProp = false, track = 'self' }: BackgroundPatternInteractiveProps = $props()
 
   const reducedMotion = useReducedMotion()
   const persistent = $derived(persistentProp || reducedMotion.current)

@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getDropdownMenuContext } from './dropdown-menu-context'
 
-  type Props = HTMLButtonAttributes & {
+  export type DropdownMenuTriggerProps = WithoutChildrenOrChild<BitsDropdownMenu.TriggerProps> & {
     /**
      * Open the menu when the trigger is hovered, not just clicked.
      * @default false
@@ -34,7 +34,7 @@
     onpointerleave,
     children,
     ...rest
-  }: Props = $props()
+  }: DropdownMenuTriggerProps = $props()
 
   const ctx = getDropdownMenuContext()
   const isDisabled = $derived(disabled || ctx.disabled)

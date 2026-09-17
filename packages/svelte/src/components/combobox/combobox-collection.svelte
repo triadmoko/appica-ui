@@ -3,11 +3,11 @@
   import { itemKey } from '../../internal/collection-filter'
   import { getComboboxGroupContext } from './combobox-context'
 
-  type Props = {
+  export type ComboboxCollectionProps = {
     children?: Snippet<[item: unknown, index: number]>
   }
 
-  let { children }: Props = $props()
+  let { children }: ComboboxCollectionProps = $props()
 
   const group = getComboboxGroupContext()
   const items = $derived(group.items())

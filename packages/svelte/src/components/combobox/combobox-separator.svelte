@@ -3,9 +3,9 @@
   import { Combobox as BitsCombobox } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement>
+  export type ComboboxSeparatorProps = HTMLAttributes<HTMLDivElement>
 
-  let { class: className, ...rest }: Props = $props()
+  let { class: className, ...rest }: ComboboxSeparatorProps = $props()
 </script>
 
 <BitsCombobox.Separator

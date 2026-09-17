@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { LinkPreview as BitsLinkPreview } from 'bits-ui'
+  import { LinkPreview as BitsLinkPreview, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
   type Side = 'top' | 'bottom' | 'left' | 'right'
   type Align = 'start' | 'center' | 'end'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type PreviewCardContentProps = Omit<WithoutChildrenOrChild<BitsLinkPreview.ContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side of the trigger.
      * @default 'bottom'
@@ -80,7 +80,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: PreviewCardContentProps = $props()
 
   const direction = useDirection()
   const resolvedDir = $derived(dir === 'rtl' || dir === 'ltr' ? dir : direction.current)

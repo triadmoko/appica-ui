@@ -4,11 +4,11 @@
   import { cn } from '../../internal/utils'
   import { getPopoverContext } from './popover-context'
 
-  type Props = HTMLAttributes<HTMLHeadingElement> & {
+  export type PopoverTitleProps = HTMLAttributes<HTMLHeadingElement> & {
     children?: Snippet
   }
 
-  let { class: className, id, children, ...rest }: Props = $props()
+  let { class: className, id, children, ...rest }: PopoverTitleProps = $props()
 
   const ctx = getPopoverContext()
   const resolvedId = $derived(id ?? ctx?.titleId)

@@ -1,28 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { LinkPreview as BitsLinkPreview } from 'bits-ui'
+  import { LinkPreview as BitsLinkPreview, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
+  export type PreviewCardProps = WithoutChildrenOrChild<BitsLinkPreview.RootProps> & {
     /** Programmatic handle from `PreviewCard.createHandle()`. */
     handle?: OverlayHandle
-    /**
-     * Delay in milliseconds before the preview opens.
-     * @default 600
-     */
-    openDelay?: number
-    /**
-     * Delay in milliseconds before the preview closes.
-     * @default 300
-     */
-    closeDelay?: number
-    disabled?: boolean
     children?: Snippet
   }
 
@@ -34,7 +19,7 @@
     closeDelay = 300,
     disabled,
     children,
-  }: Props = $props()
+  }: PreviewCardProps = $props()
 
   let innerOpen = $state(false)
   innerOpen = untrack(() => handle?.open ?? open ?? false)

@@ -1,23 +1,17 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Popover as BitsPopover } from 'bits-ui'
+  import { Popover as BitsPopover, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
   import { setPopoverContext, type PopoverModal } from './popover-context'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
+  export type PopoverProps = WithoutChildrenOrChild<BitsPopover.RootProps> & {
     /**
      * Uncontrolled initial open state.
      * @default false
      */
     defaultOpen?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
-    /** Fires after the open/close transition finishes. */
-    onOpenChangeComplete?: (open: boolean) => void
     /**
      * Trap focus and block outside scroll/interaction while open.
      * @default false
@@ -36,7 +30,7 @@
     modal = false,
     handle,
     children,
-  }: Props = $props()
+  }: PopoverProps = $props()
 
   const uid = $props.id()
   let titled = $state(false)

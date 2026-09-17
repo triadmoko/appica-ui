@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getContextMenuContext } from './context-menu-context'
@@ -13,7 +13,7 @@
     type ContextMenuSide,
   } from './context-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ContextMenuContentProps = Omit<WithoutChildrenOrChild<BitsContextMenu.ContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side to grow toward from the pointer.
      * @default 'bottom'
@@ -70,7 +70,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: ContextMenuContentProps = $props()
 
   const ctx = getContextMenuContext()
   const direction = useDirection()

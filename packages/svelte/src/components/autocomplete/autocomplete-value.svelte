@@ -4,12 +4,12 @@
   import { cn } from '../../internal/utils'
   import { getAutocompleteContext } from './autocomplete-context'
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type AutocompleteValueProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     placeholder?: string
     children?: Snippet<[value: string]>
   }
 
-  let { class: className, placeholder, children, ...rest }: Props = $props()
+  let { class: className, placeholder, children, ...rest }: AutocompleteValueProps = $props()
 
   const ctx = getAutocompleteContext()
   const current = $derived(ctx.inputValue())

@@ -27,7 +27,7 @@
     lg: '0.75rem',
   }
 
-  type Props = Omit<HTMLTextareaAttributes, 'size'> & {
+  export type TextareaProps = Omit<HTMLTextareaAttributes, 'size'> & {
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
@@ -72,7 +72,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: TextareaProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

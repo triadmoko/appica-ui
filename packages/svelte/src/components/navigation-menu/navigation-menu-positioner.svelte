@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu, Portal } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, Portal, type WithoutChildrenOrChild } from 'bits-ui'
   import type { ClassValue } from 'clsx'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
@@ -17,7 +17,7 @@
     lg: 'rounded-xl',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type NavigationMenuPositionerProps = WithoutChildrenOrChild<BitsNavigationMenu.ViewportProps> & {
     /**
      * Preferred side to open on (vertical defaults to inline-end).
      */
@@ -47,7 +47,7 @@
     container,
     children,
     ...rest
-  }: Props = $props()
+  }: NavigationMenuPositionerProps = $props()
 
   const ctx = getNavigationMenuContext()
   const direction = useDirection()

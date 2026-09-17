@@ -1,17 +1,17 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { LinkPreview as BitsLinkPreview } from 'bits-ui'
+  import { LinkPreview as BitsLinkPreview, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAnchorAttributes & {
+  export type PreviewCardTriggerProps = WithoutChildrenOrChild<BitsLinkPreview.TriggerProps> & {
     /** Detached trigger: pair with `PreviewCard.createHandle()` when rendered outside Root. */
     handle?: OverlayHandle
     children?: Snippet
   }
 
-  let { class: className, href, handle, children, ...rest }: Props = $props()
+  let { class: className, href, handle, children, ...rest }: PreviewCardTriggerProps = $props()
 </script>
 
 {#if handle}
@@ -31,7 +31,7 @@
     onblur={() => {
       handle.open = false
     }}
-    {...rest}
+    {...asBitsAttrs(rest)}
   >
     {@render children?.()}
   </a>

@@ -1,23 +1,17 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Dialog as BitsDialog } from 'bits-ui'
+  import { Dialog as BitsDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
   import { setDialogContext, type DialogModal } from './dialog-context'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
+  export type DialogProps = WithoutChildrenOrChild<BitsDialog.RootProps> & {
     /**
      * Uncontrolled initial open state.
      * @default false
      */
     defaultOpen?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
-    /** Fires after the open/close transition finishes. */
-    onOpenChangeComplete?: (open: boolean) => void
     /**
      * Trap focus and block scroll/interaction with the page behind.
      * @default true
@@ -42,7 +36,7 @@
     disablePointerDismissal = false,
     handle,
     children,
-  }: Props = $props()
+  }: DialogProps = $props()
 
   setDialogContext({
     getModal: () => modal,

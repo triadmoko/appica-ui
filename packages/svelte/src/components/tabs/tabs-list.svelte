@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Tabs as BitsTabs } from 'bits-ui'
+  import { Tabs as BitsTabs, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { getTabsContext, setTabsContext } from './tabs-context'
   import { tabsIndicatorVariants, tabsListVariants, type TabsListVariant, type TabsSize } from './tabs-variants'
 
-  export type TabsListProps = HTMLAttributes<HTMLDivElement> & {
+  export type TabsListProps = WithoutChildrenOrChild<BitsTabs.ListProps> & {
     /**
      * Override the root's variant for this list.
      * @default context

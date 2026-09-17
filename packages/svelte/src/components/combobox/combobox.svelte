@@ -7,7 +7,7 @@
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setComboboxContext, type ComboboxSize, type ComboboxVariant } from './combobox-context'
 
-  type Props = {
+  export type ComboboxProps = {
     /** Controlled value. A string when single-select, an array when `multiple`. */
     value?: string | string[]
     /** Uncontrolled initial value. */
@@ -85,7 +85,7 @@
     disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: ComboboxProps = $props()
 
   const field = getFieldContext()
   const control = $derived(mergeFieldControl({ field, name, disabled, omitId: true }))

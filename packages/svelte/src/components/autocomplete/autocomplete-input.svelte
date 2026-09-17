@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { attachGridNav } from '../../internal/grid-nav'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { useDirection } from '../../hooks/use-direction/use-direction'
@@ -15,7 +15,7 @@
     lg: 'size-5',
   } as const
 
-  type Props = Omit<HTMLInputAttributes, 'size'> & {
+  export type AutocompleteInputProps = WithoutChildrenOrChild<BitsCombobox.InputProps> & {
     start?: Snippet
     end?: Snippet
   }
@@ -32,7 +32,7 @@
     'aria-describedby': ariaDescribedby,
     'aria-label': ariaLabel,
     ...rest
-  }: Props = $props()
+  }: AutocompleteInputProps = $props()
 
   const ctx = getAutocompleteContext()
   const field = getFieldContext()

@@ -14,7 +14,7 @@
 
   type ValidateResult = string | string[] | null | undefined
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type FieldProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Mark the field as invalid. Also set when the parent Form has an error for `name`.
      * @default false
@@ -58,7 +58,7 @@
     touched: touchedProp,
     children,
     ...rest
-  }: Props = $props()
+  }: FieldProps = $props()
 
   const uid = $props.id()
   const controlId = `field-${uid}-control`

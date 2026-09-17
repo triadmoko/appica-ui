@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { requireFieldContext, type FieldValidityBits } from './field-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type FieldErrorProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * `true` always shows when the field is invalid. A `ValidityState` key shows
      * only for that failure.
@@ -14,7 +14,7 @@
     children?: Snippet
   }
 
-  let { class: className, match = true, children, ...rest }: Props = $props()
+  let { class: className, match = true, children, ...rest }: FieldErrorProps = $props()
 
   const field = requireFieldContext()
   const show = $derived.by(() => {

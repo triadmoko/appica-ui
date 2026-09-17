@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement>
+  export type ContextMenuSeparatorProps = WithoutChildrenOrChild<BitsContextMenu.SeparatorProps>
 
-  let { class: className, ...rest }: Props = $props()
+  let { class: className, ...rest }: ContextMenuSeparatorProps = $props()
 </script>
 
 <BitsContextMenu.Separator

@@ -116,7 +116,7 @@
   data-reveal={managed ? triggers.join(' ') : undefined}
   data-revealed={reveal ? '' : undefined}
   data-show-on-touch={showOnTouch ? '' : undefined}
-  class={cn('relative rounded-xl', grouped && 'group/beam', className)}
+  class={cn('relative w-fit rounded-xl', grouped && 'group/beam', className)}
   style={rootStyle}
   {...rest}
 >

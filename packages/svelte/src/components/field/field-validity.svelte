@@ -4,11 +4,11 @@
 
   export type { FieldValidityState }
 
-  type Props = {
+  export type FieldValidityProps = {
     children?: Snippet<[FieldValidityState]>
   }
 
-  let { children }: Props = $props()
+  let { children }: FieldValidityProps = $props()
 
   const field = requireFieldContext()
   const state = $derived(field.validity())

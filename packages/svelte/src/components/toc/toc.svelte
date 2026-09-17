@@ -5,7 +5,7 @@
   import { SvelteMap, SvelteSet } from 'svelte/reactivity'
   import { areSameIds, closestHeadingId, setTocContext } from './toc-context'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type TocProps = HTMLAttributes<HTMLElement> & {
     /**
      * `IntersectionObserver` `rootMargin` (`top right bottom left`) - offset the active boundary, e.g. for a sticky
      * header.
@@ -21,7 +21,7 @@
     'aria-label': ariaLabel = 'Table of contents',
     children,
     ...rest
-  }: Props = $props()
+  }: TocProps = $props()
 
   let ids = $state<readonly string[]>([])
   let activeIds = $state<readonly string[]>([])

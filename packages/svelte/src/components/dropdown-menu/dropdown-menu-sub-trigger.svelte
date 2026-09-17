@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getDropdownMenuContext } from './dropdown-menu-context'
   import { ICON_SIZE, ITEM_BASE, ITEM_TEXT } from './dropdown-menu-variants'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type DropdownMenuSubTriggerProps = WithoutChildrenOrChild<BitsDropdownMenu.SubTriggerProps> & { children?: Snippet }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, disabled, children, ...rest }: DropdownMenuSubTriggerProps = $props()
 
   const ctx = getDropdownMenuContext()
 </script>

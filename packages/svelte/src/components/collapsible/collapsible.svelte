@@ -2,11 +2,11 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Collapsible as BitsCollapsible } from 'bits-ui'
+  import { Collapsible as BitsCollapsible, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { setCollapsibleContext } from './collapsible-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type CollapsibleProps = WithoutChildrenOrChild<BitsCollapsible.RootProps> & {
     /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
     open?: boolean
     /**
@@ -32,7 +32,7 @@
     disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: CollapsibleProps = $props()
 
   let innerOpen = $state(false)
   innerOpen = untrack(() => open ?? defaultOpen)

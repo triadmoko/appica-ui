@@ -3,11 +3,11 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLFieldsetAttributes & {
+  export type FieldsetProps = HTMLFieldsetAttributes & {
     children?: Snippet
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: FieldsetProps = $props()
 </script>
 
 <fieldset data-slot="fieldset" class={cn('flex w-full flex-col gap-4', className)} {...rest}>

@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getContextMenuContext } from './context-menu-context'
   import { ITEM_BASE } from './context-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ContextMenuItemProps = WithoutChildrenOrChild<BitsContextMenu.ItemProps> & {
     /**
      * Close the menu after the item is selected.
      * @default true
@@ -17,7 +17,7 @@
     children?: Snippet
   }
 
-  let { class: className, closeOnClick = true, disabled, children, ...rest }: Props = $props()
+  let { class: className, closeOnClick = true, disabled, children, ...rest }: ContextMenuItemProps = $props()
 
   const ctx = getContextMenuContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))

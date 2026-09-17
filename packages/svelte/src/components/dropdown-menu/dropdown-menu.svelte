@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { commitBindableChange } from '../../internal/utils'
   import {
@@ -11,18 +11,12 @@
     type DropdownMenuSize,
   } from './dropdown-menu-context'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
+  export type DropdownMenuProps = WithoutChildrenOrChild<BitsDropdownMenu.RootProps> & {
     /**
      * Uncontrolled initial open state.
      * @default false
      */
     defaultOpen?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
-    /** Fires after the open/close transition finishes. */
-    onOpenChangeComplete?: (open: boolean) => void
     /**
      * Scales the popup radius, item padding, and icon size.
      * @default 'md'
@@ -56,7 +50,7 @@
     modal = true,
     disabled = false,
     children,
-  }: Props = $props()
+  }: DropdownMenuProps = $props()
 
   const direction = useDirection()
 

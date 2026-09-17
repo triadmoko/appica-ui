@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getComboboxContext } from './combobox-context'
 
@@ -21,12 +21,12 @@
     'bg-background text-foreground z-1 flex h-6 w-[calc(100%-var(--border-width)*2)] cursor-default items-center justify-center',
   )
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ComboboxContentProps = WithoutChildrenOrChild<BitsCombobox.ContentProps> & {
     keepMounted?: boolean
     children?: Snippet
   }
 
-  let { class: className, keepMounted = false, children, ...rest }: Props = $props()
+  let { class: className, keepMounted = false, children, ...rest }: ComboboxContentProps = $props()
 
   const ctx = getComboboxContext()
   const classes = $derived(

@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type DialogFooterProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: DialogFooterProps = $props()
 </script>
 
 <div

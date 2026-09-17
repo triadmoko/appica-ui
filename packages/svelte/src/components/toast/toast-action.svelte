@@ -6,7 +6,7 @@
   import { buttonVariants } from '../button/button-variants'
   import { getToastItemContext } from './toast-item-context'
 
-  type Props = HTMLButtonAttributes & {
+  export type ToastActionProps = HTMLButtonAttributes & {
     /**
      * Visual style.
      * @default 'primary'
@@ -20,7 +20,7 @@
     children?: Snippet
   }
 
-  let { class: className, variant = 'primary', size = 'sm', children, onclick, ...rest }: Props = $props()
+  let { class: className, variant = 'primary', size = 'sm', children, onclick, ...rest }: ToastActionProps = $props()
 
   const item = getToastItemContext()
   const action = $derived(item?.toast.actionProps)

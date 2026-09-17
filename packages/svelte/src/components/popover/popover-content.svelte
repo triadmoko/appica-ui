@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Popover as BitsPopover } from 'bits-ui'
+  import { Popover as BitsPopover, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getPopoverContext } from './popover-context'
@@ -9,7 +9,7 @@
   type Side = 'top' | 'bottom' | 'left' | 'right'
   type Align = 'start' | 'center' | 'end'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type PopoverContentProps = Omit<WithoutChildrenOrChild<BitsPopover.ContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side of the trigger.
      * @default 'bottom'
@@ -81,7 +81,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: PopoverContentProps = $props()
 
   const ctx = getPopoverContext()
   const direction = useDirection()

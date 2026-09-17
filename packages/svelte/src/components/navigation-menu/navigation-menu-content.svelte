@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getNavigationMenuContext, setNavigationMenuContentContext } from './navigation-menu-context'
 
@@ -11,7 +11,7 @@
     lg: 'p-2.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type NavigationMenuContentProps = WithoutChildrenOrChild<BitsNavigationMenu.ContentProps> & {
     /**
      * Keep the content in the DOM while closed, so SSR and search can reach it.
      * @default false
@@ -20,7 +20,7 @@
     children?: Snippet
   }
 
-  let { class: className, keepMounted = false, children, ...rest }: Props = $props()
+  let { class: className, keepMounted = false, children, ...rest }: NavigationMenuContentProps = $props()
 
   const ctx = getNavigationMenuContext()
   setNavigationMenuContentContext(true)

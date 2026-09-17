@@ -5,7 +5,7 @@
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLButtonAttributes & {
+  export type PopoverTriggerProps = HTMLButtonAttributes & {
     /**
      * Open the popover when the trigger is hovered, not just clicked.
      * @default false
@@ -35,7 +35,7 @@
     closeDelay = 0,
     children,
     ...rest
-  }: Props = $props()
+  }: PopoverTriggerProps = $props()
 </script>
 
 {#if handle}

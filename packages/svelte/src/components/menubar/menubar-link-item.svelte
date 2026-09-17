@@ -8,7 +8,7 @@
   import { getMenubarContext } from './menubar-context'
   import { ITEM_BASE, ITEM_ORIENTATION } from './menubar-variants'
 
-  type Props = HTMLAnchorAttributes & {
+  export type MenubarLinkItemProps = HTMLAnchorAttributes & {
     href: string
     /**
      * Close the menu when the item is clicked.
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, href, closeOnClick = false, disabled, children, ...rest }: Props = $props()
+  let { class: className, href, closeOnClick = false, disabled, children, ...rest }: MenubarLinkItemProps = $props()
 
   const ctx = getMenubarContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))

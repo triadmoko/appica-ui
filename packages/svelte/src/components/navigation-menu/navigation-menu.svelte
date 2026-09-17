@@ -2,7 +2,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import {
@@ -15,7 +15,7 @@
   } from './navigation-menu-context'
   import NavigationMenuPositioner from './navigation-menu-positioner.svelte'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type NavigationMenuProps = WithoutChildrenOrChild<BitsNavigationMenu.RootProps> & {
     /**
      * Trigger appearance - hover/active pill, or an animated underline.
      * @default 'pill'
@@ -86,7 +86,7 @@
     onValueChange,
     children,
     ...rest
-  }: Props = $props()
+  }: NavigationMenuProps = $props()
 
   const direction = useDirection()
   const nested = getNavigationMenuInContent()

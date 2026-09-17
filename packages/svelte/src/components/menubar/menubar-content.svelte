@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getMenubarContext } from './menubar-context'
@@ -13,7 +13,7 @@
     type MenubarSide,
   } from './menubar-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarContentProps = Omit<WithoutChildrenOrChild<BitsMenubar.ContentProps>, 'side' | 'align'> & {
     /**
      * Preferred side to open on. Vertical bars default to `inline-end`.
      * @default 'bottom'
@@ -70,7 +70,7 @@
     dir,
     children,
     ...rest
-  }: Props = $props()
+  }: MenubarContentProps = $props()
 
   const ctx = getMenubarContext()
   const direction = useDirection()

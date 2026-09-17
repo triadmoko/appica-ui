@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { AlertDialog as BitsAlertDialog } from 'bits-ui'
+  import { AlertDialog as BitsAlertDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type AlertDialogCloseProps = WithoutChildrenOrChild<BitsAlertDialog.CancelProps> & {
+    children?: Snippet
+  }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: AlertDialogCloseProps = $props()
 </script>
 
 <BitsAlertDialog.Cancel data-slot="alert-dialog-close" class={cn(className)} {...asBitsAttrs(rest)}>

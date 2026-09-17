@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Collapsible as BitsCollapsible } from 'bits-ui'
+  import { Collapsible as BitsCollapsible, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getCollapsibleContext } from './collapsible-context'
 
-  type Props = HTMLButtonAttributes & {
+  export type CollapsibleTriggerProps = WithoutChildrenOrChild<BitsCollapsible.TriggerProps> & {
     children?: Snippet
   }
 
-  let { class: className, disabled, children, ...rest }: Props = $props()
+  let { class: className, disabled, children, ...rest }: CollapsibleTriggerProps = $props()
 
   const ctx = getCollapsibleContext()
   const classes = $derived(

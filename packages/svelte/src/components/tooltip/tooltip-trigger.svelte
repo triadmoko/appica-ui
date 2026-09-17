@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Tooltip as BitsTooltip } from 'bits-ui'
+  import { Tooltip as BitsTooltip, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { tryGetToolbarContext } from '../toolbar/toolbar-context.svelte'
   import { getTooltipContext } from './tooltip-context'
 
-  type Props = HTMLButtonAttributes & {
+  export type TooltipTriggerProps = WithoutChildrenOrChild<BitsTooltip.TriggerProps> & {
     children?: Snippet
   }
 
@@ -18,7 +18,7 @@
     onfocus,
     children,
     ...rest
-  }: Props = $props()
+  }: TooltipTriggerProps = $props()
 
   const ctx = getTooltipContext()
   const toolbar = tryGetToolbarContext()

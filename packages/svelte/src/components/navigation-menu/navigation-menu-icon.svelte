@@ -9,7 +9,7 @@
     lg: 'size-4.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type NavigationMenuIconProps = HTMLAttributes<HTMLSpanElement> & {
     /**
      * Override the indicator for this trigger.
      * @default root
@@ -17,7 +17,7 @@
     icon?: NavigationMenuIconKind
   }
 
-  let { icon, class: className, ...rest }: Props = $props()
+  let { icon, class: className, ...rest }: NavigationMenuIconProps = $props()
 
   const ctx = getNavigationMenuContext()
   const resolved = $derived(icon === undefined ? ctx.icon : icon)

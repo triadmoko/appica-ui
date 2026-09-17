@@ -2,12 +2,15 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Tabs as BitsTabs } from 'bits-ui'
+  import { Tabs as BitsTabs, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { setTabsContext } from './tabs-context'
   import type { TabsListVariant, TabsOrientation, TabsSize } from './tabs-variants'
 
-  export type TabsProps = HTMLAttributes<HTMLDivElement> & {
+  export type TabsProps = Omit<
+    WithoutChildrenOrChild<BitsTabs.RootProps>,
+    'loop' | 'activationMode' | 'value' | 'onValueChange'
+  > & {
     /** Controlled selected tab. Pair with `onValueChange` or `bind:value`. */
     value?: string
     /** Uncontrolled initial tab. */

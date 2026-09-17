@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Tabs as BitsTabs } from 'bits-ui'
+  import { Tabs as BitsTabs, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getTabsContext } from './tabs-context'
   import {
@@ -11,7 +11,7 @@
     type TabsTriggerSize,
   } from './tabs-variants'
 
-  export type TabsTriggerProps = HTMLButtonAttributes & {
+  export type TabsTriggerProps = WithoutChildrenOrChild<BitsTabs.TriggerProps> & {
     /** Value of the tab this trigger selects. */
     value: string
     /**

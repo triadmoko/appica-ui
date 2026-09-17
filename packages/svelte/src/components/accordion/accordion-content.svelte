@@ -2,13 +2,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Accordion as BitsAccordion } from 'bits-ui'
+  import { Accordion as BitsAccordion, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAccordionContext } from './accordion-context'
 
   const EXIT_MS = 400
 
-  export type AccordionContentProps = HTMLAttributes<HTMLDivElement> & {
+  export type AccordionContentProps = WithoutChildrenOrChild<BitsAccordion.ContentProps> & {
     /**
      * Keep the panel mounted while closed.
      * @default false

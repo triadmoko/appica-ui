@@ -8,7 +8,7 @@
   import { getDropdownMenuContext } from './dropdown-menu-context'
   import { ITEM_BASE } from './dropdown-menu-variants'
 
-  type Props = HTMLAnchorAttributes & {
+  export type DropdownMenuLinkItemProps = HTMLAnchorAttributes & {
     href: string
     /**
      * Close the menu when the item is clicked.
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, href, closeOnClick = true, disabled, children, ...rest }: Props = $props()
+  let { class: className, href, closeOnClick = true, disabled, children, ...rest }: DropdownMenuLinkItemProps = $props()
 
   const ctx = getDropdownMenuContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))

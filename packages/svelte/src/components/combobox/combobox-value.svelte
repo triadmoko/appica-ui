@@ -4,12 +4,12 @@
   import { cn } from '../../internal/utils'
   import { getComboboxContext } from './combobox-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type ComboboxValueProps = HTMLAttributes<HTMLSpanElement> & {
     placeholder?: string
     children?: Snippet
   }
 
-  let { class: className, placeholder, children, ...rest }: Props = $props()
+  let { class: className, placeholder, children, ...rest }: ComboboxValueProps = $props()
 
   const ctx = getComboboxContext()
   const empty = $derived(!ctx.hasValue())

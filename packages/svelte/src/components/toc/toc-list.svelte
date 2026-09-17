@@ -5,9 +5,9 @@
   import { cn } from '../../internal/utils'
   import { getTocContext } from './toc-context'
 
-  type Props = HTMLAttributes<HTMLUListElement> & { children?: Snippet }
+  export type TocListProps = HTMLAttributes<HTMLUListElement> & { children?: Snippet }
 
-  let { class: className, style, children, ...rest }: Props = $props()
+  let { class: className, style, children, ...rest }: TocListProps = $props()
 
   const ctx = getTocContext('TocList')
   const activeIds = $derived(ctx.activeIds())

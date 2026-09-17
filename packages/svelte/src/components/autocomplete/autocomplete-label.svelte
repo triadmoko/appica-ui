@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getAutocompleteContext } from './autocomplete-context'
 
@@ -11,9 +11,9 @@
     lg: 'px-3.5 pt-2.5 pb-1.5 text-base',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type AutocompleteLabelProps = WithoutChildrenOrChild<BitsCombobox.GroupHeadingProps> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: AutocompleteLabelProps = $props()
 
   const ctx = getAutocompleteContext()
 </script>

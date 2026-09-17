@@ -7,7 +7,7 @@
   import { setAutocompleteContext, type AutocompleteSize, type AutocompleteVariant } from './autocomplete-context'
   import { filterItems, stringifyItem } from './autocomplete-filter'
 
-  type Props = {
+  export type AutocompleteProps = {
     /**
      * The data to filter. A flat array, or `{ value, items }` objects for grouped options.
      */
@@ -92,7 +92,7 @@
     required,
     children,
     ...rest
-  }: Props = $props()
+  }: AutocompleteProps = $props()
 
   const field = getFieldContext()
   const control = $derived(mergeFieldControl({ field, name, disabled, omitId: true }))

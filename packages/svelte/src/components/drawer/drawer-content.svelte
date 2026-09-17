@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Dialog as BitsDialog } from 'bits-ui'
+  import { Dialog as BitsDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { splitModalProps } from '../../internal/modal'
   import { asBitsAttrs, cn } from '../../internal/utils'
@@ -19,7 +19,7 @@
     VIEWPORT_SIDE,
   } from './drawer-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DrawerContentProps = WithoutChildrenOrChild<BitsDialog.ContentProps> & {
     /**
      * Render the × button in the corner.
      * @default true
@@ -67,7 +67,7 @@
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: DrawerContentProps = $props()
 
   const ctx = requireDrawerContext()
 

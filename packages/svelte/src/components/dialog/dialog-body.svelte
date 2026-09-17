@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type DialogBodyProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: DialogBodyProps = $props()
 </script>
 
 <div data-slot="dialog-body" class={cn('min-h-0 flex-1 px-6', className)} {...rest}>

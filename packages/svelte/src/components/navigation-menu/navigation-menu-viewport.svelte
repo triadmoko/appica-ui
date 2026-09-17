@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import type { ClassValue } from 'clsx'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type NavigationMenuViewportProps = WithoutChildrenOrChild<BitsNavigationMenu.ViewportProps> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: NavigationMenuViewportProps = $props()
 </script>
 
 <BitsNavigationMenu.Viewport forceMount {...asBitsAttrs(rest)}>

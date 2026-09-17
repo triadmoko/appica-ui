@@ -1,21 +1,17 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { AlertDialog as BitsAlertDialog } from 'bits-ui'
+  import { AlertDialog as BitsAlertDialog, type WithoutChildrenOrChild } from 'bits-ui'
   import type { OverlayHandle } from '../../internal/overlay-handle.svelte'
   import { commitBindableChange } from '../../internal/utils'
 
-  type Props = {
-    /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
-    open?: boolean
-    /** Fires when the open state changes. */
-    onOpenChange?: (open: boolean) => void
+  export type AlertDialogProps = WithoutChildrenOrChild<BitsAlertDialog.RootProps> & {
     /** Programmatic handle from `AlertDialog.createHandle()`. */
     handle?: OverlayHandle
     children?: Snippet
   }
 
-  let { open = $bindable(), onOpenChange, handle, children }: Props = $props()
+  let { open = $bindable(), onOpenChange, handle, children }: AlertDialogProps = $props()
 
   let innerOpen = $state(false)
   innerOpen = untrack(() => handle?.open ?? open ?? false)

@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { HTMLLabelAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Label as BitsLabel } from 'bits-ui'
+  import { Label as BitsLabel, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { requireFieldContext } from './field-context'
 
-  type Props = HTMLLabelAttributes & {
+  export type FieldLabelProps = WithoutChildrenOrChild<BitsLabel.RootProps> & {
     children?: Snippet
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: FieldLabelProps = $props()
 
   const field = requireFieldContext()
   const classes = $derived(

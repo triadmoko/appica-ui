@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
   import { ITEM_BASE, ITEM_ORIENTATION } from './menubar-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarItemProps = WithoutChildrenOrChild<BitsMenubar.ItemProps> & {
     /**
      * Close the menu after the item is selected.
      * @default true
@@ -18,7 +18,7 @@
     children?: Snippet
   }
 
-  let { class: className, closeOnClick = true, disabled, children, ...rest }: Props = $props()
+  let { class: className, closeOnClick = true, disabled, children, ...rest }: MenubarItemProps = $props()
 
   const ctx = getMenubarContext()
   const classes = $derived(cn(navigationLinkVariants({ variant: 'pill', size: ctx.size }), ITEM_BASE, className))

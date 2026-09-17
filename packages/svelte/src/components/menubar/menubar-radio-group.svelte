@@ -2,10 +2,10 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarRadioGroupProps = WithoutChildrenOrChild<BitsMenubar.RadioGroupProps> & {
     /** Controlled selected radio value. Pair with `onValueChange` or `bind:value`. */
     value?: string
     /** Fires when the selected radio changes. */
@@ -13,7 +13,7 @@
     children?: Snippet
   }
 
-  let { value = $bindable(), onValueChange, children, ...rest }: Props = $props()
+  let { value = $bindable(), onValueChange, children, ...rest }: MenubarRadioGroupProps = $props()
 
   let inner = $state('')
   inner = untrack(() => value ?? '')

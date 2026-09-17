@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement>
+  export type MenubarSeparatorProps = WithoutChildrenOrChild<BitsMenubar.SeparatorProps>
 
-  let { class: className, ...rest }: Props = $props()
+  let { class: className, ...rest }: MenubarSeparatorProps = $props()
 </script>
 
 <BitsMenubar.Separator

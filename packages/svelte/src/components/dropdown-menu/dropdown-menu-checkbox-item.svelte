@@ -2,13 +2,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getDropdownMenuContext } from './dropdown-menu-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_TEXT } from './dropdown-menu-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type DropdownMenuCheckboxItemProps = WithoutChildrenOrChild<BitsDropdownMenu.CheckboxItemProps> & {
     /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
     checked?: boolean
     /** Fires when the checked state changes. */
@@ -33,7 +33,7 @@
     disabled,
     children: label,
     ...rest
-  }: Props = $props()
+  }: DropdownMenuCheckboxItemProps = $props()
 
   const ctx = getDropdownMenuContext()
   let inner = $state(false)

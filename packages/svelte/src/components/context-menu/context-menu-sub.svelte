@@ -4,14 +4,14 @@
   import { ContextMenu as BitsContextMenu } from 'bits-ui'
   import { commitBindableChange } from '../../internal/utils'
 
-  type Props = {
+  export type ContextMenuSubProps = {
     /** Controlled open state of the submenu. */
     open?: boolean
     onOpenChange?: (open: boolean) => void
     children?: Snippet
   }
 
-  let { open = $bindable(), onOpenChange, children }: Props = $props()
+  let { open = $bindable(), onOpenChange, children }: ContextMenuSubProps = $props()
 
   let innerOpen = $state(false)
   innerOpen = untrack(() => open ?? false)

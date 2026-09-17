@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cssStyle, clamp01, MIN_UNIT_DURATION, type TextAnimateEffect, type TextAnimateSegment } from './text-animate-model'
 
-  type Props = {
+  export type TextAnimateUnitProps = {
     text: string
     index: number
     total: number
@@ -12,7 +12,7 @@
     run: TextAnimateEffect
   }
 
-  let { text, index, total, by, stagger, globalProgress, reduced, run }: Props = $props()
+  let { text, index, total, by, stagger, globalProgress, reduced, run }: TextAnimateUnitProps = $props()
 
   const local = $derived.by(() => {
     const start = (index / total) * stagger

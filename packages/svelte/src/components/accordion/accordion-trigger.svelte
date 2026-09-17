@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Accordion as BitsAccordion } from 'bits-ui'
+  import { Accordion as BitsAccordion, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import {
     getAccordionContext,
@@ -12,7 +12,7 @@
   } from './accordion-context'
   import { iconBoxVariants, triggerVariants } from './accordion-variants'
 
-  export type AccordionTriggerProps = HTMLButtonAttributes & {
+  export type AccordionTriggerProps = WithoutChildrenOrChild<BitsAccordion.TriggerProps> & {
     /** Override the root's icon for this trigger. */
     icon?: AccordionIcon
     /** Override the root's icon style. */

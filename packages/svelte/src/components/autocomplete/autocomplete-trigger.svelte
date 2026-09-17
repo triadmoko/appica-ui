@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type AutocompleteTriggerProps = WithoutChildrenOrChild<BitsCombobox.TriggerProps> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: AutocompleteTriggerProps = $props()
 </script>
 
 <BitsCombobox.Trigger

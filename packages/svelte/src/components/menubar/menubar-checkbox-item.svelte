@@ -2,13 +2,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getMenubarContext } from './menubar-context'
   import { CHECK_PATH_CLASS, ITEM_BASE, ITEM_ORIENTATION, ITEM_TEXT } from './menubar-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type MenubarCheckboxItemProps = WithoutChildrenOrChild<BitsMenubar.CheckboxItemProps> & {
     /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
     checked?: boolean
     /** Fires when the checked state changes. */
@@ -33,7 +33,7 @@
     disabled,
     children: label,
     ...rest
-  }: Props = $props()
+  }: MenubarCheckboxItemProps = $props()
 
   const ctx = getMenubarContext()
   let inner = $state(false)

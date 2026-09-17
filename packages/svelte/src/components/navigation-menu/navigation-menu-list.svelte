@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getNavigationMenuContext } from './navigation-menu-context'
 
@@ -14,9 +14,9 @@
     pill: 'gap-0.5',
   }
 
-  type Props = HTMLAttributes<HTMLUListElement> & { children?: Snippet }
+  export type NavigationMenuListProps = WithoutChildrenOrChild<BitsNavigationMenu.ListProps> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: NavigationMenuListProps = $props()
 
   const ctx = getNavigationMenuContext()
   const vertical = $derived(ctx.orientation === 'vertical')

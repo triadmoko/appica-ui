@@ -27,13 +27,13 @@
     lg: 'group-has-data-[slot=combobox-chip]/combobox-chips:pt-2.5 group-has-data-[slot=combobox-chip]/combobox-chips:pe-3',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ComboboxChipsProps = HTMLAttributes<HTMLDivElement> & {
     placeholder?: string
     inputProps?: Omit<HTMLInputAttributes, 'placeholder' | 'size'>
     children?: Snippet
   }
 
-  let { class: className, placeholder, inputProps, children, ...rest }: Props = $props()
+  let { class: className, placeholder, inputProps, children, ...rest }: ComboboxChipsProps = $props()
 
   const ctx = getComboboxContext()
   const field = getFieldContext()

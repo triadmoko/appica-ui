@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
+  import { NavigationMenu as BitsNavigationMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { navigationLinkVariants } from '../navigation/navigation-link-variants'
   import { getNavigationMenuContext, getNavigationMenuInContent } from './navigation-menu-context'
 
-  type Props = HTMLAnchorAttributes & {
+  export type NavigationMenuLinkProps = WithoutChildrenOrChild<BitsNavigationMenu.LinkProps> & {
     /** Marks this link as the current page. */
     active?: boolean
     /**
@@ -17,7 +17,7 @@
     children?: Snippet
   }
 
-  let { class: className, href, active, closeOnClick = false, children, ...rest }: Props = $props()
+  let { class: className, href, active, closeOnClick = false, children, ...rest }: NavigationMenuLinkProps = $props()
 
   const ctx = getNavigationMenuContext()
   const inContent = getNavigationMenuInContent()

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { patternLayerClass, patternMaskStyle, type BackgroundPatternVariant } from './background-pattern-shared'
 
-  type Props = {
+  export type BackgroundPatternLayerProps = {
     variant: BackgroundPatternVariant
     class?: string
   }
 
-  let { variant, class: className }: Props = $props()
+  let { variant, class: className }: BackgroundPatternLayerProps = $props()
 
   const maskStyle = $derived(patternMaskStyle(variant))
   const classes = $derived(patternLayerClass(variant, className))

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { inputVariants } from '../input/input-variants'
   import { getComboboxContext } from './combobox-context'
@@ -12,13 +12,13 @@
     lg: 'size-5',
   } as const
 
-  type Props = HTMLButtonAttributes & {
+  export type ComboboxTriggerProps = WithoutChildrenOrChild<BitsCombobox.TriggerProps> & {
     start?: Snippet
     end?: Snippet
     children?: Snippet
   }
 
-  let { class: className, start, end, children, ...rest }: Props = $props()
+  let { class: className, start, end, children, ...rest }: ComboboxTriggerProps = $props()
 
   const ctx = getComboboxContext()
   const classes = $derived(

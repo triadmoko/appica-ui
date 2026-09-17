@@ -2,13 +2,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { fade } from 'svelte/transition'
-  import { Tabs as BitsTabs } from 'bits-ui'
+  import { Tabs as BitsTabs, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { getTabsContext } from './tabs-context'
   import { tabsContentClasses } from './tabs-variants'
 
-  export type TabsContentProps = HTMLAttributes<HTMLDivElement> & {
+  export type TabsContentProps = WithoutChildrenOrChild<BitsTabs.ContentProps> & {
     /** Value of the tab this panel belongs to. */
     value: string
     /**

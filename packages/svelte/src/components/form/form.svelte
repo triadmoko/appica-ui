@@ -11,7 +11,7 @@
     type ValidationMode,
   } from './form-context'
 
-  type Props = HTMLFormAttributes & {
+  export type FormProps = HTMLFormAttributes & {
     /**
      * Server-side errors keyed by field name. Consumed by Field.
      * @default {}
@@ -44,7 +44,7 @@
     onsubmit,
     novalidate,
     ...rest
-  }: Props = $props()
+  }: FormProps = $props()
 
   let formEl: HTMLFormElement | undefined = $state()
   const fields = new SvelteMap<string, FormFieldHandle>()

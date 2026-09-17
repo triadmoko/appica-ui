@@ -3,11 +3,11 @@
   import { getAutocompleteGroupContext } from './autocomplete-context'
   import { itemKey } from './autocomplete-filter'
 
-  type Props = {
+  export type AutocompleteCollectionProps = {
     children?: Snippet<[item: unknown, index: number]>
   }
 
-  let { children }: Props = $props()
+  let { children }: AutocompleteCollectionProps = $props()
 
   const group = getAutocompleteGroupContext()
   const items = $derived(group.items())

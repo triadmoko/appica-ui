@@ -5,7 +5,7 @@
   const DASHED = '[stroke-dasharray:2.5_2]'
   const iconLayerClasses = 'block size-(--rating-size) *:size-full'
 
-  type Props = {
+  export type RatingItemVisualProps = {
     index: number
     displayed: number
     hover: number | null
@@ -29,7 +29,7 @@
     variant,
     disabled,
     icon,
-  }: Props = $props()
+  }: RatingItemVisualProps = $props()
 
   const fill = $derived(clamp(displayed - index, 0, 1))
   const clip = $derived(clipFor(fill, rtl, vertical))

@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type ContextMenuGroupProps = WithoutChildrenOrChild<BitsContextMenu.GroupProps> & { children?: Snippet }
 
-  let { children, ...rest }: Props = $props()
+  let { children, ...rest }: ContextMenuGroupProps = $props()
 </script>
 
 <BitsContextMenu.Group data-slot="context-menu-group" {...asBitsAttrs(rest)}>

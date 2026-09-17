@@ -4,11 +4,11 @@
   import { cn } from '../../internal/utils'
   import { requireFieldContext } from './field-context'
 
-  type Props = HTMLAttributes<HTMLParagraphElement> & {
+  export type FieldDescriptionProps = HTMLAttributes<HTMLParagraphElement> & {
     children?: Snippet
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: FieldDescriptionProps = $props()
 
   const field = requireFieldContext()
   const classes = $derived(
