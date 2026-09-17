@@ -53,6 +53,8 @@
     id,
     name,
     oninput,
+    onblur,
+    onfocus,
     htmlSize,
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
@@ -75,9 +77,30 @@
   const hasWrapper = $derived(Boolean(clearable || start || end))
   const invalid = $derived(control.invalid)
 
+  $effect(() => {
+    if (!field) return
+    return field.registerControl({
+      getValue: () => (value !== undefined ? value : (inputEl?.value ?? '')),
+      getElement: () => inputEl ?? null,
+      getValidity: () => inputEl?.validity ?? null,
+    })
+  })
+
   function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
     field?.clearFormError()
+    field?.reportChange()
     oninput?.(event)
+  }
+
+  function handleBlur(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+    field?.reportBlur()
+    field?.reportFocus(false)
+    onblur?.(event)
+  }
+
+  function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+    field?.reportFocus(true)
+    onfocus?.(event)
   }
 
   function handleClear() {
@@ -108,6 +131,8 @@
     class={cn(inputVariants({ variant, size: inputSize, state: 'self' }), 'placeholder:text-foreground-subtle', className)}
     size={htmlSize}
     oninput={handleInput}
+    onblur={handleBlur}
+    onfocus={handleFocus}
     {...rest}
   />
 {:else}
@@ -135,6 +160,8 @@
       class="peer text-foreground placeholder:text-foreground-subtle h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
       size={htmlSize}
       oninput={handleInput}
+      onblur={handleBlur}
+      onfocus={handleFocus}
       {...rest}
     />
     {#if clearable}

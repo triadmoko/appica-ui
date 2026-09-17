@@ -7,6 +7,8 @@
     formatColor,
     parseColor,
     type Color,
+    DirectionProvider,
+    Switch,
   } from '@appica/ui-svelte'
 
   const parsed = parseColor('#3b82f6')
@@ -14,6 +16,7 @@
   const sizes = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl'] as const
 
   let pickerColor: Color = $state(parseColor('hsb(217, 76%, 96%)'))
+  let dir: 'ltr' | 'rtl' = $state('ltr')
 </script>
 
 <section class="flex flex-col gap-8">
@@ -109,5 +112,19 @@
         <path d="M4 8.5l2.5 2.5 5.5-5.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </ColorSwatch>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir} class="flex items-center gap-4">
+        <ColorSwatch color="#3b82f6" />
+        <ColorSwatch color="#22c55e" shape="circle" />
+      </div>
+    </DirectionProvider>
   </div>
 </section>

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
 import ComboboxHost from './combobox.test-host.svelte'
+import ComboboxFilterHost from './combobox.filter-host.svelte'
 
 const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 })
 const overlay = { hidden: true as const }
@@ -70,6 +71,15 @@ describe('Combobox', () => {
   it('hides the toggle when icon is false', () => {
     render(ComboboxHost, { props: { icon: false } })
     expect(screen.queryByRole('button', { name: 'Toggle popup' })).toBeNull()
+  })
+
+  it('filters items as the query changes', async () => {
+    const user = setupUser()
+    render(ComboboxFilterHost)
+    await user.click(screen.getByRole('combobox'))
+    await user.type(screen.getByRole('combobox'), 'sve')
+    expect(await screen.findByText('SvelteKit', overlay)).toBeInTheDocument()
+    expect(screen.queryByText('Next.js')).toBeNull()
   })
 
   it('has no accessibility violations when closed', async () => {

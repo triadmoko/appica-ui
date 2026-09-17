@@ -9,6 +9,8 @@
      * @default 'inside'
      */
     position?: CarouselNavPosition
+    /** Props forwarded to the inner `<button>`. `class` merges onto the trigger. */
+    buttonProps?: HTMLButtonAttributes
     children?: Snippet
   }
 </script>
@@ -22,6 +24,7 @@
     class: className,
     position = 'inside',
     disabled: disabledProp,
+    buttonProps,
     children,
     onclick,
     ...rest
@@ -29,6 +32,12 @@
 
   const ctx = useCarousel()
   const disabled = $derived(Boolean(disabledProp) || !ctx.canScrollPrev)
+  const buttonClass = $derived(buttonProps?.class)
+  const buttonRest = $derived.by(() => {
+    if (!buttonProps) return {}
+    const { class: _className, onclick: _onclick, disabled: _disabled, ...restProps } = buttonProps
+    return restProps
+  })
 </script>
 
 <div
@@ -42,11 +51,14 @@
     data-disabled={disabled || undefined}
     aria-label="Previous slide"
     {disabled}
+    {...buttonRest}
+    {...rest}
+    class={cn(buttonClass)}
     onclick={(event) => {
+      buttonProps?.onclick?.(event)
       onclick?.(event)
       if (!event.defaultPrevented) ctx.scrollPrev()
     }}
-    {...rest}
   >
     {@render children?.()}
   </button>

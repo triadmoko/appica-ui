@@ -7,10 +7,13 @@
     DropdownMenuItem,
     DropdownMenuTrigger,
     buttonVariants,
+    DirectionProvider,
+    Switch,
   } from '@appica/ui-svelte'
 
   const variants = ['primary', 'primary-outline', 'secondary', 'soft', 'outline', 'destructive'] as const
   const sizes = ['sm', 'md', 'lg'] as const
+  let dir: 'ltr' | 'rtl' = $state('ltr')
 </script>
 
 <section class="flex flex-col gap-8">
@@ -120,5 +123,22 @@
       <Button>Months</Button>
       <Button>Days</Button>
     </ButtonGroup>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir}>
+        <ButtonGroup variant="outline">
+          <Button>Years</Button>
+          <Button>Months</Button>
+          <Button>Days</Button>
+        </ButtonGroup>
+      </div>
+    </DirectionProvider>
   </div>
 </section>

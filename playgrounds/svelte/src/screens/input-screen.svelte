@@ -1,12 +1,84 @@
 <script lang="ts">
-  import { Input } from '@appica/ui-svelte'
+  import { DirectionProvider, Input, Switch } from '@appica/ui-svelte'
 
-  let value = $state('')
+  const variants = ['outline', 'soft'] as const
+  const sizes = ['sm', 'md', 'lg'] as const
+
+  let email = $state('ada@example.com')
+  let dir: 'ltr' | 'rtl' = $state('ltr')
 </script>
 
-<section class="flex flex-col gap-4">
+{#snippet searchIcon()}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    class="size-4"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+{/snippet}
+
+{#snippet atIcon()}
+  <span class="text-foreground-muted text-sm">@</span>
+{/snippet}
+
+<section class="flex flex-col gap-8">
   <h2 class="text-foreground-emphasis text-lg font-semibold">Input</h2>
-  <Input placeholder="Type something…" class="max-w-xs" bind:value />
-  <Input clearable placeholder="Clearable" class="max-w-xs" />
-  <Input variant="soft" inputSize="lg" placeholder="Soft large" class="max-w-xs" />
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Variants</p>
+    <div class="flex max-w-xs flex-col gap-3">
+      {#each variants as variant (variant)}
+        <Input {variant} placeholder={variant} />
+      {/each}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Sizes</p>
+    <div class="flex max-w-xs flex-col gap-3">
+      {#each sizes as inputSize (inputSize)}
+        <Input {inputSize} placeholder={inputSize} />
+      {/each}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Start and end</p>
+    <Input class="max-w-xs" placeholder="Search" start={searchIcon} end={atIcon} />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Clearable</p>
+    <Input class="max-w-xs" clearable bind:value={email} placeholder="Email" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Disabled, read-only, error</p>
+    <div class="flex max-w-xs flex-col gap-3">
+      <Input disabled placeholder="Disabled" />
+      <Input readonly value="Read only" />
+      <Input aria-invalid="true" value="taken@example.com" />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir} class="max-w-xs">
+        <Input placeholder="Search" start={searchIcon} clearable />
+      </div>
+    </DirectionProvider>
+  </div>
 </section>

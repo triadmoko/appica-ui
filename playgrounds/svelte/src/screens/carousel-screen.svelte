@@ -15,6 +15,8 @@
     type CarouselApi,
     type CarouselNavPosition,
   } from '@appica/ui-svelte'
+  import CarouselParallaxExample from './carousel-parallax-example.svelte'
+  import CarouselScaleExample from './carousel-scale-example.svelte'
 
   const SLIDE_SRC = (n: number) => `https://appica.dev/carousel/slide-${n}.jpg`
 
@@ -28,8 +30,6 @@
   const THUMB_SLIDES = [1, 2, 3, 4, 5, 6, 7]
   const AUTOPLAY = { delay: 4000, resumeAfter: 3000 }
   const AUTO_SCROLL = { speed: 1.5, startDelay: 0, resumeAfter: 3000 }
-  const PARALLAX_FACTOR = 1.7
-  const TWEEN_FACTOR = 1.1
   const AUTOPLAY_CARDS = [
     { title: 'Short', body: 'A compact slide.' },
     {
@@ -76,18 +76,12 @@
     { n: 5, title: 'Mirror lake', caption: 'Stillwater Valley' },
   ]
 
-  const navFill =
-    '[&_button]:inline-flex [&_button]:size-full [&_button]:items-center [&_button]:justify-center [&_button]:rounded-[inherit] [&_button]:border-0 [&_button]:bg-transparent [&_button]:p-0 [&_button]:cursor-pointer'
-  const navButton = [buttonVariants({ variant: 'outline', size: 'icon-md' }), 'rounded-full !absolute', navFill]
-  const navButtonLight = [buttonVariants({ variant: 'light', size: 'icon-md' }), 'rounded-full !absolute', navFill]
-  const navButtonSquare = [buttonVariants({ variant: 'outline', size: 'icon-md' }), navFill]
-
-  const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+  const navRound = `${buttonVariants({ variant: 'outline', size: 'icon-md' })} rounded-full`
+  const navRoundLight = `${buttonVariants({ variant: 'light', size: 'icon-md' })} rounded-full`
+  const navSquare = buttonVariants({ variant: 'outline', size: 'icon-md' })
 
   let imagesApi = $state.raw<CarouselApi | undefined>(undefined)
   let textApi = $state.raw<CarouselApi | undefined>(undefined)
-  let parallaxApi = $state.raw<CarouselApi | undefined>(undefined)
-  let scaleApi = $state.raw<CarouselApi | undefined>(undefined)
   let controlledApi = $state.raw<CarouselApi | undefined>(undefined)
   let current = $state(0)
   let count = $state(0)
@@ -98,113 +92,18 @@
   )
 
   $effect(() => {
-    const api = parallaxApi
+    const api = controlledApi
     if (!api) return
-    const layers = api.slideNodes().map((slide) => slide.querySelector<HTMLElement>('[data-parallax-layer]'))
-
-    const tween = (_api: CarouselApi, event?: { type: string }) => {
-      const engine = api.internalEngine()
-      const scrollProgress = api.scrollProgress()
-      const slidesInView = api.slidesInView()
-      const isScroll = event?.type === 'scroll'
-
-      api.snapList().forEach((snap, snapIndex) => {
-        let diffToTarget = snap - scrollProgress
-        const slidesInSnap = engine.scrollSnapList.slidesBySnap[snapIndex] ?? []
-
-        slidesInSnap.forEach((slideIndex: number) => {
-          if (isScroll && !slidesInView.includes(slideIndex)) return
-          if (engine.options.loop) {
-            engine.slideLooper.loopPoints.forEach((loopItem: { target: () => number; index: number }) => {
-              const target = loopItem.target()
-              if (slideIndex === loopItem.index && target !== 0) {
-                const sign = Math.sign(target)
-                if (sign === -1) diffToTarget = snap - (1 + scrollProgress)
-                if (sign === 1) diffToTarget = snap + (1 - scrollProgress)
-              }
-            })
-          }
-          const translate = diffToTarget * (-1 * PARALLAX_FACTOR) * 100
-          const layer = layers[slideIndex]
-          if (layer) layer.style.transform = `translateX(${translate}%)`
-        })
-      })
-    }
-
-    tween(api)
-    api.on('scroll', tween)
-    api.on('slidefocus', tween)
-    api.on('reinit', tween)
-    return () => {
-      api.off('scroll', tween)
-      api.off('slidefocus', tween)
-      api.off('reinit', tween)
-    }
-  })
-
-  $effect(() => {
-    const api = scaleApi
-    if (!api) return
-    const nodes = api.slideNodes().map((slide) => slide.querySelector<HTMLElement>('[data-scale-layer]'))
-
-    const tween = (_api: CarouselApi, event?: { type: string }) => {
-      const engine = api.internalEngine()
-      const scrollProgress = api.scrollProgress()
-      const slidesInView = api.slidesInView()
-      const isScroll = event?.type === 'scroll'
-
-      api.snapList().forEach((snap, snapIndex) => {
-        let diffToTarget = snap - scrollProgress
-        const slidesInSnap = engine.scrollSnapList.slidesBySnap[snapIndex] ?? []
-
-        slidesInSnap.forEach((slideIndex: number) => {
-          if (isScroll && !slidesInView.includes(slideIndex)) return
-          if (engine.options.loop) {
-            engine.slideLooper.loopPoints.forEach((loopItem: { target: () => number; index: number }) => {
-              const target = loopItem.target()
-              if (slideIndex === loopItem.index && target !== 0) {
-                const sign = Math.sign(target)
-                if (sign === -1) diffToTarget = snap - (1 + scrollProgress)
-                if (sign === 1) diffToTarget = snap + (1 - scrollProgress)
-              }
-            })
-          }
-          const tweenValue = 1 - Math.abs(diffToTarget * TWEEN_FACTOR)
-          const scale = clamp(tweenValue, 0.58, 1)
-          const opacity = clamp(tweenValue, 0.24, 1)
-          const node = nodes[slideIndex]
-          if (node) {
-            node.style.transform = `scale(${scale})`
-            node.style.opacity = `${opacity}`
-            node.style.transformOrigin = diffToTarget > 0 ? 'left center' : diffToTarget < 0 ? 'right center' : 'center'
-          }
-        })
-      })
-    }
-
-    tween(api)
-    api.on('scroll', tween)
-    api.on('slidefocus', tween)
-    api.on('reinit', tween)
-    return () => {
-      api.off('scroll', tween)
-      api.off('slidefocus', tween)
-      api.off('reinit', tween)
-    }
-  })
-
-  const onControlledSelect = () => {
-    current += 1
-  }
-
-  const bindControlledApi = (api: CarouselApi) => {
-    if (controlledApi === api) return
-    controlledApi?.off('select', onControlledSelect)
-    controlledApi = api
     count = api.snapList().length
     current = api.selectedSnap()
-    api.on('select', onControlledSelect)
-  }
+    const onSelect = () => {
+      current = api.selectedSnap()
+    }
+    api.on('select', onSelect)
+    return () => {
+      api.off('select', onSelect)
+    }
+  })
 </script>
 
 {#snippet chevronLeft()}
@@ -270,13 +169,13 @@
 {/snippet}
 
 {#snippet roundArrows(position: CarouselNavPosition = 'inside')}
-  <CarouselPrev {position} class={navButton}>{@render chevronLeft()}</CarouselPrev>
-  <CarouselNext {position} class={navButton}>{@render chevronRight()}</CarouselNext>
+  <CarouselPrev {position} buttonProps={{ class: navRound }}>{@render chevronLeft()}</CarouselPrev>
+  <CarouselNext {position} buttonProps={{ class: navRound }}>{@render chevronRight()}</CarouselNext>
 {/snippet}
 
 {#snippet squareArrows()}
-  <CarouselPrev position="none" class={navButtonSquare}>{@render chevronLeft()}</CarouselPrev>
-  <CarouselNext position="none" class={navButtonSquare}>{@render chevronRight()}</CarouselNext>
+  <CarouselPrev position="none" buttonProps={{ class: navSquare }}>{@render chevronLeft()}</CarouselPrev>
+  <CarouselNext position="none" buttonProps={{ class: navSquare }}>{@render chevronRight()}</CarouselNext>
 {/snippet}
 
 <section class="flex flex-col gap-8">
@@ -351,8 +250,8 @@
               </CarouselSlide>
             {/each}
           </CarouselContent>
-          <CarouselPrev class={navButton}>{@render chevronUp()}</CarouselPrev>
-          <CarouselNext class={navButton}>{@render chevronDown()}</CarouselNext>
+          <CarouselPrev buttonProps={{ class: navRound }}>{@render chevronUp()}</CarouselPrev>
+          <CarouselNext buttonProps={{ class: navRound }}>{@render chevronDown()}</CarouselNext>
         </div>
         <CarouselPagination orientation="vertical" />
       </Carousel>
@@ -430,9 +329,9 @@
           {/each}
         </CarouselContent>
         <div class="mt-5 flex items-center justify-between gap-4">
-          <CarouselPrev position="none" class={navButtonSquare}>{@render chevronLeft()}</CarouselPrev>
+          <CarouselPrev position="none" buttonProps={{ class: navSquare }}>{@render chevronLeft()}</CarouselPrev>
           <CarouselPagination />
-          <CarouselNext position="none" class={navButtonSquare}>{@render chevronRight()}</CarouselNext>
+          <CarouselNext position="none" buttonProps={{ class: navSquare }}>{@render chevronRight()}</CarouselNext>
         </div>
       </Carousel>
     </div>
@@ -563,60 +462,12 @@
 
   <div class="flex flex-col gap-3">
     <p class="text-foreground-muted text-sm">Parallax</p>
-    <div class="w-full max-w-xl">
-      <Carousel
-        loop
-        align="center"
-        setApi={(api) => {
-          parallaxApi = api
-        }}
-      >
-        <CarouselContent>
-          {#each ALIGNMENT_SLIDES as n (n)}
-            <CarouselSlide class="basis-2/3">
-              <div class="aspect-3/2 overflow-hidden rounded-xl">
-                <div data-parallax-layer class="size-full">
-                  <img src={SLIDE_SRC(n)} alt="Slide {n}" class="size-full scale-[1.6] object-cover" />
-                </div>
-              </div>
-            </CarouselSlide>
-          {/each}
-        </CarouselContent>
-        <div class="mt-5 flex justify-center gap-2">
-          {@render squareArrows()}
-        </div>
-      </Carousel>
-    </div>
+    <CarouselParallaxExample />
   </div>
 
   <div class="flex flex-col gap-3">
     <p class="text-foreground-muted text-sm">Scale</p>
-    <div class="w-full max-w-xl">
-      <Carousel
-        loop
-        align="center"
-        setApi={(api) => {
-          scaleApi = api
-        }}
-      >
-        <CarouselContent>
-          {#each ALIGNMENT_SLIDES as n (n)}
-            <CarouselSlide class="basis-2/3">
-              <div data-scale-layer class="transition-none">
-                <img
-                  src={SLIDE_SRC(n)}
-                  alt="Slide {n}"
-                  class="aspect-3/2 w-full rounded-xl object-cover"
-                />
-              </div>
-            </CarouselSlide>
-          {/each}
-        </CarouselContent>
-        <div class="mt-5 flex justify-center gap-2">
-          {@render squareArrows()}
-        </div>
-      </Carousel>
-    </div>
+    <CarouselScaleExample />
   </div>
 
   <div class="flex flex-col gap-3">
@@ -637,8 +488,8 @@
             </CarouselSlide>
           {/each}
         </CarouselContent>
-        <CarouselPrev class={navButtonLight}>{@render chevronLeft()}</CarouselPrev>
-        <CarouselNext class={navButtonLight}>{@render chevronRight()}</CarouselNext>
+        <CarouselPrev buttonProps={{ class: navRoundLight }}>{@render chevronLeft()}</CarouselPrev>
+        <CarouselNext buttonProps={{ class: navRoundLight }}>{@render chevronRight()}</CarouselNext>
         <CarouselPagination light class="absolute inset-x-0 bottom-5 justify-center" />
       </Carousel>
     </div>
@@ -647,7 +498,12 @@
   <div class="flex flex-col gap-3">
     <p class="text-foreground-muted text-sm">Controlled with the api</p>
     <div class="w-full max-w-xl">
-      <Carousel loop setApi={bindControlledApi}>
+      <Carousel
+        loop
+        setApi={(api) => {
+          controlledApi = api
+        }}
+      >
         <CarouselContent>
           {#each DEFAULT_SLIDES as n (n)}
             <CarouselSlide>

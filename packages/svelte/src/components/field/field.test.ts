@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
 import FieldHost from './field.test-host.svelte'
 import FieldFormHost from './field.form-host.svelte'
+import FieldMatchHost from './field.match-host.svelte'
 
 describe('Field', () => {
   it('associates the label with the control', () => {
@@ -52,6 +53,30 @@ describe('Field', () => {
     expect(screen.getByText('Email is required')).toBeInTheDocument()
     await user.type(screen.getByLabelText('Email'), 'a')
     expect(screen.queryByText('Email is required')).toBeNull()
+  })
+
+  it('runs validate on blur', async () => {
+    const user = userEvent.setup()
+    render(FieldHost, {
+      props: {
+        validationMode: 'onBlur',
+        validate: (value) => (String(value ?? '').trim() ? null : 'Email is required'),
+      },
+    })
+
+    const input = screen.getByLabelText('Email')
+    await user.click(input)
+    await user.tab()
+    expect(screen.getByText('Email is required')).toBeInTheDocument()
+  })
+
+  it('shows FieldError for a ValidityState key', async () => {
+    const user = userEvent.setup()
+    render(FieldMatchHost)
+    const input = screen.getByLabelText('Email')
+    await user.click(input)
+    await user.tab()
+    expect(screen.getByText('Email is missing')).toBeInTheDocument()
   })
 
   it('has no accessibility violations', async () => {

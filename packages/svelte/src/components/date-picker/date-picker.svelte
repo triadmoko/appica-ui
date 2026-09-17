@@ -3,7 +3,13 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { DateValue } from '@internationalized/date'
   import type { TimeValue } from 'bits-ui'
-  import type { CalendarSize, CalendarMode, DateRange } from '../calendar/calendar-tokens'
+  import type {
+    CalendarCaptionLayout,
+    CalendarMode,
+    CalendarSize,
+    DateRange,
+    Matcher,
+  } from '../calendar/calendar-tokens'
   import type { DateFieldVariant } from '../date-field/date-field.svelte'
 
   export type DatePickerSize = CalendarSize
@@ -115,6 +121,32 @@
     fixedWeeks?: boolean
     isDateDisabled?: (date: DateValue) => boolean
     isDateUnavailable?: (date: DateValue) => boolean
+    /**
+     * Month/year header: select dropdowns, or a static label with arrows.
+     * @default 'dropdown'
+     */
+    captionLayout?: CalendarCaptionLayout
+    /**
+     * Render days from the adjacent months.
+     * @default true
+     */
+    showOutsideDays?: boolean
+    /**
+     * How many months to display.
+     * @default 1
+     */
+    numberOfMonths?: number
+    /**
+     * When several months are visible, jump by that count instead of one month.
+     * @default false
+     */
+    pagedNavigation?: boolean
+    /** Earliest navigable month. Falls back to `minValue`. */
+    startMonth?: DateValue
+    /** Latest navigable month. Falls back to `maxValue`. */
+    endMonth?: DateValue
+    /** Dates that can't be selected (a date, range, weekday set, or predicate). */
+    disabledDates?: Matcher
     /**
      * 12-hour or 24-hour clock when `showTime` is set.
      */
@@ -265,6 +297,13 @@
     fixedWeeks = false,
     isDateDisabled,
     isDateUnavailable,
+    captionLayout,
+    showOutsideDays,
+    numberOfMonths,
+    pagedNavigation,
+    startMonth,
+    endMonth,
+    disabledDates,
     hourCycle,
     inputClassName,
     id,
@@ -492,12 +531,16 @@
     onMonthChange={handlePlaceholderChange}
     {locale}
     {weekStartsOn}
-    startMonth={minValue}
-    endMonth={maxValue}
+    startMonth={startMonth ?? minValue}
+    endMonth={endMonth ?? maxValue}
     {fixedWeeks}
-    disabled={isDateDisabled}
+    disabled={disabledDates ?? isDateDisabled}
     {isDateUnavailable}
     {required}
+    {captionLayout}
+    {showOutsideDays}
+    {numberOfMonths}
+    {pagedNavigation}
   />
 {/snippet}
 

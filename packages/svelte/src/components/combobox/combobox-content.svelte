@@ -31,7 +31,7 @@
   const ctx = getComboboxContext()
   const classes = $derived(
     cn(
-      'group/combobox-content bg-background border-border-overlay flex flex-col border py-2 shadow-2xl outline-none',
+      'group/combobox-content bg-background border-border-overlay flex flex-col border py-2 shadow-2xl outline-none has-data-empty:py-0',
       POPUP_RADIUS[ctx.size],
       'w-(--bits-combobox-anchor-width) min-w-36',
       'max-h-(--bits-combobox-content-available-height) overflow-hidden',
@@ -48,6 +48,7 @@
 <BitsCombobox.Portal>
   <BitsCombobox.Content
     data-slot="combobox-content"
+    data-empty={ctx.isEmpty() ? '' : undefined}
     class={classes}
     side="bottom"
     sideOffset={6}

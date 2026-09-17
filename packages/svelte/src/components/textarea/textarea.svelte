@@ -67,6 +67,8 @@
     id,
     name,
     oninput,
+    onblur,
+    onfocus,
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
@@ -88,9 +90,30 @@
   const hasWrapper = $derived(Boolean(clearable || start || end))
   const invalid = $derived(control.invalid)
 
+  $effect(() => {
+    if (!field) return
+    return field.registerControl({
+      getValue: () => (value !== undefined ? value : (textareaEl?.value ?? '')),
+      getElement: () => textareaEl ?? null,
+      getValidity: () => textareaEl?.validity ?? null,
+    })
+  })
+
   function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }) {
     field?.clearFormError()
+    field?.reportChange()
     oninput?.(event)
+  }
+
+  function handleBlur(event: FocusEvent & { currentTarget: HTMLTextAreaElement }) {
+    field?.reportBlur()
+    field?.reportFocus(false)
+    onblur?.(event)
+  }
+
+  function handleFocus(event: FocusEvent & { currentTarget: HTMLTextAreaElement }) {
+    field?.reportFocus(true)
+    onfocus?.(event)
   }
 
   function handleClear() {
@@ -120,6 +143,8 @@
     {rows}
     {placeholder}
     oninput={handleInput}
+    onblur={handleBlur}
+    onfocus={handleFocus}
     class={cn(
       inputVariants({ variant, size: inputSize, state: 'self' }),
       'placeholder:text-foreground-subtle h-auto resize-y',
@@ -162,6 +187,8 @@
       placeholder={placeholder ?? ' '}
       class="peer text-foreground placeholder:text-foreground-subtle min-w-0 flex-1 resize-none self-stretch bg-transparent outline-none disabled:cursor-not-allowed"
       oninput={handleInput}
+      onblur={handleBlur}
+      onfocus={handleFocus}
       {...rest}
     ></textarea>
     {#if clearable}

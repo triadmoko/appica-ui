@@ -19,7 +19,11 @@
 
 <div
   data-slot="combobox-empty"
-  class={cn('text-foreground-muted text-center', EMPTY_SIZE[ctx.size], className)}
+  class={cn(
+    'text-foreground-muted hidden text-center group-data-empty/combobox-content:block',
+    EMPTY_SIZE[ctx.size],
+    className,
+  )}
   {...rest}
 >
   {@render children?.()}

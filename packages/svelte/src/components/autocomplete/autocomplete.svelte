@@ -100,6 +100,7 @@
   let innerValue = $state('')
   let innerSelected = $state('')
   let innerOpen = $state(false)
+  let listCols = $state(1)
   innerValue = untrack(() => value ?? defaultValue ?? '')
   innerSelected = untrack(() => innerValue)
   innerOpen = untrack(() => open ?? defaultOpen)
@@ -193,6 +194,11 @@
     stringify: (item) => stringifyItem(item, itemToStringValue),
     inputValue: () => innerValue,
     setInputValue: handleValueChange,
+    isOpen: () => innerOpen,
+    cols: () => listCols,
+    setCols: (cols) => {
+      listCols = cols
+    },
     hasValue: () => hasValue,
     clear,
     disabled: () => Boolean(control.disabled),

@@ -69,6 +69,7 @@
   import ToastScreen from './screens/toast-screen.svelte'
   import TocScreen from './screens/toc-screen.svelte'
   import ToggleScreen from './screens/toggle-screen.svelte'
+  import ToggleGroupScreen from './screens/toggle-group-screen.svelte'
   import ToolbarScreen from './screens/toolbar-screen.svelte'
   import TooltipScreen from './screens/tooltip-screen.svelte'
 
@@ -141,6 +142,7 @@
     { id: 'toast', label: 'Toast' },
     { id: 'toc', label: 'Toc' },
     { id: 'toggle', label: 'Toggle' },
+    { id: 'toggle-group', label: 'ToggleGroup' },
     { id: 'toolbar', label: 'Toolbar' },
     { id: 'tooltip', label: 'Tooltip' },
   ] as const
@@ -216,6 +218,7 @@
     toast: ToastScreen,
     toc: TocScreen,
     toggle: ToggleScreen,
+    'toggle-group': ToggleGroupScreen,
     toolbar: ToolbarScreen,
     tooltip: TooltipScreen,
   }

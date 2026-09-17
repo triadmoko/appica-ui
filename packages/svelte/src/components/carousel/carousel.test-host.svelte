@@ -19,6 +19,7 @@
     paginationClass,
     paginationLight = false,
     prevClass,
+    prevButtonClass,
     prevPosition,
     nextPosition,
     nextDisabled,
@@ -43,6 +44,7 @@
     paginationClass?: string
     paginationLight?: boolean
     prevClass?: string
+    prevButtonClass?: string
     prevPosition?: CarouselNavPosition
     nextPosition?: CarouselNavPosition
     nextDisabled?: boolean
@@ -74,7 +76,7 @@
     <CarouselSlide>Slide 3</CarouselSlide>
     <CarouselSlide>Slide 4</CarouselSlide>
   </CarouselContent>
-  <CarouselPrev class={prevClass} position={prevPosition} />
+  <CarouselPrev class={prevClass} position={prevPosition} buttonProps={prevButtonClass ? { class: prevButtonClass } : undefined} />
   <CarouselNext position={nextPosition} disabled={nextDisabled} onclick={nextOnclick} />
   {#if showPagination}
     <CarouselPagination class={paginationClass} light={paginationLight} />

@@ -2,21 +2,25 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
-  import { requireFieldContext } from './field-context'
+  import { requireFieldContext, type FieldValidityBits } from './field-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /**
-     * When `false`, the message stays collapsed even if the field is invalid.
+     * `true` always shows when the field is invalid. A `ValidityState` key shows
+     * only for that failure.
      * @default true
      */
-    match?: boolean
+    match?: boolean | keyof FieldValidityBits
     children?: Snippet
   }
 
   let { class: className, match = true, children, ...rest }: Props = $props()
 
   const field = requireFieldContext()
-  const show = $derived(match && field.invalid())
+  const show = $derived.by(() => {
+    if (typeof match === 'boolean') return match && field.invalid()
+    return Boolean(field.validity().validity[match])
+  })
   const message = $derived(field.formError())
 </script>
 

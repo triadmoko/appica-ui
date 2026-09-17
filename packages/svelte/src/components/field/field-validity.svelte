@@ -1,11 +1,8 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import { requireFieldContext } from './field-context'
+  import { requireFieldContext, type FieldValidityState } from './field-context'
 
-  export type FieldValidityState = {
-    valid: boolean
-    invalid: boolean
-  }
+  export type { FieldValidityState }
 
   type Props = {
     children?: Snippet<[FieldValidityState]>
@@ -14,10 +11,7 @@
   let { children }: Props = $props()
 
   const field = requireFieldContext()
-  const state = $derived({
-    valid: !field.invalid(),
-    invalid: field.invalid(),
-  } satisfies FieldValidityState)
+  const state = $derived(field.validity())
 </script>
 
 {@render children?.(state)}

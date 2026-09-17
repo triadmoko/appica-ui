@@ -13,6 +13,9 @@
     description,
     error,
     showValidity,
+    validate,
+    validationMode,
+    required,
   }: {
     invalid?: boolean
     disabled?: boolean
@@ -20,17 +23,22 @@
     description?: boolean
     error?: string
     showValidity?: boolean
+    validate?: (value: unknown) => string | null
+    validationMode?: 'onSubmit' | 'onBlur' | 'onChange'
+    required?: boolean
   } = $props()
 </script>
 
-<Field {invalid} {disabled} {name}>
+<Field {invalid} {disabled} {name} {validate} {validationMode}>
   <FieldLabel>Email</FieldLabel>
-  <Input type="email" />
+  <Input type="email" {required} />
   {#if description}
     <FieldDescription>We never share your email.</FieldDescription>
   {/if}
   {#if error}
     <FieldError>{error}</FieldError>
+  {:else if validate}
+    <FieldError />
   {/if}
   {#if showValidity}
     <FieldValidity>

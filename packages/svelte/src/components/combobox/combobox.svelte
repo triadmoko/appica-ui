@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
   import { Combobox as BitsCombobox } from 'bits-ui'
+  import { filterItems, stringifyItem } from '../../internal/collection-filter'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setComboboxContext, type ComboboxSize, type ComboboxVariant } from './combobox-context'
@@ -49,6 +50,16 @@
      * @default false
      */
     multiple?: boolean
+    /**
+     * The data to filter. A flat array, or `{ value, items }` objects for grouped options.
+     */
+    items?: readonly unknown[]
+    /**
+     * How the filter and input read each object item.
+     */
+    itemToStringValue?: (item: unknown) => string
+    /** Match items against the query. Return `true` to keep an item. */
+    filter?: (item: unknown, query: string) => boolean
     name?: string
     disabled?: boolean
     children?: Snippet
@@ -67,6 +78,9 @@
     icon = true,
     grid = false,
     multiple = false,
+    items,
+    itemToStringValue,
+    filter,
     name,
     disabled,
     children,
@@ -89,9 +103,12 @@
   let innerSingle = $state('')
   let innerMultiple = $state<string[]>([])
   let innerOpen = $state(false)
+  let query = $state('')
+  let listCols = $state(1)
   innerSingle = untrack(() => toSingle(value ?? defaultValue))
   innerMultiple = untrack(() => toMultiple(value ?? defaultValue))
   innerOpen = untrack(() => open ?? defaultOpen)
+  query = untrack(() => (multiple ? '' : innerSingle))
 
   $effect(() => {
     if (value === undefined) return
@@ -104,7 +121,24 @@
     innerOpen = open
   })
 
+  const filteredItems = $derived(filterItems(items, query, itemToStringValue, filter))
+  const hasItems = $derived(items != null)
+  const isEmpty = $derived(hasItems && filteredItems.length === 0)
+  const bitsItems = $derived(
+    (items ?? []).flatMap((entry) => {
+      if (entry && typeof entry === 'object' && Array.isArray((entry as { items?: unknown }).items)) {
+        return (entry as { items: unknown[] }).items.map((item) => {
+          const label = stringifyItem(item, itemToStringValue)
+          return { value: label, label }
+        })
+      }
+      const label = stringifyItem(entry, itemToStringValue)
+      return [{ value: label, label }]
+    }),
+  )
+
   function handleSingleChange(next: string) {
+    query = next
     field?.clearFormError()
     commitBindableChange({
       next,
@@ -167,6 +201,10 @@
 
   const hasValue = $derived(multiple ? innerMultiple.length > 0 : innerSingle !== '')
 
+  function setInputValue(next: string) {
+    query = next
+  }
+
   setComboboxContext({
     get size() {
       return size
@@ -186,6 +224,17 @@
     get multiple() {
       return multiple
     },
+    hasItems: () => hasItems,
+    filteredItems: () => filteredItems,
+    isEmpty: () => isEmpty,
+    stringify: (item) => stringifyItem(item, itemToStringValue),
+    inputValue: () => query,
+    setInputValue,
+    isOpen: () => innerOpen,
+    cols: () => listCols,
+    setCols: (cols) => {
+      listCols = cols
+    },
     hasValue: () => hasValue,
     clear,
     remove,
@@ -199,6 +248,8 @@
     type="multiple"
     bind:value={innerMultiple}
     bind:open={innerOpen}
+    inputValue={query}
+    items={bitsItems}
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleMultipleChange}
@@ -212,6 +263,8 @@
     type="single"
     bind:value={innerSingle}
     bind:open={innerOpen}
+    inputValue={query}
+    items={bitsItems}
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleSingleChange}

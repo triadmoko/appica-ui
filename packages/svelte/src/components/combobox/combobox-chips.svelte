@@ -2,7 +2,9 @@
   import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { Combobox as BitsCombobox } from 'bits-ui'
+  import { attachGridNav } from '../../internal/grid-nav'
   import { asBitsAttrs, cn } from '../../internal/utils'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
   import { getComboboxContext } from './combobox-context'
@@ -46,10 +48,20 @@
   )
   const canClear = $derived(ctx.clearable && ctx.hasValue())
   const hasControls = $derived(canClear || ctx.icon)
+  const dir = useDirection()
+  const gridNav = (node: HTMLElement) =>
+    attachGridNav(node, {
+      getOpen: () => ctx.isOpen(),
+      getEnabled: () => ctx.grid,
+      getCols: () => ctx.cols(),
+      getDir: () => dir.current,
+      itemSelector: '[data-slot="combobox-item"]',
+    })
 </script>
 
 <div
   data-slot="combobox-chips"
+  {@attach gridNav}
   class={cn(
     'group/combobox-chips',
     inputVariants({ variant: ctx.variant, size: ctx.size, state: 'within' }),
@@ -71,6 +83,10 @@
       aria-describedby={control.describedby}
       class="peer text-foreground placeholder:text-foreground-subtle min-w-15 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
       {...asBitsAttrs(inputProps ?? {})}
+      oninput={(event) => {
+        ctx.setInputValue(event.currentTarget.value)
+        inputProps?.oninput?.(event)
+      }}
     />
   </div>
   {#if hasControls}

@@ -3,10 +3,19 @@
   import type { Snippet } from 'svelte'
   import { Combobox as BitsCombobox } from 'bits-ui'
   import { asBitsAttrs } from '../../internal/utils'
+  import { setComboboxGroupContext } from './combobox-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  type Props = HTMLAttributes<HTMLDivElement> & {
+    /** The group's items, so the inner ComboboxCollection can map them. */
+    items?: readonly unknown[]
+    children?: Snippet
+  }
 
-  let { children, ...rest }: Props = $props()
+  let { items = [], children, ...rest }: Props = $props()
+
+  setComboboxGroupContext({
+    items: () => items,
+  })
 </script>
 
 <BitsCombobox.Group data-slot="combobox-group" {...asBitsAttrs(rest)}>

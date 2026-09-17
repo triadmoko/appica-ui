@@ -19,6 +19,7 @@
 </script>
 
 <script lang="ts">
+  import { untrack } from 'svelte'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import Carousel from './carousel.svelte'
   import CarouselContent from './carousel-content.svelte'
@@ -39,7 +40,7 @@
   const light = $derived(lightProp ?? parent.light)
   const vertical = $derived(orientation === 'vertical')
 
-  let thumbsApi = $state<CarouselApi | undefined>(undefined)
+  let thumbsApi = $state.raw<CarouselApi | undefined>(undefined)
   let box = $state<CarouselThumbBox | null>(null)
   let thumbCount = 0
 
@@ -68,7 +69,9 @@
       const thumb = api?.slideNodes()[selected]
       const track = api?.containerNode()
       if (!thumb || !track) {
-        box = null
+        untrack(() => {
+          box = null
+        })
         return
       }
       const nested = thumb.offsetParent === track
@@ -78,7 +81,9 @@
         width: thumb.offsetWidth,
         height: thumb.offsetHeight,
       }
-      box = sameThumbBox(box, next) ? box : next
+      untrack(() => {
+        box = sameThumbBox(box, next) ? box : next
+      })
     }
 
     measure()

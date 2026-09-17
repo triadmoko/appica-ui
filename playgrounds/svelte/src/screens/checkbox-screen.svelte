@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Checkbox, CheckboxGroup } from '@appica/ui-svelte'
+  import { Checkbox, CheckboxGroup, DirectionProvider, Switch } from '@appica/ui-svelte'
 
   const toppings = [
     { name: 'cheese', label: 'Extra cheese' },
@@ -16,6 +16,7 @@
 
   const allValues = permissions.map((permission) => permission.name)
   let permissionValue = $state<string[]>(['read'])
+  let dir: 'ltr' | 'rtl' = $state('ltr')
 </script>
 
 <section class="flex flex-col gap-8">
@@ -138,5 +139,21 @@
         {/each}
       </div>
     </CheckboxGroup>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir}>
+        <label class="flex items-center gap-2 text-sm">
+          <Checkbox defaultChecked />
+          Accept terms
+        </label>
+      </div>
+    </DirectionProvider>
   </div>
 </section>

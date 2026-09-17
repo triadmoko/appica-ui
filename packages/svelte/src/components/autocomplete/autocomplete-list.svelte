@@ -19,10 +19,15 @@
   const isRenderFn = $derived((children?.length ?? 0) > 0)
   const items = $derived(ctx.filteredItems())
   const staticChildren = $derived(children as unknown as Snippet | undefined)
+
+  $effect(() => {
+    ctx.setCols(effectiveCols && effectiveCols > 1 ? effectiveCols : 1)
+  })
 </script>
 
 <BitsCombobox.Viewport
   data-slot="autocomplete-list"
+  role={ctx.grid && effectiveCols && effectiveCols > 1 ? 'grid' : undefined}
   class={cn(
     'flex max-h-(--bits-combobox-content-available-height) min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overscroll-contain px-2',
     effectiveCols && effectiveCols > 1 && 'grid',

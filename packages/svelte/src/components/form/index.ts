@@ -1,2 +1,2 @@
 export { default as Form } from './form.svelte'
-export type { FormErrors } from './form-context'
+export type { FormErrors, FormHandle, FormValues, ValidationMode } from './form-context'

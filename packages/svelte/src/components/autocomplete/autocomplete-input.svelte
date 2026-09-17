@@ -2,7 +2,9 @@
   import type { HTMLInputAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { Combobox as BitsCombobox } from 'bits-ui'
+  import { attachGridNav } from '../../internal/grid-nav'
   import { asBitsAttrs, cn } from '../../internal/utils'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
   import { getAutocompleteContext } from './autocomplete-context'
@@ -45,10 +47,20 @@
   )
   const canClear = $derived(ctx.clearable && ctx.hasValue())
   const isDisabled = $derived(control.disabled)
+  const dir = useDirection()
+  const gridNav = (node: HTMLElement) =>
+    attachGridNav(node, {
+      getOpen: () => ctx.isOpen(),
+      getEnabled: () => ctx.grid,
+      getCols: () => ctx.cols(),
+      getDir: () => dir.current,
+      itemSelector: '[data-slot="autocomplete-item"]',
+    })
 </script>
 
 <div
   data-slot="autocomplete-input"
+  {@attach gridNav}
   class={cn(inputVariants({ variant: ctx.variant, size: ctx.size, state: 'within' }), className)}
   data-invalid={control.invalid ? '' : undefined}
   data-disabled={isDisabled ? '' : undefined}

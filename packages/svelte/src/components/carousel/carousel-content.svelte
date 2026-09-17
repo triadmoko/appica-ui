@@ -10,6 +10,8 @@
 </script>
 
 <script lang="ts">
+  import { untrack } from 'svelte'
+  import { on } from 'svelte/events'
   import emblaCarouselSvelte from 'embla-carousel-svelte'
   import type { CarouselApi } from './carousel-types'
   import { cn } from '../../internal/utils'
@@ -24,16 +26,33 @@
     const { class: _className, ...restProps } = viewportProps
     return restProps
   })
-  const emblaConfig = $derived({ options: ctx.options, plugins: ctx.plugins })
 
   function onEmblaInit(event: Event) {
     ctx.setApi((event as CustomEvent<CarouselApi>).detail)
   }
+
+  function attachEmbla(node: HTMLElement) {
+    const getConfig = () => ({ options: ctx.options, plugins: ctx.plugins })
+    const offEmblaInit = on(node, 'emblainit', onEmblaInit)
+    const inst = emblaCarouselSvelte(node, untrack(getConfig))
+    let primed = false
+    $effect(() => {
+      const config = getConfig()
+      if (!primed) {
+        primed = true
+        return
+      }
+      inst.update?.(config)
+    })
+    return () => {
+      offEmblaInit()
+      inst.destroy?.()
+    }
+  }
 </script>
 
 <div
-  use:emblaCarouselSvelte={emblaConfig}
-  onemblainit={onEmblaInit}
+  {@attach attachEmbla}
   data-slot="carousel-viewport"
   data-orientation={ctx.orientation}
   data-auto-height={ctx.autoHeight || undefined}

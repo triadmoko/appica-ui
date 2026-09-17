@@ -2,7 +2,9 @@
   import type { HTMLInputAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { Combobox as BitsCombobox } from 'bits-ui'
+  import { attachGridNav } from '../../internal/grid-nav'
   import { asBitsAttrs, cn } from '../../internal/utils'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
   import { getComboboxContext } from './combobox-context'
@@ -28,6 +30,8 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     'aria-label': ariaLabel,
+    oninput,
+    onkeydown,
     ...rest
   }: Props = $props()
 
@@ -43,10 +47,21 @@
     }),
   )
   const canClear = $derived(ctx.clearable && ctx.hasValue())
+  const dir = useDirection()
+
+  const gridNav = (node: HTMLElement) =>
+    attachGridNav(node, {
+      getOpen: () => ctx.isOpen(),
+      getEnabled: () => ctx.grid,
+      getCols: () => ctx.cols(),
+      getDir: () => dir.current,
+      itemSelector: '[data-slot="combobox-item"]',
+    })
 </script>
 
 <div
   data-slot="combobox-input"
+  {@attach gridNav}
   class={cn(inputVariants({ variant: ctx.variant, size: ctx.size, state: 'within' }), className)}
   data-invalid={control.invalid ? '' : undefined}
   data-disabled={control.disabled ? '' : undefined}
@@ -66,6 +81,11 @@
     aria-label={ariaLabel}
     class="peer text-foreground placeholder:text-foreground-subtle h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
     {...asBitsAttrs(rest)}
+    oninput={(event) => {
+      ctx.setInputValue(event.currentTarget.value)
+      oninput?.(event)
+    }}
+    onkeydown={onkeydown}
   />
   {#if canClear}
     <button

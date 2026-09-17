@@ -100,7 +100,6 @@
 
 <script lang="ts">
   import { untrack } from 'svelte'
-  import { SvelteSet } from 'svelte/reactivity'
   import Accessibility from 'embla-carousel-accessibility'
   import AutoHeight from 'embla-carousel-auto-height'
   import AutoScroll from 'embla-carousel-auto-scroll'
@@ -215,15 +214,15 @@
     return { ...merged, ...options }
   })
 
-  let emblaApi = $state<CarouselApi | undefined>(undefined)
+  let emblaApi = $state.raw<CarouselApi | undefined>(undefined)
   let selectedIndex = $state(0)
-  let scrollSnaps = $state<number[]>([])
+  let scrollSnaps = $state.raw<number[]>([])
   let canScrollPrev = $state(false)
   let canScrollNext = $state(false)
-  let autoplayState = $state<CarouselAutoplayState | null>(null)
+  let autoplayState = $state.raw<CarouselAutoplayState | null>(null)
 
   let scrollProgress = 0
-  const scrollListeners = new SvelteSet<() => void>()
+  const scrollListeners = new Set<() => void>()
 
   function subscribeScrollProgress(onChange: () => void) {
     scrollListeners.add(onChange)
@@ -261,15 +260,19 @@
     }
     const syncFull = () => {
       notifyScroll()
-      selectedIndex = api.selectedSnap()
-      scrollSnaps = api.snapList()
-      canScrollPrev = api.canGoToPrev()
-      canScrollNext = api.canGoToNext()
+      untrack(() => {
+        selectedIndex = api.selectedSnap()
+        scrollSnaps = api.snapList()
+        canScrollPrev = api.canGoToPrev()
+        canScrollNext = api.canGoToNext()
+      })
     }
     const syncSelection = () => {
-      selectedIndex = api.selectedSnap()
-      canScrollPrev = api.canGoToPrev()
-      canScrollNext = api.canGoToNext()
+      untrack(() => {
+        selectedIndex = api.selectedSnap()
+        canScrollPrev = api.canGoToPrev()
+        canScrollNext = api.canGoToNext()
+      })
     }
 
     syncFull()
@@ -325,21 +328,28 @@
     if (autoplayPlugin) {
       const rawDelay = autoplayPlugin.options.delay
       const initialDelay = typeof rawDelay === 'number' ? rawDelay : 4000
-      autoplayState = { delay: initialDelay, cycleId: 0, isPlaying: autoplayPlugin.isPlaying() }
+      const writeAutoplay = (next: CarouselAutoplayState | null) => {
+        untrack(() => {
+          autoplayState = next
+        })
+      }
+      writeAutoplay({ delay: initialDelay, cycleId: 0, isPlaying: autoplayPlugin.isPlaying() })
       const onPlay = () => {
         clearResumeTimer()
-        autoplayState = autoplayState ? { ...autoplayState, isPlaying: true } : autoplayState
+        const current = untrack(() => autoplayState)
+        writeAutoplay(current ? { ...current, isPlaying: true } : current)
       }
       const onStop = () => {
-        autoplayState = autoplayState ? { ...autoplayState, isPlaying: false } : autoplayState
+        const current = untrack(() => autoplayState)
+        writeAutoplay(current ? { ...current, isPlaying: false } : current)
       }
       const onTimerSet = () => {
-        autoplayState = autoplayState
-          ? { ...autoplayState, cycleId: autoplayState.cycleId + 1, isPlaying: true }
-          : autoplayState
+        const current = untrack(() => autoplayState)
+        writeAutoplay(current ? { ...current, cycleId: current.cycleId + 1, isPlaying: true } : current)
       }
       const onTimerStopped = () => {
-        autoplayState = autoplayState ? { ...autoplayState, isPlaying: false } : autoplayState
+        const current = untrack(() => autoplayState)
+        writeAutoplay(current ? { ...current, isPlaying: false } : current)
       }
       const resetOnSelect = () => autoplayPlugin.reset()
       const onInteraction = (_api: CarouselApi, event: { detail: { interaction: string } }) => {
@@ -354,7 +364,9 @@
       api.on('autoplay:timerstopped', onTimerStopped)
       api.on('select', resetOnSelect)
       if (resumeAfter > 0) api.on('autoplay:interaction', onInteraction)
-      if (playAutoplay) autoplayPlugin.play()
+      untrack(() => {
+        if (playAutoplay) autoplayPlugin.play()
+      })
       cleanupAutoplay = () => {
         api.off('autoplay:play', onPlay)
         api.off('autoplay:stop', onStop)
@@ -364,7 +376,9 @@
         if (resumeAfter > 0) api.off('autoplay:interaction', onInteraction)
       }
     } else {
-      autoplayState = null
+      untrack(() => {
+        autoplayState = null
+      })
     }
 
     let cleanupAutoScroll: (() => void) | undefined

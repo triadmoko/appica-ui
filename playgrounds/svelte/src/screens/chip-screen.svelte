@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Chip, ChipGroup, type ChipGroupHandle } from '@appica/ui-svelte'
+  import { Button, Chip, ChipGroup, DirectionProvider, Switch, type ChipGroupHandle } from '@appica/ui-svelte'
 
   const variants = ['soft', 'outline', 'primary', 'secondary', 'destructive'] as const
   const sizes = [
@@ -15,6 +15,7 @@
   let selected = $state('Active')
   let active = $state([...groupFilters])
   let group: ChipGroupHandle | undefined = $state()
+  let dir: 'ltr' | 'rtl' = $state('ltr')
 </script>
 
 {#snippet plusIcon()}
@@ -190,5 +191,19 @@
       <Chip href="#engineering">#engineering</Chip>
       <Chip variant="primary" href="#featured">#featured</Chip>
     </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">RTL</p>
+    <label class="flex items-center gap-2 text-sm">
+      <Switch checked={dir === 'rtl'} onCheckedChange={(next) => (dir = next ? 'rtl' : 'ltr')} />
+      RTL
+    </label>
+    <DirectionProvider {dir}>
+      <div {dir} class="flex flex-wrap items-center gap-2">
+        <Chip dismissible>Design</Chip>
+        <Chip variant="primary">Featured</Chip>
+      </div>
+    </DirectionProvider>
   </div>
 </section>

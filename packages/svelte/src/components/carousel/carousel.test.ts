@@ -206,6 +206,14 @@ describe('CarouselPrev / CarouselNext', () => {
     expect(prev.className).not.toContain('prev-wrapper-cls')
   })
 
+  it('forwards buttonProps.class to the inner trigger, not the positioner', () => {
+    const { container } = render(CarouselHost, { props: { prevButtonClass: 'prev-trigger-cls' } })
+    const wrapper = container.querySelector('[data-slot="carousel-prev-positioner"]') as HTMLElement
+    const prev = screen.getByRole('button', { name: 'Previous slide' })
+    expect(prev.className).toContain('prev-trigger-cls')
+    expect(wrapper.className).not.toContain('prev-trigger-cls')
+  })
+
   it('disables prev when canGoToPrev() reports false', () => {
     render(CarouselHost)
     const prev = screen.getByRole('button', { name: 'Previous slide' })
@@ -397,6 +405,35 @@ describe('useCarousel + lifecycle', () => {
     render(CarouselHost, { props: { setApi } })
     expect(setApi).toHaveBeenCalledTimes(1)
     expect(setApi).toHaveBeenCalledWith(stubApi)
+  })
+
+  it('does not loop when autoplay play() emits timerset synchronously', () => {
+    const autoplayPlugin = {
+      options: { delay: 4000 },
+      isPlaying: vi.fn(() => false),
+      play: vi.fn(() => {
+        fireEmbla('autoplay:timerset')
+      }),
+      stop: vi.fn(),
+      reset: vi.fn(),
+    }
+    stubApi.plugins.mockReturnValue({ autoplay: autoplayPlugin })
+    expect(() => render(CarouselHost, { props: { autoplay: { delay: 4000 } } })).not.toThrow()
+    expect(autoplayPlugin.play).toHaveBeenCalled()
+  })
+
+  it('lets a setApi consumer subscribe to select and read the current snap', () => {
+    const onSelect = vi.fn()
+    render(CarouselHost, {
+      props: {
+        setApi: (api: CarouselApi) => {
+          api.on('select', onSelect)
+        },
+      },
+    })
+    fireEmbla('select')
+    expect(onSelect).toHaveBeenCalled()
+    expect(stubApi.selectedSnap()).toBe(0)
   })
 
   it('subscribes to v9 lowercase events including select, scroll, slideschanged, slidesinview, reinit', () => {

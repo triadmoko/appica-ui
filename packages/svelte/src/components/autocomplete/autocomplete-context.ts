@@ -15,6 +15,9 @@ export interface AutocompleteContextValue {
   stringify: (item: unknown) => string
   inputValue: () => string
   setInputValue: (next: string) => void
+  isOpen: () => boolean
+  cols: () => number
+  setCols: (cols: number) => void
   hasValue: () => boolean
   clear: () => void
   disabled: () => boolean
