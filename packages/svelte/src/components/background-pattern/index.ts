@@ -1,3 +1,4 @@
 export { default as BackgroundPattern } from './background-pattern.svelte'
 export { patternCell } from './background-pattern-shared'
+export type { BackgroundPatternProps } from './background-pattern.svelte'
 export type { BackgroundPatternVariant } from './background-pattern-shared'

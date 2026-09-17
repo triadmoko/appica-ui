@@ -8,7 +8,7 @@
 
   type SpotlightConfig = { size?: number | string; persistent?: boolean }
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type BackgroundPatternProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Pattern texture painted behind the content.
      * @default 'dots'
@@ -40,10 +40,10 @@
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: BackgroundPatternProps = $props()
 
   function resolveSpotlight(
-    value: Props['spotlight'],
+    value: BackgroundPatternProps['spotlight'],
   ): { size?: number | string; persistent: boolean } | null {
     if (!value) return null
     if (value === true) return { persistent: false }

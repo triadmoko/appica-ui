@@ -4,12 +4,12 @@
   import { cn } from '../../internal/utils'
   import { getSparklineContext, type SparklinePoint } from './sparkline-context'
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type SparklineLabelProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     /** Render snippet to customize the displayed text. Omit for the raw label. */
     children?: Snippet<[string, SparklinePoint]>
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: SparklineLabelProps = $props()
 
   const ctx = getSparklineContext()
   const data = $derived(ctx.data())

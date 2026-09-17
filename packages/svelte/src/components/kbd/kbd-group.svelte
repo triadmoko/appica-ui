@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { setKbdGroupContext, type KbdSize } from './kbd-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type KbdGroupProps = HTMLAttributes<HTMLSpanElement> & {
     /**
      * Default size applied to each child `Kbd` that doesn't set its own.
      * @default 'md'
@@ -13,7 +13,7 @@
     children?: Snippet
   }
 
-  let { class: className, size = 'md', children, ...rest }: Props = $props()
+  let { class: className, size = 'md', children, ...rest }: KbdGroupProps = $props()
 
   const ctx = {
     get size() {

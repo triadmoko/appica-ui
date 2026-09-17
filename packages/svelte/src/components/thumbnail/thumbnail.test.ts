@@ -1,5 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/svelte'
-import { describe, expect, it } from 'vitest'
+import { tick } from 'svelte'
+import { render, screen } from '@testing-library/svelte'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import { htmlSnippet } from '../../test/snippet'
 import Thumbnail from './thumbnail.svelte'
@@ -64,20 +65,81 @@ describe('Thumbnail', () => {
     expect(img.getAttribute('alt')).toBe('Mountain peak')
     expect(img.className).toContain('object-cover')
     expect(img.className).toContain('rounded-[inherit]')
+    expect(img.className).toContain('hidden')
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).not.toBeNull()
+  })
+
+  it('fires onLoadingStatusChange as the image loads and unmounts the fallback', async () => {
+    const onLoadingStatusChange = vi.fn()
+    const { container } = render(Thumbnail, {
+      props: { src: 'https://example.com/peak.jpg', alt: 'Mountain peak', onLoadingStatusChange },
+    })
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('loading')
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).not.toBeNull()
+
+    const img = container.querySelector('[data-slot="thumbnail-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('load'))
+    await tick()
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('loaded')
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).toBeNull()
+    expect(img.className).not.toContain('hidden')
   })
 
   it('shows the fallback icon when the image errors', async () => {
-    const { container } = render(Thumbnail, { props: { src: 'https://example.com/broken.jpg', alt: 'Broken' } })
+    const onLoadingStatusChange = vi.fn()
+    const { container } = render(Thumbnail, {
+      props: { src: 'https://example.com/broken.jpg', alt: 'Broken', onLoadingStatusChange },
+    })
 
     const img = container.querySelector('[data-slot="thumbnail-image"]') as HTMLImageElement
     img.dispatchEvent(new Event('error'))
+    await tick()
 
-    const fallback = await waitFor(() => {
-      const el = container.querySelector('[data-slot="thumbnail-fallback"]')
-      if (!el) throw new Error('thumbnail-fallback not mounted')
-      return el as HTMLElement
-    })
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('error')
+    expect(container.querySelector('[data-slot="thumbnail-image"]')).toBeNull()
+    const fallback = container.querySelector('[data-slot="thumbnail-fallback"]') as HTMLElement
+    expect(fallback).not.toBeNull()
     expect(fallback.querySelector('[data-slot="thumbnail-fallback-icon"]')).not.toBeNull()
+  })
+
+  it('resets to idle when src is cleared so the fallback returns', async () => {
+    const onLoadingStatusChange = vi.fn()
+    const { container, rerender } = render(Thumbnail, {
+      props: { src: 'https://example.com/peak.jpg', alt: 'Mountain peak', onLoadingStatusChange },
+    })
+
+    const img = container.querySelector('[data-slot="thumbnail-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('load'))
+    await tick()
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).toBeNull()
+
+    await rerender({ src: undefined, alt: 'Mountain peak', onLoadingStatusChange })
+    await tick()
+
+    expect(onLoadingStatusChange).toHaveBeenCalledWith('idle')
+    expect(container.querySelector('[data-slot="thumbnail-image"]')).toBeNull()
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).not.toBeNull()
+  })
+
+  it('remounts the image after an error when src changes', async () => {
+    const { container, rerender } = render(Thumbnail, {
+      props: { src: 'https://example.com/broken.jpg', alt: 'Broken' },
+    })
+
+    const broken = container.querySelector('[data-slot="thumbnail-image"]') as HTMLImageElement
+    broken.dispatchEvent(new Event('error'))
+    await tick()
+    expect(container.querySelector('[data-slot="thumbnail-image"]')).toBeNull()
+
+    await rerender({ src: 'https://example.com/peak.jpg', alt: 'Mountain peak' })
+    await tick()
+
+    const img = container.querySelector('[data-slot="thumbnail-image"]') as HTMLImageElement
+    expect(img).not.toBeNull()
+    expect(img.getAttribute('src')).toBe('https://example.com/peak.jpg')
+    expect(container.querySelector('[data-slot="thumbnail-fallback"]')).not.toBeNull()
   })
 
   it('renders icon children for the icon-soft variant', () => {

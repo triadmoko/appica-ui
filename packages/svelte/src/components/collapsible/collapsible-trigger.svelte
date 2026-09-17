@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte'
   import { Collapsible as BitsCollapsible } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
+  import { getCollapsibleContext } from './collapsible-context'
 
   type Props = HTMLButtonAttributes & {
     children?: Snippet
@@ -10,6 +11,7 @@
 
   let { class: className, disabled, children, ...rest }: Props = $props()
 
+  const ctx = getCollapsibleContext()
   const classes = $derived(
     cn(
       'outline-ring cursor-pointer select-none',
@@ -19,6 +21,10 @@
   )
 </script>
 
-<BitsCollapsible.Trigger data-slot="collapsible-trigger" {disabled} class={classes} {...asBitsAttrs(rest)}>
-  {@render children?.()}
+<BitsCollapsible.Trigger {disabled} class={classes} {...asBitsAttrs(rest)}>
+  {#snippet child({ props })}
+    <button {...props} data-slot="collapsible-trigger" data-panel-open={ctx.open ? '' : undefined}>
+      {@render children?.()}
+    </button>
+  {/snippet}
 </BitsCollapsible.Trigger>

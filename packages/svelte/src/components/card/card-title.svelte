@@ -5,7 +5,7 @@
 
   type HeadingEl = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type CardTitleProps = HTMLAttributes<HTMLElement> & {
     /**
      * Heading level so the card fits the page outline.
      * @default 'h3'
@@ -14,7 +14,7 @@
     children?: Snippet
   }
 
-  let { class: className, el = 'h3', children, ...rest }: Props = $props()
+  let { class: className, el = 'h3', children, ...rest }: CardTitleProps = $props()
 </script>
 
 <svelte:element this={el} data-slot="card-title" class={cn('text-foreground-intense text-lg font-semibold', className)} {...rest}>

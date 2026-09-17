@@ -6,7 +6,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 ## Components
 
-- [x] `accordion` - Wave 2: bits-ui. `multiple` → `type`. Variant/icon context. Closed content unmounts (`forceMount={false}`).
+- [x] `accordion` - Wave 2: bits-ui. `multiple` → `type`. Variant/icon context. `keepMounted` / `hiddenUntilFound` cascade from root to content (`forceMount`). Closed content unmounts after the height animation.
 - [x] `alert` - Wave 1. Dismiss uses `svelte/transition` (`out:`), not Motion. Compound parts: Icon / Title / Description / Action. Title tag via `el`.
 - [x] `alert-dialog` - Wave 2: bits-ui. No default ×. Nested overlay `data-nested:hidden` unless `backdropProps.forceRender`. `AlertDialog.createHandle` is a Svelte `$state` handle. Close wraps bits-ui Cancel.
 - [x] `autocomplete` - Wave 2: bits-ui Combobox analog. `items` + built-in filter; `value` is the input string. `icon` default `false`. Extra `AutocompleteStatus`. `AutocompleteCollection` maps group items. No 2D grid keyboard nav.
@@ -23,7 +23,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `checkbox` - Wave 2: bits-ui `Checkbox.Root`. Folded indicator. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context. Group identity is `value` with `name` fallback (same as Base UI). `parent` select-all is Appica (bits-ui has no parent).
 - [x] `checkbox-group` - Wave 2: bits-ui `Checkbox.Group`. `orientation` default `vertical`. `allValues` drives a `parent` checkbox.
 - [x] `chip` - Wave 1. Reuses `buttonVariants`. Dismiss uses `svelte/transition`. Group `clearAll()` is a component export (`bind:this`).
-- [x] `collapsible` - Wave 2: bits-ui. Height via `--bits-collapsible-content-height`. `keepMounted` → `forceMount`.
+- [x] `collapsible` - Wave 2: bits-ui. Height via `--collapsible-panel-height` aliased from `--bits-collapsible-content-height`. `keepMounted` / `hiddenUntilFound` → `forceMount`. Trigger `data-panel-open`, root/content `data-open`, content `data-closed`.
 - [x] `color-area` - Wave 2: custom (bits-ui has no color primitives). `bind:value`. RTL via `useDirection()`.
 - [x] `color-picker` - Wave 2: custom. `bind:value` / `bind:open`. `trigger` snippet or `null` (no React `render` / `child`). `onOpenChange(open)` (no Base UI `details` / `cancel()`). Default `children` snippet replaces the HSB panel.
 - [x] `color-slider` - Wave 2: custom. `bind:value`. RTL via `useDirection()`. Thumb inset from `offsetWidth` / `offsetHeight`.
@@ -63,7 +63,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `separator` - Wave 1. SVG decorative variants (dotted / wave / zigzag) ported as-is.
 - [x] `skeleton` - Wave 1. Same `shimmer` / `pulse` / `none` classes as React.
 - [x] `slider` - Wave 2: bits-ui. Folded Root + track + thumbs. Infers `type` from number vs array. `tooltipVisibility`. RTL via closest `[dir]`.
-- [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL from closest `[dir]` (no DirectionProvider).
+- [x] `sparkline` - Wave 1. SVG path / CSS columns. Hover via pointer events. RTL via `useDirection()` with closest `[dir]` fallback.
 - [x] `spinner` - Wave 1. Circular / dots as CSS `@keyframes`; sparkle morphs via rAF. Gated by `useReducedMotion`.
 - [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.

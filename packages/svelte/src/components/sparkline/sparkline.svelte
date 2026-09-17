@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { setSparklineContext, type SparklinePoint } from './sparkline-context'
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
+  export type SparklineProps = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
     /** **Required.** The series to plot. */
     data: number[]
     /** Per-point labels (e.g. dates), surfaced in the tooltip and to `SparklineLabel`. */
@@ -34,7 +34,7 @@
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: SparklineProps = $props()
 
   let activeIndex = $state<number | null>(null)
 

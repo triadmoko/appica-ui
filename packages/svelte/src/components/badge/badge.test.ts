@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
-import { textSnippet } from '../../test/snippet'
+import { htmlSnippet, textSnippet } from '../../test/snippet'
 import Badge from './badge.svelte'
 
 describe('Badge', () => {
@@ -44,8 +44,30 @@ describe('Badge', () => {
     expect(el.className).toContain('h-7')
   })
 
+  it('is keyboard-focusable when href is set', () => {
+    render(Badge, { props: { href: '/x', children: textSnippet('Link badge') } })
+    expect(screen.getByRole('link', { name: 'Link badge' })).toHaveAttribute('tabindex', '0')
+  })
+
+  it('is keyboard-focusable when onclick is set', () => {
+    render(Badge, { props: { onclick: vi.fn(), children: textSnippet('Click badge') } })
+    expect(screen.getByRole('button', { name: 'Click badge' })).toHaveAttribute('tabindex', '0')
+  })
+
   it('has no accessibility violations', async () => {
     const { container } = render(Badge, { props: { children: textSnippet('Accessible') } })
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('has no accessibility violations when icon-only with an aria-label', async () => {
+    const { container } = render(Badge, {
+      props: {
+        size: 'icon-sm',
+        role: 'img',
+        'aria-label': 'Verified',
+        children: htmlSnippet('<svg aria-hidden="true"></svg>'),
+      },
+    })
     expect(await axe(container)).toHaveNoViolations()
   })
 })

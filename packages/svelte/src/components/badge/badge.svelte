@@ -4,7 +4,7 @@
   import { cn, focusableProps } from '../../internal/utils'
   import { badgeVariants, type BadgeSize, type BadgeVariant } from './badge-variants'
 
-  type Props = HTMLAttributes<HTMLSpanElement> &
+  export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
     HTMLAnchorAttributes &
     HTMLButtonAttributes & {
       /**
@@ -20,7 +20,7 @@
       children?: Snippet
     }
 
-  let { class: className, variant, size, href, onclick, children, ...rest }: Props = $props()
+  let { class: className, variant, size, href, onclick, children, ...rest }: BadgeProps = $props()
 
   const interactive = $derived(href != null || onclick != null)
   const classes = $derived(cn(badgeVariants({ variant, size }), className))

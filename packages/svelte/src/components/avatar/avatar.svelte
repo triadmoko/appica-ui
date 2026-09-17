@@ -5,7 +5,7 @@
   import { getAvatarGroupContext, setAvatarContext, type AvatarStatus } from './avatar-context'
   import { avatarVariants, type AvatarPresetSize, type AvatarShape } from './avatar-variants'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type AvatarProps = HTMLAttributes<HTMLSpanElement> & {
     /**
      * Full circle or rounded square.
      * @default 'circle'
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, style, size, shape, children, ...rest }: Props = $props()
+  let { class: className, style, size, shape, children, ...rest }: AvatarProps = $props()
 
   const group = getAvatarGroupContext()
   const resolvedSize = $derived(size ?? group?.size ?? 'md')

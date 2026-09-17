@@ -17,7 +17,7 @@
 
   const BORDER_MASK = 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type GradientGlowProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * First gradient stop.
      * @default '#8EC5FF'
@@ -95,7 +95,7 @@
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: GradientGlowProps = $props()
 
   const gradient = $derived(
     `linear-gradient(calc(${angle}deg + var(--gradient-glow-rotation, 0deg)), ${from} 3.64%, ${via} 53.35%, ${to} 95.37%)`,

@@ -40,14 +40,14 @@
     },
   }
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type SeparatorProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Line style. `gradient`, `wave`, `zigzag`, and `dotted` are decorative.
      * @default 'solid'
      */
     variant?: SeparatorVariant
     /**
-     * Axis the rule follows.
+     * Direction of the line. Vertical separators stretch to their flex parent.
      * @default 'horizontal'
      */
     orientation?: Orientation
@@ -66,7 +66,7 @@
     decorative = false,
     children,
     ...rest
-  }: Props = $props()
+  }: SeparatorProps = $props()
 
   const isDecorative = $derived(variant in decorativeVariants)
   const config = $derived(decorativeVariants[variant])

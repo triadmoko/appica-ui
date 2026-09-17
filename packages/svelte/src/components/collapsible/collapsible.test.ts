@@ -25,6 +25,7 @@ describe('Collapsible', () => {
     await user.click(trigger)
     const panel = await screen.findByText('Panel body')
     expect(panel.closest('[data-slot="collapsible-content"]')).not.toBeNull()
+    expect(trigger.getAttribute('data-panel-open')).not.toBeNull()
 
     await user.click(trigger)
     await waitFor(() => {
@@ -35,6 +36,7 @@ describe('Collapsible', () => {
   it('respects defaultOpen', () => {
     render(CollapsibleHost, { props: { defaultOpen: true } })
     expect(screen.getByText('Panel body')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Toggle' }).getAttribute('data-panel-open')).not.toBeNull()
   })
 
   it('disabled prevents toggling', async () => {
@@ -46,8 +48,15 @@ describe('Collapsible', () => {
     expect(screen.queryByText('Panel body')).toBeNull()
   })
 
-  it('keepMounted leaves the panel in the DOM when closed', () => {
+  it('keepMounted leaves the panel in the DOM when closed with data-closed', () => {
     render(CollapsibleHost, { props: { keepMounted: true } })
+    const panel = screen.getByText('Panel body').closest('[data-slot="collapsible-content"]') as HTMLElement
+    expect(panel).not.toBeNull()
+    expect(panel.getAttribute('data-closed')).not.toBeNull()
+  })
+
+  it('hiddenUntilFound leaves the panel in the DOM when closed', () => {
+    render(CollapsibleHost, { props: { hiddenUntilFound: true } })
     expect(screen.getByText('Panel body')).toBeInTheDocument()
     expect(document.querySelector('[data-slot="collapsible-content"]')).not.toBeNull()
   })
@@ -61,6 +70,22 @@ describe('Collapsible', () => {
     expect(onOpenChange).toHaveBeenCalledTimes(1)
     expect(onOpenChange).toHaveBeenLastCalledWith(true)
     await screen.findByText('Panel body')
+  })
+
+  it('forwards class on each part', async () => {
+    const user = userEvent.setup()
+    render(CollapsibleHost, {
+      props: { rootClass: 'root-cls', triggerClass: 'trigger-cls', contentClass: 'content-cls' },
+    })
+
+    const trigger = screen.getByRole('button', { name: 'Toggle' })
+    expect(trigger.className).toContain('trigger-cls')
+    expect(trigger.className).toContain('cursor-pointer')
+
+    await user.click(trigger)
+    const panel = (await screen.findByText('Panel body')).closest('[data-slot="collapsible-content"]') as HTMLElement
+    expect(panel.className).toContain('content-cls')
+    expect(panel.className).toContain('overflow-hidden')
   })
 
   it('has no a11y violations when open', async () => {

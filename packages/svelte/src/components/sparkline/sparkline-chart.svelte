@@ -2,16 +2,10 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
+  import { readTextDirection } from '../../internal/direction'
+  import { useDirection } from '../../hooks/use-direction/use-direction'
   import { getSparklineContext, type SparklinePoint } from './sparkline-context'
-  import {
-    buildLinePath,
-    clamp01,
-    formatNumber,
-    getExtent,
-    readTextDirection,
-    round,
-    type PathPoint,
-  } from './sparkline-geometry'
+  import { buildLinePath, clamp01, formatNumber, getExtent, round, type PathPoint } from './sparkline-geometry'
 
   type SparklineVariant = 'line' | 'area' | 'column'
 
@@ -23,7 +17,7 @@
     topFrac: number
   }
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  export type SparklineChartProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /**
      * The layout.
      * @default 'line'
@@ -83,7 +77,7 @@
     role = 'img',
     'aria-label': ariaLabel,
     ...rest
-  }: Props = $props()
+  }: SparklineChartProps = $props()
 
   const ctx = getSparklineContext()
   const data = $derived(ctx.data())
@@ -94,8 +88,9 @@
   const n = $derived(data.length)
 
   let chartEl: HTMLDivElement | undefined = $state()
-  const isRtl = $derived(readTextDirection(chartEl) === 'rtl')
-  const gradientId = `sparkline-fill-${Math.random().toString(36).slice(2, 10)}`
+  const direction = useDirection()
+  const isRtl = $derived(direction.current === 'rtl' || readTextDirection(chartEl) === 'rtl')
+  const gradientId = $props.id()
 
   const showTooltip = $derived(tooltip || tooltipContent !== undefined)
   const interactive = $derived(indicator || showTooltip)
@@ -171,6 +166,7 @@
   }
 
   const pointerAttach = (node: HTMLDivElement) => {
+    chartEl = node
     const onDown = (event: PointerEvent) => {
       if (interactive) updateActiveFromEvent(event, true)
     }
@@ -191,6 +187,7 @@
     node.addEventListener('pointerup', onUp)
     node.addEventListener('pointercancel', onUp)
     return () => {
+      chartEl = undefined
       node.removeEventListener('pointerdown', onDown)
       node.removeEventListener('pointermove', onMove)
       node.removeEventListener('pointerleave', onLeave)
@@ -212,7 +209,6 @@
 
 {#if n > 0}
   <div
-    bind:this={chartEl}
     {role}
     aria-label={ariaLabel ?? `${variant} chart`}
     class={cn('relative w-full', className)}

@@ -52,14 +52,3 @@ export function formatNumber(value: number, format?: Intl.NumberFormatOptions, l
 
 export const round = (n: number) => Math.round(n * 100) / 100
 export const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
-
-export function readTextDirection(el: HTMLElement | undefined): 'ltr' | 'rtl' {
-  if (!el) return 'ltr'
-  const withDir = el.closest('[dir]')
-  const attr = withDir?.getAttribute('dir')
-  if (attr === 'rtl' || attr === 'ltr') return attr
-  if (typeof getComputedStyle === 'function') {
-    return getComputedStyle(el).direction === 'rtl' ? 'rtl' : 'ltr'
-  }
-  return 'ltr'
-}

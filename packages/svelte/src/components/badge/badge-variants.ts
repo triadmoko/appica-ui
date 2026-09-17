@@ -54,7 +54,7 @@ const badgeVariants = cva(
           '[a,button]:hover:before:bg-background-subtle [a,button]:hover:before:border-border-strong',
           '[a,button]:data-pressed:before:bg-background-subtle [a,button]:data-pressed:before:border-border-strong',
           '[a,button]:data-popup-open:before:bg-background-subtle [a,button]:data-popup-open:before:border-border-strong',
-          'data-active:before:border-border-strong',
+          'data-active:before:bg-background-subtle data-active:before:border-border-strong',
         ),
         error: cn(
           backgroundLayer,

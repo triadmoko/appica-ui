@@ -3,7 +3,7 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & {
+  export type AvatarBadgeProps = HTMLAttributes<HTMLSpanElement> & {
     /**
      * Add a pulsing ping behind the dot (skipped under reduced motion).
      * @default false
@@ -12,7 +12,7 @@
     children?: Snippet
   }
 
-  let { animate = false, class: className, children, ...rest }: Props = $props()
+  let { animate = false, class: className, children, ...rest }: AvatarBadgeProps = $props()
 </script>
 
 <span

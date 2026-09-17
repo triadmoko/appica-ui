@@ -1,6 +1,6 @@
 import { tick } from 'svelte'
 import { render, screen } from '@testing-library/svelte'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import AvatarGroupHost from './avatar-group.test-host.svelte'
 import AvatarHost from './avatar.test-host.svelte'
@@ -8,6 +8,10 @@ import AvatarHost from './avatar.test-host.svelte'
 const ROUNDED_RADIUS_CLASS = 'rounded-[calc(tan(atan2(var(--radius-md),2.5rem))*100%)]'
 
 describe('Avatar', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('renders a root with data-slot and default md size + circle shape', () => {
     const { container } = render(AvatarHost)
 
@@ -77,6 +81,52 @@ describe('Avatar', () => {
     expect(img.getAttribute('alt')).toBe('Jane Doe')
     expect(img.className).toContain('object-cover')
     expect(img.className).toContain('rounded-[inherit]')
+  })
+
+  it('keeps the image hidden until it loads so the fallback is not crushed', async () => {
+    const { container } = render(AvatarHost, {
+      props: { src: 'https://example.com/jane.jpg', alt: 'Jane Doe' },
+    })
+
+    const img = container.querySelector('[data-slot="avatar-image"]') as HTMLImageElement
+    expect(img.className.split(/\s+/)).toContain('hidden')
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).not.toBeNull()
+
+    img.dispatchEvent(new Event('load'))
+    await tick()
+
+    expect(img.className.split(/\s+/)).not.toContain('hidden')
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).toBeNull()
+  })
+
+  it('holds the fallback off until delay elapses when the image is still loading', async () => {
+    vi.useFakeTimers()
+    const { container } = render(AvatarHost, {
+      props: { src: 'https://example.com/jane.jpg', alt: 'Jane Doe', delay: 200 },
+    })
+
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).toBeNull()
+
+    await vi.advanceTimersByTimeAsync(200)
+    await tick()
+
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).not.toBeNull()
+  })
+
+  it('does not flash the fallback when the image loads before delay elapses', async () => {
+    vi.useFakeTimers()
+    const { container } = render(AvatarHost, {
+      props: { src: 'https://example.com/jane.jpg', alt: 'Jane Doe', delay: 500 },
+    })
+
+    const img = container.querySelector('[data-slot="avatar-image"]') as HTMLImageElement
+    img.dispatchEvent(new Event('load'))
+    await tick()
+
+    await vi.advanceTimersByTimeAsync(500)
+    await tick()
+
+    expect(container.querySelector('[data-slot="avatar-fallback"]')).toBeNull()
   })
 
   it('AvatarBadge renders a dot without ping span by default', () => {

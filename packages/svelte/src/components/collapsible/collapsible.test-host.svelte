@@ -7,16 +7,24 @@
     defaultOpen,
     disabled,
     keepMounted,
+    hiddenUntilFound,
+    rootClass,
+    triggerClass,
+    contentClass,
   }: {
     defaultOpen?: boolean
     disabled?: boolean
     keepMounted?: boolean
+    hiddenUntilFound?: boolean
+    rootClass?: string
+    triggerClass?: string
+    contentClass?: string
   } = $props()
 </script>
 
-<Collapsible {defaultOpen} {disabled}>
-  <CollapsibleTrigger>Toggle</CollapsibleTrigger>
-  <CollapsibleContent {keepMounted}>
+<Collapsible {defaultOpen} {disabled} class={rootClass}>
+  <CollapsibleTrigger class={triggerClass}>Toggle</CollapsibleTrigger>
+  <CollapsibleContent {keepMounted} {hiddenUntilFound} class={contentClass}>
     <p>Panel body</p>
   </CollapsibleContent>
 </Collapsible>

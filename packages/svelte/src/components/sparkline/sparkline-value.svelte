@@ -5,12 +5,12 @@
   import { getSparklineContext } from './sparkline-context'
   import { formatNumber } from './sparkline-geometry'
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type SparklineValueProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     /** Render snippet to fully customize the displayed text. Omit for the number. */
     children?: Snippet<[string, number]>
   }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: SparklineValueProps = $props()
 
   const ctx = getSparklineContext()
   const data = $derived(ctx.data())

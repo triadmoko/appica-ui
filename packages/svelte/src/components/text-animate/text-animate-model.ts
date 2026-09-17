@@ -11,8 +11,10 @@ export interface TextAnimateUnitContext {
   reduced: boolean
 }
 
+export type TextAnimateStyle = Record<string, string | number>
+
 export interface TextAnimateEffectResult {
-  style?: Record<string, string>
+  style?: TextAnimateStyle
   className?: string
   content?: string
   caret?: boolean
@@ -24,7 +26,7 @@ export type TextAnimateEffect = (progress: number, ctx: TextAnimateUnitContext) 
 export type TextAnimateContainerEffect = (
   progress: number,
   ctx: { reduced: boolean },
-) => { style?: Record<string, string>; className?: string }
+) => { style?: TextAnimateStyle; className?: string }
 
 interface PresetConfig {
   fn: TextAnimateEffect
@@ -188,7 +190,7 @@ export function clamp01(value: number): number {
   return value < 0 ? 0 : value > 1 ? 1 : value
 }
 
-export function cssStyle(style?: Record<string, string>): string | undefined {
+export function cssStyle(style?: TextAnimateStyle): string | undefined {
   if (!style) return undefined
   const parts: string[] = []
   for (const [key, value] of Object.entries(style)) {

@@ -39,6 +39,11 @@ describe('Separator', () => {
     expect(screen.getByRole('separator')).toHaveStyle({ opacity: '0.5' })
   })
 
+  it('leaves the accessibility tree when decorative is true', () => {
+    render(Separator, { props: { decorative: true } })
+    expect(screen.queryByRole('separator')).not.toBeInTheDocument()
+  })
+
   it('has no accessibility violations', async () => {
     const { container } = render(Separator)
     expect(await axe(container)).toHaveNoViolations()

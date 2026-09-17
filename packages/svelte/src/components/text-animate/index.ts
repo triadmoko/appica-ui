@@ -1,4 +1,5 @@
 export { default as TextAnimate } from './text-animate.svelte'
+export type { TextAnimateProps } from './text-animate.svelte'
 export type {
   TextAnimateEffect,
   TextAnimateEffectName,

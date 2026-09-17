@@ -17,7 +17,7 @@
     type TableSize,
   } from './table-variants'
 
-  type Props = HTMLTableAttributes & {
+  export type TableProps = HTMLTableAttributes & {
     /**
      * Cell padding, corner radius, and text scale.
      * @default 'md'
@@ -55,7 +55,7 @@
     class: className,
     children,
     ...rest
-  }: Props = $props()
+  }: TableProps = $props()
 </script>
 
 <table

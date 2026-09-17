@@ -1,23 +1,127 @@
 <script lang="ts">
-  import { Card, CardDescription, CardHeader, CardTitle, GradientGlow } from '@appica/ui-svelte'
+  import { onDestroy } from 'svelte'
+  import { Button, GradientGlow, Spinner } from '@appica/ui-svelte'
+
+  const PALETTES = [
+    { label: 'Sunset', from: '#FCA5A5', via: '#FDC49B', to: '#FCE3A6' },
+    { label: 'Ocean', from: '#9DE7D8', via: '#9CC0F9', to: '#BEB0F7' },
+    { label: 'Candy', from: '#F0ABFC', via: '#C4B5FD', to: '#93C5FD' },
+  ] as const
+
+  const LEVELS = ['md', 'lg', '2xl'] as const
+
+  let loading = $state(false)
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  function run() {
+    if (timer) clearTimeout(timer)
+    loading = true
+    timer = setTimeout(() => (loading = false), 5000)
+  }
+
+  onDestroy(() => {
+    if (timer) clearTimeout(timer)
+  })
 </script>
 
-<section class="flex flex-col gap-6">
+<section class="flex flex-col gap-8">
   <h2 class="text-foreground-emphasis text-lg font-semibold">GradientGlow</h2>
-  <GradientGlow class="p-4">
-    <Card class="bg-background">
-      <CardHeader>
-        <CardTitle>Always on</CardTitle>
-        <CardDescription>Aura rotates behind the card.</CardDescription>
-      </CardHeader>
-    </Card>
-  </GradientGlow>
-  <GradientGlow border revealOn="hover" class="p-4">
-    <Card class="bg-background">
-      <CardHeader>
-        <CardTitle>Hover to reveal</CardTitle>
-        <CardDescription>Glow and border appear on hover.</CardDescription>
-      </CardHeader>
-    </Card>
-  </GradientGlow>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Basic glow</p>
+    <GradientGlow class="w-full max-w-80">
+      <div
+        class="bg-background text-foreground-intense flex min-h-32 w-full items-center justify-center rounded-2xl px-6 text-center text-sm font-medium"
+      >
+        How can I assist you today?
+      </div>
+    </GradientGlow>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Animated gradient border</p>
+    <GradientGlow border blur="xl" class="w-full max-w-80">
+      <div
+        class="bg-background text-foreground-intense flex min-h-32 w-full items-center justify-center rounded-2xl px-6 text-center text-sm font-medium"
+      >
+        Smart comparison
+      </div>
+    </GradientGlow>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Custom colors</p>
+    <div class="flex flex-wrap items-center justify-center gap-8">
+      {#each PALETTES as p (p.label)}
+        <GradientGlow from={p.from} via={p.via} to={p.to}>
+          <div
+            class="bg-background text-foreground-intense flex size-28 items-center justify-center rounded-2xl text-sm font-medium"
+          >
+            {p.label}
+          </div>
+        </GradientGlow>
+      {/each}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Blur / softness</p>
+    <div class="flex flex-wrap items-center justify-center gap-10">
+      {#each LEVELS as blur (blur)}
+        <GradientGlow {blur}>
+          <div
+            class="bg-background text-foreground-intense flex size-28 items-center justify-center rounded-2xl text-sm font-medium"
+          >
+            blur="{blur}"
+          </div>
+        </GradientGlow>
+      {/each}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Reveal on interaction</p>
+    <div class="flex flex-wrap items-center justify-center gap-8">
+      <GradientGlow revealOn="hover" pressScale border showOnTouch blur="md" class="rounded-full">
+        <Button variant="outline" size="lg" class="rounded-full">Hover me</Button>
+      </GradientGlow>
+      <GradientGlow revealOn="press" pressScale border blur="md" class="rounded-full">
+        <Button variant="outline" size="lg" class="rounded-full">Press me</Button>
+      </GradientGlow>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <p class="text-foreground-muted text-sm">Controlled (loading state)</p>
+    <div class="flex flex-wrap items-center">
+      <GradientGlow reveal={loading} border blur="md" speed={3} class="rounded-full">
+        <Button variant="outline" size="lg" class="rounded-full" onclick={run}>
+          {#if loading}
+            <Spinner variant="sparkle" currentColor data-icon="start" class="text-xl" />
+          {:else}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.85"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              data-icon="start"
+            >
+              <path
+                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+              ></path>
+              <path d="M20 3v4"></path>
+              <path d="M22 5h-4"></path>
+              <path d="M4 17v2"></path>
+              <path d="M5 18H3"></path>
+            </svg>
+          {/if}
+          {loading ? 'Thinking…' : 'Ask AI'}
+        </Button>
+      </GradientGlow>
+    </div>
+  </div>
 </section>

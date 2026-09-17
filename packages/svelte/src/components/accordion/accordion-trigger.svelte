@@ -12,7 +12,7 @@
   } from './accordion-context'
   import { iconBoxVariants, triggerVariants } from './accordion-variants'
 
-  type Props = HTMLButtonAttributes & {
+  export type AccordionTriggerProps = HTMLButtonAttributes & {
     /** Override the root's icon for this trigger. */
     icon?: AccordionIcon
     /** Override the root's icon style. */
@@ -22,7 +22,7 @@
     children?: Snippet
   }
 
-  let { class: className, icon, iconVariant, iconPosition, children, ...rest }: Props = $props()
+  let { class: className, icon, iconVariant, iconPosition, children, ...rest }: AccordionTriggerProps = $props()
 
   const root = getAccordionContext()
   const item = getAccordionItemContext()
@@ -44,44 +44,36 @@
   const classes = $derived(cn(triggerVariants({ variant }), className))
 </script>
 
+{#snippet indicator()}
+  {#if resolvedIcon !== false}
+    <span class="inline-flex h-lh items-center">
+      {#if resolvedIconVariant === 'icon-box'}
+        <span data-slot="accordion-trigger-icon-box" class={iconBoxVariants({ variant })}>
+          {#if resolvedIcon === 'plus'}
+            {@render plusIcon(svgSize)}
+          {:else}
+            {@render chevronIcon(svgSize)}
+          {/if}
+        </span>
+      {:else if resolvedIcon === 'plus'}
+        {@render plusIcon(svgSize)}
+      {:else}
+        {@render chevronIcon(svgSize)}
+      {/if}
+    </span>
+  {/if}
+{/snippet}
+
 <BitsAccordion.Header data-slot="accordion-header" class="flex">
   <BitsAccordion.Trigger data-slot="accordion-trigger" class={classes} {...asBitsAttrs(rest)}>
-    {#if resolvedIcon !== false && resolvedIconPosition === 'start'}
-      <span class="inline-flex h-lh items-center">
-        {#if resolvedIconVariant === 'icon-box'}
-          <span data-slot="accordion-trigger-icon-box" class={iconBoxVariants({ variant })}>
-            {#if resolvedIcon === 'plus'}
-              {@render plusIcon(svgSize)}
-            {:else}
-              {@render chevronIcon(svgSize)}
-            {/if}
-          </span>
-        {:else if resolvedIcon === 'plus'}
-          {@render plusIcon(svgSize)}
-        {:else}
-          {@render chevronIcon(svgSize)}
-        {/if}
-      </span>
+    {#if resolvedIconPosition === 'start'}
+      {@render indicator()}
     {/if}
     <span class="flex flex-1 items-start gap-3.5 text-start">
       {@render children?.()}
     </span>
-    {#if resolvedIcon !== false && resolvedIconPosition === 'end'}
-      <span class="inline-flex h-lh items-center">
-        {#if resolvedIconVariant === 'icon-box'}
-          <span data-slot="accordion-trigger-icon-box" class={iconBoxVariants({ variant })}>
-            {#if resolvedIcon === 'plus'}
-              {@render plusIcon(svgSize)}
-            {:else}
-              {@render chevronIcon(svgSize)}
-            {/if}
-          </span>
-        {:else if resolvedIcon === 'plus'}
-          {@render plusIcon(svgSize)}
-        {:else}
-          {@render chevronIcon(svgSize)}
-        {/if}
-      </span>
+    {#if resolvedIconPosition === 'end'}
+      {@render indicator()}
     {/if}
   </BitsAccordion.Trigger>
 </BitsAccordion.Header>

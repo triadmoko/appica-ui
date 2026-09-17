@@ -3,7 +3,7 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type CardDescriptionProps = HTMLAttributes<HTMLElement> & {
     /**
      * Root tag.
      * @default 'p'
@@ -12,7 +12,7 @@
     children?: Snippet
   }
 
-  let { class: className, el = 'p', children, ...rest }: Props = $props()
+  let { class: className, el = 'p', children, ...rest }: CardDescriptionProps = $props()
 </script>
 
 <svelte:element this={el} data-slot="card-description" class={cn('text-foreground-muted text-sm', className)} {...rest}>

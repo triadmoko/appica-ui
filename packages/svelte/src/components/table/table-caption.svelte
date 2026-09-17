@@ -3,7 +3,7 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type TableCaptionProps = HTMLAttributes<HTMLElement> & {
     /**
      * Render the caption above or below the table.
      * @default 'bottom'
@@ -12,7 +12,7 @@
     children?: Snippet
   }
 
-  let { position = 'bottom', class: className, children, ...rest }: Props = $props()
+  let { position = 'bottom', class: className, children, ...rest }: TableCaptionProps = $props()
 </script>
 
 <caption

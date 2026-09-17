@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { DirectionProvider } from '../../providers/direction-provider'
+  import type { Direction } from '../../providers/direction-provider/direction-context'
   import Sparkline from './sparkline.svelte'
   import SparklineChart from './sparkline-chart.svelte'
   import SparklineLabel from './sparkline-label.svelte'
@@ -21,6 +23,7 @@
     chartClass,
     ariaLabel,
     rtl = false,
+    direction,
     testId,
   }: {
     data?: number[]
@@ -38,11 +41,12 @@
     chartClass?: string
     ariaLabel?: string
     rtl?: boolean
+    direction?: Direction
     testId?: string
   } = $props()
 </script>
 
-<div dir={rtl ? 'rtl' : undefined}>
+{#snippet chart()}
   <Sparkline {data} {labels} {color} {format} {locale} {onActiveChange} data-testid={testId}>
     {#if showValue}
       <SparklineValue />
@@ -52,4 +56,14 @@
     {/if}
     <SparklineChart {variant} {fill} {indicator} {tooltip} class={chartClass} aria-label={ariaLabel} />
   </Sparkline>
-</div>
+{/snippet}
+
+{#if direction}
+  <DirectionProvider dir={direction}>
+    {@render chart()}
+  </DirectionProvider>
+{:else}
+  <div dir={rtl ? 'rtl' : undefined}>
+    {@render chart()}
+  </div>
+{/if}

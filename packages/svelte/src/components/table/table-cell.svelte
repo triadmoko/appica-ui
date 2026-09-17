@@ -2,8 +2,8 @@
   import type { HTMLTdAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
 
-  type Props = HTMLTdAttributes & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type TableCellProps = HTMLTdAttributes & { children?: Snippet }
+  let { class: className, children, ...rest }: TableCellProps = $props()
 </script>
 
 <td data-slot="table-cell" class={className} {...rest}>

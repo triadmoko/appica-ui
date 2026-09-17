@@ -6,18 +6,26 @@
     orientation = 'vertical',
     scrollShadow = false,
     scrollbarVisibility = 'always',
+    overflowEdgeThreshold = 0,
     class: className = 'h-40 w-80',
     children,
   }: {
     orientation?: 'vertical' | 'horizontal' | 'both'
     scrollShadow?: boolean
     scrollbarVisibility?: 'always' | 'auto' | 'never'
+    overflowEdgeThreshold?: number
     class?: string
     children?: Snippet
   } = $props()
 </script>
 
-<ScrollArea {orientation} {scrollShadow} {scrollbarVisibility} class={className}>
+<ScrollArea
+  {orientation}
+  {scrollShadow}
+  {scrollbarVisibility}
+  {overflowEdgeThreshold}
+  class={className}
+>
   {#if children}
     {@render children()}
   {:else}

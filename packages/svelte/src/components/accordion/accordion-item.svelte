@@ -6,7 +6,7 @@
   import { getAccordionContext, setAccordionItemContext, type AccordionVariant } from './accordion-context'
   import { itemVariants } from './accordion-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AccordionItemProps = HTMLAttributes<HTMLDivElement> & {
     /** Identity of this item. Required for controlled `value`. */
     value: string
     /** Override the root's `variant` for this item. */
@@ -19,7 +19,7 @@
     children?: Snippet
   }
 
-  let { class: className, value, variant, disabled, children, ...rest }: Props = $props()
+  let { class: className, value, variant, disabled, children, ...rest }: AccordionItemProps = $props()
 
   const root = getAccordionContext()
   const resolvedVariant = $derived(variant ?? root.variant)

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
+  import type { HTMLAttributes, HTMLFormAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
@@ -7,7 +7,7 @@
   const FRAME_RADIUS = 'rounded-[calc(var(--card-radius)*4/3)]'
 
   type CardFrame = 'none' | 'solid' | 'glass'
-  type CardEl = 'div' | 'article' | 'li' | 'section' | 'aside'
+  type CardEl = 'div' | 'article' | 'li' | 'section' | 'aside' | 'form'
 
   const frameVariants: Record<CardFrame, string> = {
     none: 'rounded-(--card-radius)',
@@ -21,7 +21,8 @@
     glass: '',
   }
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type CardProps = HTMLAttributes<HTMLElement> &
+    Pick<HTMLFormAttributes, 'onsubmit' | 'action' | 'method' | 'novalidate'> & {
     /**
      * Wrap the content in a padded frame. `true` is an alias for `'solid'`; `'glass'` is translucent and blurred.
      * @default false
@@ -37,8 +38,9 @@
      * @default 'div'
      */
     el?: CardEl
-    children?: Snippet
+    /** Escape hatch for the inner content wrapper - e.g. `{ class: 'sm:flex-row' }` for a horizontal card. */
     contentProps?: HTMLAttributes<HTMLDivElement>
+    children?: Snippet
   }
 
   let {
@@ -49,7 +51,7 @@
     contentProps,
     children,
     ...rest
-  }: Props = $props()
+  }: CardProps = $props()
 
   const variant: CardFrame = $derived(frame === true ? 'solid' : frame === false ? 'none' : frame)
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import { cn } from '../../internal/utils'
   import type { CarouselOrientation } from './carousel-types'
 
@@ -16,7 +17,7 @@
 
   let armed = $state(false)
 
-  $effect(() => {
+  onMount(() => {
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {

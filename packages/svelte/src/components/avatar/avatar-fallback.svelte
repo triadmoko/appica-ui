@@ -4,11 +4,38 @@
   import { cn } from '../../internal/utils'
   import { getAvatarContext } from './avatar-context'
 
-  type Props = HTMLAttributes<HTMLSpanElement> & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type AvatarFallbackProps = HTMLAttributes<HTMLSpanElement> & {
+    /**
+     * Milliseconds to wait before showing the fallback (avoids a flash on fast loads).
+     */
+    delay?: number
+    children?: Snippet
+  }
+
+  let { class: className, children, delay, ...rest }: AvatarFallbackProps = $props()
 
   const avatar = getAvatarContext()
-  const show = $derived(!avatar || avatar.status !== 'loaded')
+  let delayElapsed = $state(true)
+
+  $effect.pre(() => {
+    const ms = delay
+    if (ms == null || ms <= 0) {
+      delayElapsed = true
+    } else {
+      delayElapsed = false
+    }
+  })
+
+  $effect(() => {
+    const ms = delay
+    if (ms == null || ms <= 0) return
+    const id = setTimeout(() => {
+      delayElapsed = true
+    }, ms)
+    return () => clearTimeout(id)
+  })
+
+  const show = $derived((!avatar || avatar.status !== 'loaded') && delayElapsed)
 </script>
 
 {#if show}

@@ -2,8 +2,8 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
 
-  type Props = HTMLAttributes<HTMLTableSectionElement> & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> & { children?: Snippet }
+  let { class: className, children, ...rest }: TableBodyProps = $props()
 </script>
 
 <tbody data-slot="table-body" class={className} {...rest}>

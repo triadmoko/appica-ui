@@ -12,7 +12,7 @@
     type AccordionVariant,
   } from './accordion-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AccordionProps = HTMLAttributes<HTMLDivElement> & {
     /** Controlled open item(s). A string when single, an array when `multiple`. */
     value?: string | string[]
     /** Uncontrolled initial value. */
@@ -49,6 +49,16 @@
      * @default false
      */
     disabled?: boolean
+    /**
+     * Keep closed panels in the DOM (e.g. for in-page search / SEO).
+     * @default false
+     */
+    keepMounted?: boolean
+    /**
+     * Let the browser's find-in-page expand the panel. Implies `keepMounted`.
+     * @default false
+     */
+    hiddenUntilFound?: boolean
     children?: Snippet
   }
 
@@ -63,9 +73,11 @@
     iconVariant = 'icon',
     iconPosition = 'end',
     disabled,
+    keepMounted = false,
+    hiddenUntilFound = false,
     children,
     ...rest
-  }: Props = $props()
+  }: AccordionProps = $props()
 
   setAccordionContext({
     get variant() {
@@ -79,6 +91,12 @@
     },
     get iconPosition() {
       return iconPosition
+    },
+    get keepMounted() {
+      return keepMounted
+    },
+    get hiddenUntilFound() {
+      return hiddenUntilFound
     },
   })
 

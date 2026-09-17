@@ -10,6 +10,8 @@ export interface AccordionContextValue {
   icon: AccordionIcon
   iconVariant: AccordionIconVariant
   iconPosition: AccordionIconPosition
+  keepMounted: boolean
+  hiddenUntilFound: boolean
 }
 
 const ROOT_KEY = Symbol('appica-accordion')
@@ -20,6 +22,8 @@ const DEFAULT_CONTEXT: AccordionContextValue = {
   icon: 'chevron',
   iconVariant: 'icon',
   iconPosition: 'end',
+  keepMounted: false,
+  hiddenUntilFound: false,
 }
 
 export function setAccordionContext(value: AccordionContextValue) {

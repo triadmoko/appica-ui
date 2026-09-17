@@ -172,6 +172,16 @@ describe('Sparkline', () => {
     expect(onActiveChange).toHaveBeenLastCalledWith(expect.objectContaining({ index: DATA.length - 1 }))
   })
 
+  it('mirrors the active index under DirectionProvider rtl', async () => {
+    const onActiveChange = vi.fn()
+    render(SparklineHost, { props: { data: DATA, onActiveChange, direction: 'rtl' } })
+    const chart = screen.getByRole('img')
+    stubRect(chart, 100)
+    dispatchPointer(chart, 'pointermove', { clientX: 0 })
+    await tick()
+    expect(onActiveChange).toHaveBeenLastCalledWith(expect.objectContaining({ index: DATA.length - 1 }))
+  })
+
   it('forwards class onto the chart wrapper', () => {
     render(SparklineHost, { props: { data: DATA, chartClass: 'custom-chart', ariaLabel: 'Revenue' } })
     expect(screen.getByRole('img', { name: 'Revenue' }).className).toContain('custom-chart')

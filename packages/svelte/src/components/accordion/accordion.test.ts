@@ -1,8 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from 'vitest-axe'
 import AccordionHost from './accordion.test-host.svelte'
+import AccordionControlledHost from './accordion.controlled-host.svelte'
 
 describe('Accordion', () => {
   it('renders trigger with data-slot', () => {
@@ -99,6 +100,41 @@ describe('Accordion', () => {
     const trigger = screen.getByRole('button', { name: 'First' })
     const firstChild = trigger.firstElementChild
     expect(firstChild?.querySelector('[data-slot="accordion-icon"]')).not.toBeNull()
+  })
+
+  it('controlled mode: onValueChange fires with the next string', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    render(AccordionControlledHost, { props: { onValueChange } })
+
+    await user.click(screen.getByRole('button', { name: 'Toggle' }))
+    expect(onValueChange).toHaveBeenCalledTimes(1)
+    expect(onValueChange).toHaveBeenLastCalledWith('one')
+    await screen.findByText('Panel body')
+  })
+
+  it('controlled multiple: onValueChange fires with the next string array', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    render(AccordionControlledHost, { props: { multiple: true, onValueChange } })
+
+    await user.click(screen.getByRole('button', { name: 'Toggle' }))
+    expect(onValueChange).toHaveBeenLastCalledWith(['one'])
+    await user.click(screen.getByRole('button', { name: 'Second' }))
+    expect(onValueChange).toHaveBeenLastCalledWith(['one', 'two'])
+  })
+
+  it('keepMounted leaves closed panels in the DOM', () => {
+    render(AccordionHost, { props: { keepMounted: true } })
+    expect(screen.getByText('First body')).toBeInTheDocument()
+    expect(screen.getByText('Second body')).toBeInTheDocument()
+    expect(document.querySelector('[data-slot="accordion-content"]')).not.toBeNull()
+  })
+
+  it('hiddenUntilFound leaves closed panels in the DOM', () => {
+    render(AccordionHost, { props: { hiddenUntilFound: true } })
+    expect(screen.getByText('First body')).toBeInTheDocument()
+    expect(document.querySelector('[data-slot="accordion-content"]')).not.toBeNull()
   })
 
   it('has no a11y violations when open', async () => {

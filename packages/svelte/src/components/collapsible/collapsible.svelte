@@ -4,6 +4,7 @@
   import { untrack } from 'svelte'
   import { Collapsible as BitsCollapsible } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
+  import { setCollapsibleContext } from './collapsible-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & {
     /** Controlled open state. Pair with `onOpenChange` or `bind:open`. */
@@ -55,10 +56,17 @@
   }
 
   const classes = $derived(cn(className))
+
+  setCollapsibleContext({
+    get open() {
+      return innerOpen
+    },
+  })
 </script>
 
 <BitsCollapsible.Root
   data-slot="collapsible"
+  data-open={innerOpen ? '' : undefined}
   class={classes}
   bind:open={innerOpen}
   onOpenChange={handleOpenChange}

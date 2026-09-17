@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import { untrack } from 'svelte'
   import { cn } from '../../internal/utils'
   import {
     thumbnailVariants,
@@ -9,7 +10,11 @@
     type ThumbnailVariant,
   } from './thumbnail-variants'
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  type ThumbnailLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error'
+
+  const UNSET = Symbol('thumbnail-src')
+
+  export type ThumbnailProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /**
      * Image tile, or a colored icon tile.
      * @default 'image'
@@ -32,6 +37,8 @@
      * @default ''
      */
     alt?: string
+    /** Fires as the image moves through its loading lifecycle. */
+    onLoadingStatusChange?: (status: ThumbnailLoadingStatus) => void
     children?: Snippet
   }
 
@@ -43,9 +50,10 @@
     size = 'md',
     src,
     alt = '',
+    onLoadingStatusChange,
     children,
     ...rest
-  }: Props = $props()
+  }: ThumbnailProps = $props()
 
   const isNumeric = $derived(typeof size === 'number')
   const variantClass = $derived(
@@ -57,30 +65,47 @@
   )
   const numericStyle = $derived(isNumeric ? `font-size: ${size}px;` : '')
 
-  let status = $state<'loading' | 'loaded' | 'error'>('loading')
+  let status = $state<ThumbnailLoadingStatus>('idle')
+  let seenSrc: string | undefined | typeof UNSET = UNSET
+
+  // Reset when `src` changes. Loaded/error come from img events, so this cannot be $derived.
+  $effect.pre(() => {
+    const current = src
+    if (current === seenSrc) return
+    seenSrc = current
+    const next: ThumbnailLoadingStatus = current ? 'loading' : 'idle'
+    untrack(() => {
+      status = next
+      onLoadingStatusChange?.(next)
+    })
+  })
 
   function handleLoad() {
     status = 'loaded'
+    onLoadingStatusChange?.('loaded')
   }
 
   function handleError() {
     status = 'error'
+    onLoadingStatusChange?.('error')
   }
 </script>
 
 <div data-slot="thumbnail" class={cn(variantClass, className)} style="{numericStyle}{style ?? ''}" {...rest}>
   {#if variant === 'image'}
     {#if src && status !== 'error'}
-      <img
-        data-slot="thumbnail-image"
-        {src}
-        {alt}
-        class="size-full rounded-[inherit] object-cover"
-        onload={handleLoad}
-        onerror={handleError}
-      />
+      {#key src}
+        <img
+          data-slot="thumbnail-image"
+          {src}
+          {alt}
+          class={cn('size-full rounded-[inherit] object-cover', status !== 'loaded' && 'hidden')}
+          onload={handleLoad}
+          onerror={handleError}
+        />
+      {/key}
     {/if}
-    {#if !src || status !== 'loaded'}
+    {#if status !== 'loaded'}
       <span
         data-slot="thumbnail-fallback"
         class="text-foreground-subtle flex size-full items-center justify-center has-[svg]:text-[1em]"

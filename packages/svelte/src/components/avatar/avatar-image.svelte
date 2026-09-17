@@ -6,7 +6,7 @@
 
   const UNSET = Symbol('avatar-src')
 
-  type Props = HTMLImgAttributes & {
+  export type AvatarImageProps = HTMLImgAttributes & {
     src?: string
     alt?: string
     /**
@@ -23,7 +23,7 @@
     onerror,
     onLoadingStatusChange,
     ...rest
-  }: Props = $props()
+  }: AvatarImageProps = $props()
 
   const avatar = getAvatarContext()
 
@@ -60,7 +60,11 @@
       data-slot="avatar-image"
       {src}
       {alt}
-      class={cn('size-full rounded-[inherit] object-cover', className)}
+      class={cn(
+        'size-full rounded-[inherit] object-cover',
+        className,
+        avatar && avatar.status !== 'loaded' && 'hidden',
+      )}
       {...rest}
       onload={handleLoad}
       onerror={handleError}

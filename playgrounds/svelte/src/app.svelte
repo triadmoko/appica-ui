@@ -60,6 +60,7 @@
   import SpinnerScreen from './screens/spinner-screen.svelte'
   import SwitchScreen from './screens/switch-screen.svelte'
   import TableScreen from './screens/table-screen.svelte'
+  import DataTableScreen from './screens/data-table-screen.svelte'
   import TabsScreen from './screens/tabs-screen.svelte'
   import TextAnimateScreen from './screens/text-animate-screen.svelte'
   import TextareaScreen from './screens/textarea-screen.svelte'
@@ -133,6 +134,7 @@
     { id: 'spinner', label: 'Spinner' },
     { id: 'switch', label: 'Switch' },
     { id: 'table', label: 'Table' },
+    { id: 'data-table', label: 'DataTable' },
     { id: 'tabs', label: 'Tabs' },
     { id: 'text-animate', label: 'TextAnimate' },
     { id: 'thumbnail', label: 'Thumbnail' },
@@ -207,6 +209,7 @@
     spinner: SpinnerScreen,
     switch: SwitchScreen,
     table: TableScreen,
+    'data-table': DataTableScreen,
     tabs: TabsScreen,
     'text-animate': TextAnimateScreen,
     thumbnail: ThumbnailScreen,

@@ -5,7 +5,7 @@
   import { setAvatarGroupContext } from './avatar-context'
   import type { AvatarPresetSize, AvatarShape } from './avatar-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Full circle or rounded square. Applied to child avatars that omit their own.
      */
@@ -22,7 +22,7 @@
     children?: Snippet
   }
 
-  let { class: className, size, shape, orientation = 'horizontal', children, ...rest }: Props = $props()
+  let { class: className, size, shape, orientation = 'horizontal', children, ...rest }: AvatarGroupProps = $props()
 
   setAvatarGroupContext({
     get size() {

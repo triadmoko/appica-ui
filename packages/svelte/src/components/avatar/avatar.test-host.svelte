@@ -22,6 +22,7 @@
     onload,
     onerror,
     onLoadingStatusChange,
+    delay,
   }: {
     size?: AvatarPresetSize | number
     shape?: AvatarShape
@@ -37,12 +38,13 @@
     onload?: HTMLImgAttributes['onload']
     onerror?: HTMLImgAttributes['onerror']
     onLoadingStatusChange?: (status: AvatarStatus) => void
+    delay?: number
   } = $props()
 </script>
 
 <Avatar {size} {shape} class={className} {style} data-testid={testId}>
   <AvatarImage {src} {alt} {onload} {onerror} {onLoadingStatusChange} />
-  <AvatarFallback>{fallback}</AvatarFallback>
+  <AvatarFallback {delay}>{fallback}</AvatarFallback>
   {#if showBadge}
     <AvatarBadge animate={animateBadge} class={badgeClass} />
   {/if}

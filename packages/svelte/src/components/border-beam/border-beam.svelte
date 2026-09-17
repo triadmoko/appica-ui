@@ -7,7 +7,7 @@
 
   const RING_MASK = 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type BorderBeamProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Beam color. It lights the head of the comet and fades to transparent along the tail, so pass a solid color
      * rather than a gradient.
@@ -69,7 +69,7 @@
     style,
     children,
     ...rest
-  }: Props = $props()
+  }: BorderBeamProps = $props()
 
   const triggers = $derived(revealOn == null ? [] : Array.isArray(revealOn) ? revealOn : [revealOn])
   const managed = $derived(triggers.length > 0 || reveal !== undefined)

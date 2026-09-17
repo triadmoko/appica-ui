@@ -3,8 +3,8 @@
   import type { Snippet } from 'svelte'
   import { cn } from '../../internal/utils'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
-  let { class: className, children, ...rest }: Props = $props()
+  export type CardFooterProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  let { class: className, children, ...rest }: CardFooterProps = $props()
 </script>
 
 <div

@@ -13,7 +13,7 @@
     type TextAnimateSegment,
   } from './text-animate-model'
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type TextAnimateProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
     /** The text to animate. Use `\n` for explicit line breaks. */
     text: string
     /**
@@ -68,7 +68,7 @@
     stagger,
     class: className,
     ...rest
-  }: Props = $props()
+  }: TextAnimateProps = $props()
 
   const reducedMotion = useReducedMotion()
   const preset = $derived(resolvePreset(effectProp))
@@ -82,7 +82,7 @@
   let clock = $state(0)
   let visible = $state(true)
 
-  $effect(() => {
+  $effect.pre(() => {
     if (controlled) clock = clamp01(progress ?? 0)
     else if (!autoPlay) clock = 1
   })

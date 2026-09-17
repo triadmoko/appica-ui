@@ -1,7 +1,47 @@
-import { render } from '@testing-library/svelte'
+import { fireEvent, render } from '@testing-library/svelte'
+import { tick } from 'svelte'
 import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
 import ScrollAreaHost from './scroll-area.test-host.svelte'
+
+async function mockOverflow(
+  container: HTMLElement,
+  dims: {
+    scrollHeight?: number
+    clientHeight?: number
+    scrollWidth?: number
+    clientWidth?: number
+    scrollTop?: number
+    scrollLeft?: number
+  } = {},
+) {
+  const viewport = container.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement
+  let scrollTop = dims.scrollTop ?? 0
+  let scrollLeft = dims.scrollLeft ?? 0
+  Object.defineProperties(viewport, {
+    scrollHeight: { configurable: true, get: () => dims.scrollHeight ?? 400 },
+    clientHeight: { configurable: true, get: () => dims.clientHeight ?? 160 },
+    scrollWidth: { configurable: true, get: () => dims.scrollWidth ?? 320 },
+    clientWidth: { configurable: true, get: () => dims.clientWidth ?? 320 },
+    scrollTop: {
+      configurable: true,
+      get: () => scrollTop,
+      set: (value: number) => {
+        scrollTop = value
+      },
+    },
+    scrollLeft: {
+      configurable: true,
+      get: () => scrollLeft,
+      set: (value: number) => {
+        scrollLeft = value
+      },
+    },
+  })
+  fireEvent.scroll(viewport)
+  await tick()
+  return viewport
+}
 
 describe('ScrollArea', () => {
   it('renders viewport + content + a single vertical scrollbar by default', () => {
@@ -38,8 +78,9 @@ describe('ScrollArea', () => {
     expect(viewport.className).toContain('mask-image:linear-gradient')
   })
 
-  it('omits hover-reveal classes when scrollbarVisibility defaults to "always"', () => {
+  it('omits hover-reveal classes when scrollbarVisibility defaults to "always"', async () => {
     const { container } = render(ScrollAreaHost)
+    await mockOverflow(container)
     const scrollbar = container.querySelector('[data-slot="scroll-area-scrollbar"]') as HTMLElement | null
     if (scrollbar) {
       expect(scrollbar.getAttribute('data-visibility')).toBe('always')
@@ -47,8 +88,9 @@ describe('ScrollArea', () => {
     }
   })
 
-  it('applies auto-reveal classes when scrollbarVisibility="auto"', () => {
+  it('applies auto-reveal classes when scrollbarVisibility="auto"', async () => {
     const { container } = render(ScrollAreaHost, { props: { scrollbarVisibility: 'auto' } })
+    await mockOverflow(container)
     const scrollbar = container.querySelector('[data-slot="scroll-area-scrollbar"]') as HTMLElement | null
     if (scrollbar) {
       expect(scrollbar.getAttribute('data-visibility')).toBe('auto')
@@ -60,8 +102,9 @@ describe('ScrollArea', () => {
     }
   })
 
-  it('does not render the scrollbar when scrollbarVisibility="never"', () => {
+  it('does not render the scrollbar when scrollbarVisibility="never"', async () => {
     const { container } = render(ScrollAreaHost, { props: { scrollbarVisibility: 'never', orientation: 'both' } })
+    await mockOverflow(container, { scrollWidth: 640, clientWidth: 320 })
     expect(container.querySelector('[data-slot="scroll-area-scrollbar"]')).toBeNull()
     expect(container.querySelector('[data-slot="scroll-area-corner"]')).toBeNull()
     expect(container.querySelector('[data-slot="scroll-area-viewport"]')).not.toBeNull()
@@ -74,10 +117,53 @@ describe('ScrollArea', () => {
     expect(root.className).toContain('relative')
   })
 
+  it('makes the viewport keyboard-focusable', () => {
+    const { container } = render(ScrollAreaHost)
+    const viewport = container.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement
+    expect(viewport.getAttribute('tabindex')).toBe('0')
+  })
+
+  it('keeps scrollbars decorative', async () => {
+    const { container } = render(ScrollAreaHost)
+    await mockOverflow(container)
+    const scrollbar = container.querySelector('[data-slot="scroll-area-scrollbar"]') as HTMLElement | null
+    if (scrollbar) {
+      expect(scrollbar.getAttribute('role')).toBeNull()
+      expect(scrollbar.getAttribute('aria-hidden')).toBe('true')
+    }
+  })
+
+  it('pins the vertical scrollbar to the inline end edge', async () => {
+    const { container } = render(ScrollAreaHost)
+    await mockOverflow(container)
+    const scrollbar = container.querySelector('[data-slot="scroll-area-scrollbar"]') as HTMLElement | null
+    if (scrollbar) {
+      expect(scrollbar.className).toContain('inset-e-0')
+      expect(scrollbar.className).not.toContain('right-0')
+    }
+  })
+
+  it('zeros overflow CSS vars below overflowEdgeThreshold', async () => {
+    const { container } = render(ScrollAreaHost, {
+      props: { overflowEdgeThreshold: 10, scrollShadow: true },
+    })
+    const viewport = await mockOverflow(container, { scrollTop: 5, scrollHeight: 400, clientHeight: 160 })
+    expect(viewport.style.getPropertyValue('--scroll-area-overflow-y-start')).toBe('0px')
+  })
+
+  it('applies overflow CSS vars once overflowEdgeThreshold is passed', async () => {
+    const { container } = render(ScrollAreaHost, {
+      props: { overflowEdgeThreshold: 10, scrollShadow: true },
+    })
+    const viewport = await mockOverflow(container, { scrollTop: 24, scrollHeight: 400, clientHeight: 160 })
+    expect(viewport.style.getPropertyValue('--scroll-area-overflow-y-start')).toBe('24px')
+  })
+
   it('has no accessibility violations', async () => {
     const { container } = render(ScrollAreaHost, {
       props: { scrollShadow: true, scrollbarVisibility: 'auto', orientation: 'both' },
     })
+    await mockOverflow(container, { scrollWidth: 640, clientWidth: 320 })
     expect(await axe(container)).toHaveNoViolations()
   })
 })

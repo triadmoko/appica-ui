@@ -92,6 +92,16 @@ describe('TextAnimate', () => {
     expect(ctx).toMatchObject({ total: 2, by: 'char', globalProgress: 0.5 })
   })
 
+  it('applies numeric custom-effect style values to each unit', () => {
+    const effect = () => ({ style: { opacity: 0.4 } })
+    const { container } = render(TextAnimate, {
+      props: { text: 'ab', effect, by: 'char' as const, stagger: 0, progress: 1 },
+    })
+    const units = container.querySelectorAll('[data-slot="text-animate-unit"]')
+    expect((units[0] as HTMLElement).style.opacity).toBe('0.4')
+    expect((units[1] as HTMLElement).style.opacity).toBe('0.4')
+  })
+
   it('advances the built-in clock with requestAnimationFrame to reveal text over time', async () => {
     let t = 0
     vi.spyOn(performance, 'now').mockImplementation(() => t)

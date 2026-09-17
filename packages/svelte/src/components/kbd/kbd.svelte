@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { getKbdGroupContext, SIZE_CLASSES, type KbdSize } from './kbd-context'
 
-  type Props = HTMLAttributes<HTMLElement> & {
+  export type KbdProps = HTMLAttributes<HTMLElement> & {
     /**
      * Height, padding, and text scale. Inherited from a `KbdGroup`.
      * @default 'md'
@@ -13,7 +13,7 @@
     children?: Snippet
   }
 
-  let { class: className, size, children, ...rest }: Props = $props()
+  let { class: className, size, children, ...rest }: KbdProps = $props()
 
   const group = getKbdGroupContext()
   const resolvedSize = $derived(size ?? group?.size ?? 'md')

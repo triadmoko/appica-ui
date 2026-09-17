@@ -13,6 +13,8 @@
     icon,
     iconVariant,
     iconPosition,
+    keepMounted,
+    hiddenUntilFound,
   }: {
     defaultValue?: string | string[]
     disabled?: boolean
@@ -21,10 +23,12 @@
     icon?: AccordionIcon
     iconVariant?: AccordionIconVariant
     iconPosition?: AccordionIconPosition
+    keepMounted?: boolean
+    hiddenUntilFound?: boolean
   } = $props()
 </script>
 
-<Accordion {defaultValue} {disabled} {multiple} {icon} {iconVariant} {iconPosition}>
+<Accordion {defaultValue} {disabled} {multiple} {icon} {iconVariant} {iconPosition} {keepMounted} {hiddenUntilFound}>
   <AccordionItem value="one" disabled={itemDisabled}>
     <AccordionTrigger>First</AccordionTrigger>
     <AccordionContent>
