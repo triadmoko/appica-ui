@@ -48,7 +48,7 @@
      */
     showOnTouch?: boolean
     /**
-     * Scale the beam down while pressed, to track a child `Button`'s own active-press scale.
+     * Scale the wrapper with a child `Button`'s press motion, so the beam stays on the border.
      * @default false
      */
     pressScale?: boolean
@@ -74,20 +74,11 @@
   const triggers = $derived(revealOn == null ? [] : Array.isArray(revealOn) ? revealOn : [revealOn])
   const managed = $derived(triggers.length > 0 || reveal !== undefined)
   const grouped = $derived(managed || pressScale)
-  const transition = $derived(
-    managed && pressScale
-      ? '[transition:opacity_500ms_ease-out,scale_150ms_ease-out,translate_150ms_ease-out]'
-      : managed
-        ? 'transition-opacity duration-500 ease-out'
-        : pressScale
-          ? '[transition:scale_150ms_ease-out,translate_150ms_ease-out]'
-          : undefined,
-  )
   const ringClasses = $derived(
     cn(
       'pointer-events-none absolute inset-0 rounded-[inherit] rtl:transform-[scaleX(-1)]',
       'motion-safe:animate-border-beam motion-reduce:hidden',
-      managed && 'opacity-0 [animation-play-state:paused]',
+      managed && 'opacity-0 [animation-play-state:paused] transition-opacity duration-500 ease-out',
       managed &&
         triggers.includes('hover') &&
         'group-hover/beam:opacity-100 group-hover/beam:[animation-play-state:running]',
@@ -99,8 +90,6 @@
         triggers.includes('press') &&
         'group-active/beam:opacity-100 group-active/beam:[animation-play-state:running]',
       managed && reveal && 'opacity-100 [animation-play-state:running]',
-      pressScale && 'group-active/beam:translate-y-px group-active/beam:scale-[0.97]',
-      transition,
     ),
   )
   const rootStyle = $derived(

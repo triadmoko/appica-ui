@@ -1,13 +1,16 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { filterItems, stringifyItem } from '../../internal/collection-filter'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setComboboxContext, type ComboboxSize, type ComboboxVariant } from './combobox-context'
 
-  export type ComboboxProps = {
+  export type ComboboxProps = Omit<
+    WithoutChildrenOrChild<BitsCombobox.RootProps>,
+    'type' | 'value' | 'onValueChange' | 'items'
+  > & {
     /** Controlled value. A string when single-select, an array when `multiple`. */
     value?: string | string[]
     /** Uncontrolled initial value. */

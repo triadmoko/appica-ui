@@ -1,13 +1,10 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { ContextMenu as BitsContextMenu } from 'bits-ui'
+  import { ContextMenu as BitsContextMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { commitBindableChange } from '../../internal/utils'
 
-  export type ContextMenuSubProps = {
-    /** Controlled open state of the submenu. */
-    open?: boolean
-    onOpenChange?: (open: boolean) => void
+  export type ContextMenuSubProps = WithoutChildrenOrChild<BitsContextMenu.SubProps> & {
     children?: Snippet
   }
 

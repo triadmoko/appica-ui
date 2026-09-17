@@ -1,12 +1,9 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs } from '../../internal/utils'
 
-  export type MenubarMenuProps = {
-    /** Value assigned to this menu. Used to control which menu is open. */
-    value?: string
-    onOpenChange?: (open: boolean) => void
+  export type MenubarMenuProps = WithoutChildrenOrChild<BitsMenubar.MenuProps> & {
     children?: Snippet
   }
 

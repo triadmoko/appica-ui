@@ -1,13 +1,10 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Menubar as BitsMenubar } from 'bits-ui'
+  import { Menubar as BitsMenubar, type WithoutChildrenOrChild } from 'bits-ui'
   import { commitBindableChange } from '../../internal/utils'
 
-  export type MenubarSubProps = {
-    /** Controlled open state of the submenu. */
-    open?: boolean
-    onOpenChange?: (open: boolean) => void
+  export type MenubarSubProps = WithoutChildrenOrChild<BitsMenubar.SubProps> & {
     children?: Snippet
   }
 

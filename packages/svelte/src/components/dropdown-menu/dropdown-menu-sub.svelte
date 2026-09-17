@@ -1,13 +1,10 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { DropdownMenu as BitsDropdownMenu } from 'bits-ui'
+  import { DropdownMenu as BitsDropdownMenu, type WithoutChildrenOrChild } from 'bits-ui'
   import { commitBindableChange } from '../../internal/utils'
 
-  export type DropdownMenuSubProps = {
-    /** Controlled open state of the submenu. */
-    open?: boolean
-    onOpenChange?: (open: boolean) => void
+  export type DropdownMenuSubProps = WithoutChildrenOrChild<BitsDropdownMenu.SubProps> & {
     children?: Snippet
   }
 

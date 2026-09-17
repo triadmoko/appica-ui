@@ -1,13 +1,16 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Combobox as BitsCombobox } from 'bits-ui'
+  import { Combobox as BitsCombobox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { setAutocompleteContext, type AutocompleteSize, type AutocompleteVariant } from './autocomplete-context'
   import { filterItems, stringifyItem } from './autocomplete-filter'
 
-  export type AutocompleteProps = {
+  export type AutocompleteProps = Omit<
+    WithoutChildrenOrChild<BitsCombobox.RootProps>,
+    'type' | 'value' | 'onValueChange' | 'items' | 'loop'
+  > & {
     /**
      * The data to filter. A flat array, or `{ value, items }` objects for grouped options.
      */
