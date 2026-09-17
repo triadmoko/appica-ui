@@ -200,7 +200,7 @@
   }
 
   const onControlledSelect = (api: CarouselApi) => {
-    current = api.selectedSnap()
+    current = current + 1
   }
 </script>
 
