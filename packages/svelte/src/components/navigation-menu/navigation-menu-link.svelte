@@ -9,10 +9,15 @@
   type Props = HTMLAnchorAttributes & {
     /** Marks this link as the current page. */
     active?: boolean
+    /**
+     * Close the navigation menu when the link is clicked.
+     * @default false
+     */
+    closeOnClick?: boolean
     children?: Snippet
   }
 
-  let { class: className, href, active, children, ...rest }: Props = $props()
+  let { class: className, href, active, closeOnClick = false, children, ...rest }: Props = $props()
 
   const ctx = getNavigationMenuContext()
   const inContent = getNavigationMenuInContent()
@@ -25,6 +30,10 @@
       className,
     ),
   )
+
+  function handleSelect(event: Event) {
+    if (!closeOnClick) event.preventDefault()
+  }
 </script>
 
 <BitsNavigationMenu.Link
@@ -32,6 +41,7 @@
   data-orientation={vertical ? 'vertical' : 'horizontal'}
   {href}
   {active}
+  onSelect={handleSelect}
   class={classes}
   {...asBitsAttrs(rest)}
 >

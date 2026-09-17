@@ -4,6 +4,8 @@ export type NavigationMenuVariant = 'pill' | 'line'
 export type NavigationMenuSize = 'sm' | 'md' | 'lg'
 export type NavigationMenuIconKind = 'chevron' | 'caret' | 'plus' | false
 export type NavigationMenuOrientation = 'horizontal' | 'vertical'
+export type NavigationMenuSide = 'top' | 'right' | 'bottom' | 'left' | 'inline-end' | 'inline-start'
+export type NavigationMenuAlign = 'start' | 'center' | 'end'
 
 export interface NavigationMenuContextValue {
   variant: NavigationMenuVariant
@@ -12,7 +14,9 @@ export interface NavigationMenuContextValue {
   orientation: NavigationMenuOrientation
   backdrop: boolean
   morph: boolean
+  sideOffset: number
   isOpen: () => boolean
+  rootEl: () => HTMLElement | null
 }
 
 const KEY = Symbol('appica-navigation-menu')

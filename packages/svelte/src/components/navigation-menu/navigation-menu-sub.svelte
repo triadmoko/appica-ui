@@ -3,13 +3,15 @@
   import type { Snippet } from 'svelte'
   import { NavigationMenu as BitsNavigationMenu } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
-  import { setNavigationMenuContext, getNavigationMenuContext } from './navigation-menu-context'
+  import { getNavigationMenuContext, setNavigationMenuContext } from './navigation-menu-context'
 
   type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
   let { class: className, children, ...rest }: Props = $props()
 
   const parent = getNavigationMenuContext()
+  let subEl = $state<HTMLElement | null>(null)
+
   setNavigationMenuContext({
     get variant(): 'pill' {
       return 'pill'
@@ -29,10 +31,20 @@
     get morph() {
       return parent.morph
     },
+    get sideOffset() {
+      return 12
+    },
     isOpen: () => parent.isOpen(),
+    rootEl: () => subEl,
   })
 </script>
 
-<BitsNavigationMenu.Sub data-slot="navigation-menu-sub" orientation="vertical" class={cn(className)} {...asBitsAttrs(rest)}>
+<BitsNavigationMenu.Sub
+  bind:ref={subEl}
+  data-slot="navigation-menu-sub"
+  orientation="vertical"
+  class={cn(className)}
+  {...asBitsAttrs(rest)}
+>
   {@render children?.()}
 </BitsNavigationMenu.Sub>

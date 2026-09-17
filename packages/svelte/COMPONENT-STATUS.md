@@ -48,7 +48,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `menubar` - Wave 2: bits-ui `Menubar.Root` + `Menu` (not a DropdownMenu wrap). Extra `MenubarCheckboxGroup`. Vertical uses `side=right`.
 - [x] `meter` - Wave 1. Native ARIA `role="meter"` (no bits-ui). Threshold status classes on the indicator.
 - [x] `navigation` - Wave 1. Native `<nav>` / list / `el` on `NavigationLink` (`a` / `button`). No `render` / `child`.
-- [x] `navigation-menu` - Wave 2: bits-ui. Viewport auto-rendered (`viewport` default `true`). Appica `NavigationMenuIcon`, backdrop, Sub (pill + vertical inside Content). `useDirection()` for `dir`.
+- [x] `navigation-menu` - Wave 2: bits-ui. Nested `<NavigationMenu>` inside Content maps to bits `Sub`. Viewport auto-rendered via Appica `NavigationMenuPositioner` (portal, backdrop, trigger-following morph; `viewport` default `true`). `delayDuration` default 50. Appica `NavigationMenuIcon`. `useDirection()` for `dir`.
 - [x] `number-field` - Wave 2: native (bits-ui has no NumberField). Steppers + `Intl.NumberFormat`. Digit overlay is CSS `translateY`, not Motion. Reads Field context.
 - [x] `otp-field` - Wave 2: bits-ui PinInput. Public `length` maps to `maxlength`. Root snippet `{ cells }` → `OTPFieldInput {cell}`. One hidden input is the form control. `OTPFieldSeparator` is Appica chrome.
 - [x] `pagination` - Wave 1. `el` on `PaginationLink` (`a` / `button`). Links use `buttonVariants` via context.

@@ -6,13 +6,14 @@
   import { useDirection } from '../../hooks/use-direction/use-direction'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import {
+    getNavigationMenuInContent,
     setNavigationMenuContext,
     type NavigationMenuIconKind,
     type NavigationMenuOrientation,
     type NavigationMenuSize,
     type NavigationMenuVariant,
   } from './navigation-menu-context'
-  import NavigationMenuViewport from './navigation-menu-viewport.svelte'
+  import NavigationMenuPositioner from './navigation-menu-positioner.svelte'
 
   type Props = HTMLAttributes<HTMLElement> & {
     /**
@@ -36,12 +37,12 @@
      */
     backdrop?: boolean
     /**
-     * Auto-render the viewport that hosts portalled content. Set `false` to render your own.
+     * Auto-render the portalled positioner + popup. Set `false` to render your own.
      * @default true
      */
     viewport?: boolean
     /**
-     * Animate the viewport's size between items.
+     * Animate the popup's size and position between items.
      * @default true
      */
     morph?: boolean
@@ -51,8 +52,13 @@
      */
     orientation?: NavigationMenuOrientation
     /**
+     * Gap between the trigger and the auto-rendered popup.
+     * @default 6, or 12 when nested inside Content
+     */
+    sideOffset?: number
+    /**
      * Delay in ms before a hover opens a panel.
-     * @default 200
+     * @default 50
      */
     delayDuration?: number
     /** Controlled open item value. */
@@ -73,7 +79,8 @@
     viewport = true,
     morph = true,
     orientation = 'horizontal',
-    delayDuration = 200,
+    sideOffset,
+    delayDuration = 50,
     value = $bindable(),
     defaultValue = '',
     onValueChange,
@@ -82,7 +89,10 @@
   }: Props = $props()
 
   const direction = useDirection()
+  const nested = getNavigationMenuInContent()
+  const resolvedSideOffset = $derived(sideOffset ?? (nested ? 12 : 6))
 
+  let rootEl = $state<HTMLElement | null>(null)
   let innerValue = $state('')
   innerValue = untrack(() => value ?? defaultValue)
 
@@ -124,23 +134,46 @@
     get morph() {
       return morph
     },
+    get sideOffset() {
+      return resolvedSideOffset
+    },
     isOpen: () => innerValue !== '',
+    rootEl: () => rootEl,
   })
 </script>
 
-<BitsNavigationMenu.Root
-  data-slot="navigation-menu"
-  data-orientation={orientation}
-  {orientation}
-  delayDuration={delayDuration}
-  dir={direction.current}
-  bind:value={innerValue}
-  onValueChange={handleValueChange}
-  class={cn(className)}
-  {...asBitsAttrs(rest)}
->
-  {@render children?.()}
-  {#if viewport}
-    <NavigationMenuViewport />
-  {/if}
-</BitsNavigationMenu.Root>
+{#if nested}
+  <BitsNavigationMenu.Sub
+    bind:ref={rootEl}
+    data-slot="navigation-menu"
+    data-orientation={orientation}
+    {orientation}
+    bind:value={innerValue}
+    onValueChange={handleValueChange}
+    class={cn(className)}
+    {...asBitsAttrs(rest)}
+  >
+    {#if viewport}
+      <NavigationMenuPositioner sideOffset={resolvedSideOffset} />
+    {/if}
+    {@render children?.()}
+  </BitsNavigationMenu.Sub>
+{:else}
+  <BitsNavigationMenu.Root
+    bind:ref={rootEl}
+    data-slot="navigation-menu"
+    data-orientation={orientation}
+    {orientation}
+    delayDuration={delayDuration}
+    dir={direction.current}
+    bind:value={innerValue}
+    onValueChange={handleValueChange}
+    class={cn(className)}
+    {...asBitsAttrs(rest)}
+  >
+    {#if viewport}
+      <NavigationMenuPositioner sideOffset={resolvedSideOffset} />
+    {/if}
+    {@render children?.()}
+  </BitsNavigationMenu.Root>
+{/if}

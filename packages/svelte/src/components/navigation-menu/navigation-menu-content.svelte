@@ -12,6 +12,10 @@
   } as const
 
   type Props = HTMLAttributes<HTMLDivElement> & {
+    /**
+     * Keep the content in the DOM while closed, so SSR and search can reach it.
+     * @default false
+     */
     keepMounted?: boolean
     children?: Snippet
   }
@@ -24,14 +28,19 @@
   const classes = $derived(
     cn(
       ctx.morph && [
+        'absolute inset-0',
         'motion-safe:transition-[opacity,translate] motion-safe:duration-350 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]',
         'data-starting-style:motion-safe:opacity-0',
         'data-ending-style:motion-safe:opacity-0',
         'data-[state=closed]:motion-safe:opacity-0',
+        'data-[motion=from-start]:motion-safe:-translate-x-4',
+        'data-[motion=from-end]:motion-safe:translate-x-4',
+        'data-[motion=to-start]:motion-safe:translate-x-4',
+        'data-[motion=to-end]:motion-safe:-translate-x-4',
       ],
-      className,
     ),
   )
+  const bodyClasses = $derived(cn('w-max', CONTENT_PADDING[ctx.size], className))
 </script>
 
 <BitsNavigationMenu.Content
@@ -40,7 +49,7 @@
   forceMount={keepMounted ? true : undefined}
   {...asBitsAttrs(rest)}
 >
-  <div class={cn('flex w-max flex-col', CONTENT_PADDING[ctx.size])}>
+  <div class={bodyClasses}>
     {@render children?.()}
   </div>
 </BitsNavigationMenu.Content>

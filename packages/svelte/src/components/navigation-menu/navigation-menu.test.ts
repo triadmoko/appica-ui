@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { axe } from 'vitest-axe'
 import NavigationMenuHost from './navigation-menu.test-host.svelte'
 import NavigationMenuIconOverrideHost from './navigation-menu.icon-override-host.svelte'
+import NavigationMenuExtraHost from './navigation-menu.extra-host.svelte'
 
 const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 })
 const overlay = { hidden: true as const }
@@ -102,7 +103,10 @@ describe('NavigationMenu', () => {
     const user = setupUser()
     render(NavigationMenuHost)
     await user.click(screen.getByRole('button', { name: /Products/ }))
-    expect(await screen.findByRole('link', { name: 'Product One', ...overlay })).toBeInTheDocument()
+    const link = await screen.findByRole('link', { name: 'Product One', ...overlay })
+    const popup = document.querySelector('[data-slot="navigation-menu-popup"]') as HTMLElement
+    expect(popup).not.toBeNull()
+    expect(popup.contains(link)).toBe(true)
   })
 
   it('closes the menu on Escape', async () => {
@@ -158,6 +162,47 @@ describe('NavigationMenu', () => {
     await user.click(screen.getByRole('button', { name: /Products/ }))
     await new Promise((resolve) => setTimeout(resolve, 100))
     expect(document.querySelector('[data-slot="navigation-menu-popup"]')).toBeNull()
+  })
+
+  it('opens a nested NavigationMenu as a second popup', async () => {
+    const user = setupUser()
+    render(NavigationMenuExtraHost, { props: { nested: true } })
+    await user.click(screen.getByRole('button', { name: /Products/ }))
+    await user.click(await screen.findByRole('button', { name: /Handbook/, ...overlay }))
+    expect(await screen.findByRole('link', { name: 'Getting started', ...overlay })).toBeInTheDocument()
+    expect(document.querySelectorAll('[data-slot="navigation-menu-popup"]').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders a consumer Viewport without popup chrome when viewport is false', async () => {
+    const user = setupUser()
+    render(NavigationMenuExtraHost, { props: { customViewport: true } })
+    await user.click(screen.getByRole('button', { name: /Products/ }))
+    await screen.findByRole('link', { name: 'Nested One', ...overlay })
+    const inline = document.querySelector('[data-testid="inline-viewport"]') as HTMLElement
+    expect(inline).not.toBeNull()
+    expect(inline.className).toContain('overflow-hidden')
+    expect(inline.className).not.toContain('shadow-2xl')
+    expect(document.querySelector('[data-slot="navigation-menu-popup"]')).toBeNull()
+  })
+
+  it('applies Content className to the measured panel so p-0 drops the default padding', async () => {
+    const user = setupUser()
+    render(NavigationMenuExtraHost, { props: { contentClass: 'p-0' } })
+    await user.click(screen.getByRole('button', { name: /Products/ }))
+    await screen.findByRole('link', { name: 'Product One', ...overlay })
+    const content = document.querySelector('[data-slot="navigation-menu-content"]') as HTMLElement
+    const body = content.firstElementChild as HTMLElement
+    expect(body.className).toContain('p-0')
+    expect(body.className).not.toMatch(/(?:^|\s)p-2(?:\s|$)/)
+  })
+
+  it('opens the popup to the inline-end side when orientation is vertical', async () => {
+    const user = setupUser()
+    render(NavigationMenuHost, { props: { orientation: 'vertical' } })
+    await user.click(screen.getByRole('button', { name: /Products/ }))
+    await screen.findByRole('link', { name: 'Product One', ...overlay })
+    const positioner = document.querySelector('[data-slot="navigation-menu-positioner"]') as HTMLElement
+    expect(['right', 'inline-end']).toContain(positioner.getAttribute('data-side'))
   })
 
   it('has no accessibility violations when closed', async () => {
