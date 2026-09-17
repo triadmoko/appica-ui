@@ -46,7 +46,11 @@
   })
 
   $effect(() => {
-    if (indicator.visible) animate = true
+    if (!indicator.visible || animate) return
+    const frame = requestAnimationFrame(() => {
+      animate = true
+    })
+    return () => cancelAnimationFrame(frame)
   })
 
   const listStyle = $derived(

@@ -25,11 +25,13 @@
   const active = $derived(id !== null && activeIds.includes(id))
   const indent = $derived(DEPTH_INDENT[Math.min(Math.max(Math.trunc(depth), 2), 6)])
 
-  const registerLink = (node: HTMLAnchorElement) => {
+  const registerLink = $derived.by(() => {
     const headingId = id
-    if (!headingId) return
-    return untrack(() => ctx.register(headingId, node))
-  }
+    return (node: HTMLAnchorElement) => {
+      if (!headingId) return
+      return untrack(() => ctx.register(headingId, node))
+    }
+  })
 </script>
 
 <a
