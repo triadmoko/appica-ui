@@ -7,7 +7,7 @@
   import { setTabsContext } from './tabs-context'
   import type { TabsListVariant, TabsOrientation, TabsSize } from './tabs-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type TabsProps = HTMLAttributes<HTMLDivElement> & {
     /** Controlled selected tab. Pair with `onValueChange` or `bind:value`. */
     value?: string
     /** Uncontrolled initial tab. */
@@ -29,6 +29,16 @@
      * @default 'horizontal'
      */
     orientation?: TabsOrientation
+    /**
+     * Activate a tab as soon as it is focused with the arrow keys, not only on click or Enter.
+     * @default false
+     */
+    activateOnFocus?: boolean
+    /**
+     * Whether arrow-key focus wraps from the last trigger to the first and back.
+     * @default true
+     */
+    loopFocus?: boolean
     children?: Snippet
   }
 
@@ -40,9 +50,14 @@
     variant = 'pill',
     size = 'md',
     orientation = 'horizontal',
+    activateOnFocus = false,
+    loopFocus = true,
     children,
     ...rest
-  }: Props = $props()
+  }: TabsProps = $props()
+
+  let inner = $state('')
+  inner = untrack(() => value ?? defaultValue)
 
   setTabsContext({
     get variant() {
@@ -54,10 +69,10 @@
     get orientation() {
       return orientation
     },
+    get value() {
+      return inner
+    },
   })
-
-  let inner = $state('')
-  inner = untrack(() => value ?? defaultValue)
 
   $effect(() => {
     if (value !== undefined) inner = value
@@ -78,6 +93,7 @@
   }
 
   const classes = $derived(cn('flex gap-6 data-[orientation=horizontal]:flex-col', className))
+  const activationMode = $derived(activateOnFocus ? 'automatic' : 'manual')
 </script>
 
 <BitsTabs.Root
@@ -86,6 +102,8 @@
   bind:value={inner}
   onValueChange={handleValueChange}
   {orientation}
+  {activationMode}
+  loop={loopFocus}
   {...asBitsAttrs(rest)}
 >
   {@render children?.()}

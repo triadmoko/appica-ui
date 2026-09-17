@@ -11,7 +11,7 @@
     type TabsTriggerSize,
   } from './tabs-variants'
 
-  type Props = HTMLButtonAttributes & {
+  export type TabsTriggerProps = HTMLButtonAttributes & {
     /** Value of the tab this trigger selects. */
     value: string
     /**
@@ -27,7 +27,8 @@
     children?: Snippet
   }
 
-  let { class: className, value, variant: variantProp, size: sizeProp, disabled, children, ...rest }: Props = $props()
+  let { class: className, value, variant: variantProp, size: sizeProp, disabled, children, ...rest }: TabsTriggerProps =
+    $props()
 
   const ctx = getTabsContext()
   const variant = $derived(variantProp ?? ctx.variant)

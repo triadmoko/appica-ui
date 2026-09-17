@@ -7,26 +7,34 @@
 
   let {
     defaultValue = 'one',
+    value,
+    onValueChange,
     secondDisabled,
     variant,
     size,
     orientation,
+    keepMounted,
+    activateOnFocus,
   }: {
     defaultValue?: string
+    value?: string
+    onValueChange?: (value: string) => void
     secondDisabled?: boolean
     variant?: TabsListVariant
     size?: TabsSize
     orientation?: TabsOrientation
+    keepMounted?: boolean
+    activateOnFocus?: boolean
   } = $props()
 </script>
 
-<Tabs {defaultValue} {variant} {size} {orientation}>
+<Tabs {defaultValue} {value} {onValueChange} {variant} {size} {orientation} {activateOnFocus}>
   <TabsList>
     <TabsTrigger value="one">One</TabsTrigger>
     <TabsTrigger value="two" disabled={secondDisabled}>Two</TabsTrigger>
     <TabsTrigger value="three">Three</TabsTrigger>
   </TabsList>
-  <TabsContent value="one">Panel One</TabsContent>
-  <TabsContent value="two">Panel Two</TabsContent>
-  <TabsContent value="three">Panel Three</TabsContent>
+  <TabsContent value="one" {keepMounted}>Panel One</TabsContent>
+  <TabsContent value="two" {keepMounted}>Panel Two</TabsContent>
+  <TabsContent value="three" {keepMounted}>Panel Three</TabsContent>
 </Tabs>

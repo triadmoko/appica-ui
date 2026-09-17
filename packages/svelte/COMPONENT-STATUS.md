@@ -67,7 +67,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 - [x] `spinner` - Wave 1. Circular / dots as CSS `@keyframes`; sparkle morphs via rAF. Gated by `useReducedMotion`.
 - [x] `switch` - Wave 2: bits-ui `Switch.Root` + `Thumb`. `size` sm/md/lg. `bind:checked`. `aria-invalid` → `data-invalid`. Reads Field context.
 - [x] `table` - Wave 1. Native table parts. `highlighted` on `TableRow`.
-- [x] `tabs` - Wave 2: bits-ui. Custom sliding indicator (`data-slot="tabs-indicator"`) because bits-ui has no Tabs.Indicator. `data-[state=active]:`.
+- [x] `tabs` - Wave 2: bits-ui. Custom sliding indicator (`data-slot="tabs-indicator"`) because bits-ui has no Tabs.Indicator. `data-[state=active]:`. `activateOnFocus` / `loopFocus` on Root (bits-ui has no List equivalents). Inactive panels unmount unless `keepMounted`.
 - [x] `text-animate` - Wave 1. rAF clock + `IntersectionObserver`. Required `text` prop (Svelte cannot tokenize string children). Presets match React.
 - [x] `textarea` - Wave 1. Same patterns as Input (`bind:value`, `clearable`, `start` / `end`). Reads Field context.
 - [x] `thumbnail` - Wave 1. Image vs icon variants; same size/shape scale as Avatar.

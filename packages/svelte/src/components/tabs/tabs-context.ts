@@ -5,6 +5,7 @@ export interface TabsContextValue {
   variant: TabsListVariant
   size: TabsSize
   orientation: TabsOrientation
+  value: string
 }
 
 const KEY = Symbol('appica-tabs')
