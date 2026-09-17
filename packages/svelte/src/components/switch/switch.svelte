@@ -1,31 +1,22 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import { untrack } from 'svelte'
-  import { Switch as BitsSwitch } from 'bits-ui'
+  import { Switch as BitsSwitch, type WithoutChildrenOrChild } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, commitBindableChange, invalidDataAttr } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { switchSizes, type SwitchSize } from './switch-sizes'
 
-  type Props = HTMLButtonAttributes & {
-    /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
-    checked?: boolean
+  export type SwitchProps = WithoutChildrenOrChild<BitsSwitch.RootProps> & {
     /**
      * Uncontrolled initial checked state.
      * @default false
      */
     defaultChecked?: boolean
-    /** Fires when the checked state is committed. */
-    onCheckedChange?: (checked: boolean) => void
     /**
      * Scales the track and thumb together.
      * @default 'md'
      */
     size?: SwitchSize
-    /** Field name submitted with a form, via a hidden input. */
-    name?: string
-    /** Value submitted with the form when checked. */
-    value?: string
   }
 
   let {
@@ -41,7 +32,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: SwitchProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

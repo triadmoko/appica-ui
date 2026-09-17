@@ -1,21 +1,16 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Checkbox as BitsCheckbox } from 'bits-ui'
+  import { Checkbox as BitsCheckbox, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { setCheckboxGroupContext } from './checkbox-group-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
-    /** Controlled selected values. Pair with `onValueChange` or `bind:value`. */
-    value?: string[]
+  export type CheckboxGroupProps = WithoutChildrenOrChild<BitsCheckbox.GroupProps> & {
     /**
      * Uncontrolled initial selected values.
      * @default []
      */
     defaultValue?: string[]
-    /** Fires when the selected values change. */
-    onValueChange?: (value: string[]) => void
     /**
      * Every child value - required to drive a `parent` "select all" checkbox.
      */
@@ -25,13 +20,6 @@
      * @default 'vertical'
      */
     orientation?: 'horizontal' | 'vertical'
-    /** Field name submitted with a form for every child checkbox. */
-    name?: string
-    /**
-     * Disable every checkbox in the group.
-     * @default false
-     */
-    disabled?: boolean
     children?: Snippet
   }
 
@@ -46,7 +34,7 @@
     disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: CheckboxGroupProps = $props()
 
   let inner = $state<string[]>([])
   inner = untrack(() => value ?? defaultValue)

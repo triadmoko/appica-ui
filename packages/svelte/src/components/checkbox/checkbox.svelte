@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import { untrack } from 'svelte'
-  import { Checkbox as BitsCheckbox } from 'bits-ui'
+  import { Checkbox as BitsCheckbox, type WithoutChildrenOrChild } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, commitBindableChange, invalidDataAttr } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
@@ -10,35 +9,17 @@
   const SQUISH_MS = 300
   const SQUISH_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
-  type Props = HTMLButtonAttributes & {
-    /** Controlled checked state. Pair with `onCheckedChange` or `bind:checked`. */
-    checked?: boolean
+  export type CheckboxProps = WithoutChildrenOrChild<BitsCheckbox.RootProps> & {
     /**
      * Uncontrolled initial checked state.
      * @default false
      */
     defaultChecked?: boolean
-    /** Fires when the checked state is committed. */
-    onCheckedChange?: (checked: boolean) => void
-    /**
-     * Mixed state. Sets `aria-checked="mixed"` and draws a dash.
-     * @default false
-     */
-    indeterminate?: boolean
     /**
      * Inside a `CheckboxGroup`, makes this the "select all" box driven by the children (needs group `allValues`).
      * @default false
      */
     parent?: boolean
-    /**
-     * Field name on form submit. When `value` is omitted, also how a `CheckboxGroup` matches this box to its value array.
-     */
-    name?: string
-    /**
-     * Value submitted with the form, and the identity of this box inside a `CheckboxGroup`.
-     * Falls back to `name` when omitted.
-     */
-    value?: string
   }
 
   let {
@@ -55,7 +36,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: CheckboxProps = $props()
 
   const field = getFieldContext()
   const group = getCheckboxGroupContext()

@@ -1,2 +1,3 @@
 export { default as Switch } from './switch.svelte'
+export type { SwitchProps } from './switch.svelte'
 export type { SwitchSize } from './switch-sizes'

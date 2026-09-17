@@ -1,22 +1,17 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { Toggle as BitsToggle, ToggleGroup as BitsToggleGroup } from 'bits-ui'
+  import { Toggle as BitsToggle, ToggleGroup as BitsToggleGroup, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { tryGetToolbarContext } from '../toolbar/toolbar-context.svelte'
   import { getToggleGroupContext } from '../toggle-group/toggle-group-context'
 
-  type Props = HTMLButtonAttributes & {
-    /** Controlled pressed state. Pair with `onPressedChange` or `bind:pressed`. */
-    pressed?: boolean
+  export type ToggleProps = WithoutChildrenOrChild<BitsToggle.RootProps> & {
     /**
      * Uncontrolled initial pressed state.
      * @default false
      */
     defaultPressed?: boolean
-    /** Fires when the pressed state is committed. */
-    onPressedChange?: (pressed: boolean) => void
     /** Identity of this toggle inside a `ToggleGroup`. Required in a group. */
     value?: string
     children?: Snippet
@@ -31,7 +26,7 @@
     disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: ToggleProps = $props()
 
   const inGroup = getToggleGroupContext()
   const toolbar = tryGetToolbarContext()
@@ -83,7 +78,7 @@
         data-slot="toggle"
         data-pressed={itemPressed ? '' : undefined}
         data-disabled={isDisabled ? '' : undefined}
-        tabindex={toolbar ? tabIndex : props.tabindex}
+        tabindex={toolbar ? tabIndex : typeof props.tabindex === 'number' ? props.tabindex : undefined}
         onfocus={handleFocus}
       >
         {@render children?.()}

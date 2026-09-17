@@ -7,7 +7,7 @@
   import { getChipGroupContext } from './chip-context'
   import { chipSizeVariants, closeIconSize, type ChipSize, type ChipVariant } from './chip-variants'
 
-  type Props = HTMLButtonAttributes &
+  export type ChipProps = HTMLButtonAttributes &
     HTMLAnchorAttributes & {
       /**
        * Visual style, from the shared Button palette. Inherited from `ChipGroup`.
@@ -55,7 +55,7 @@
     onclick,
     disabled,
     ...rest
-  }: Props = $props()
+  }: ChipProps = $props()
 
   const group = getChipGroupContext()
   const resolvedVariant = $derived((variant ?? group?.variant ?? 'soft') as ChipVariant)

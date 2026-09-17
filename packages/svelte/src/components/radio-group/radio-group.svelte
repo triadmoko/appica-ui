@@ -1,33 +1,16 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { RadioGroup as BitsRadioGroup } from 'bits-ui'
+  import { RadioGroup as BitsRadioGroup, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
-    /** Controlled selected value. Pair with `onValueChange` or `bind:value`. */
-    value?: string
+  export type RadioGroupProps = Omit<WithoutChildrenOrChild<BitsRadioGroup.RootProps>, 'readonly'> & {
     /**
      * Uncontrolled initial selected value.
      * @default ''
      */
     defaultValue?: string
-    /** Fires when the selected value changes. */
-    onValueChange?: (value: string) => void
-    /**
-     * Lay options out in a row or column; sets which arrow keys move selection.
-     * @default 'vertical'
-     */
-    orientation?: 'horizontal' | 'vertical'
-    /** Field name submitted with a form. */
-    name?: string
-    /**
-     * Disable every radio in the group.
-     * @default false
-     */
-    disabled?: boolean
     children?: Snippet
   }
 
@@ -44,7 +27,7 @@
     'aria-describedby': ariaDescribedby,
     children,
     ...rest
-  }: Props = $props()
+  }: RadioGroupProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

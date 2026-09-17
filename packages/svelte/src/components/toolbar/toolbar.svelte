@@ -4,7 +4,7 @@
   import { cn } from '../../internal/utils'
   import { setToolbarContext, ToolbarState, type ToolbarOrientation } from './toolbar-context.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToolbarProps = HTMLAttributes<HTMLDivElement> & {
     /**
      * Lay items in a row or a column.
      * @default 'horizontal'
@@ -30,7 +30,7 @@
     loopFocus = true,
     children,
     ...rest
-  }: Props = $props()
+  }: ToolbarProps = $props()
 
   const ctx = new ToolbarState()
   ctx.getOrientation = () => orientation

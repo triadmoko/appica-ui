@@ -1,8 +1,7 @@
 <script lang="ts">
-  import type { HTMLInputAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { PinInput as BitsPinInput } from 'bits-ui'
+  import { PinInput as BitsPinInput, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import {
@@ -18,7 +17,10 @@
     isHovering: boolean
   }
 
-  type Props = Omit<HTMLInputAttributes, 'size' | 'value' | 'children' | 'readonly'> & {
+  export type OTPFieldProps = Omit<
+    WithoutChildrenOrChild<BitsPinInput.RootProps>,
+    'maxlength' | 'readonly' | 'onComplete' | 'children' | 'size'
+  > & {
     /**
      * Slot appearance - bordered or filled.
      * @default 'outline'
@@ -74,7 +76,7 @@
     'aria-label': ariaLabel,
     children: slots,
     ...rest
-  }: Props = $props()
+  }: OTPFieldProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

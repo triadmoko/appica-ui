@@ -3,9 +3,9 @@
   import { cn } from '../../internal/utils'
   import { getToolbarContext } from './toolbar-context.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement>
+  export type ToolbarSeparatorProps = HTMLAttributes<HTMLDivElement>
 
-  let { class: className, ...rest }: Props = $props()
+  let { class: className, ...rest }: ToolbarSeparatorProps = $props()
 
   const ctx = getToolbarContext()
   const orientation = $derived(ctx.orientation === 'vertical' ? 'horizontal' : 'vertical')

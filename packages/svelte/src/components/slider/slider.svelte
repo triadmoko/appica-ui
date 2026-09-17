@@ -3,13 +3,15 @@
 </script>
 
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import { untrack } from 'svelte'
-  import { Slider as BitsSlider } from 'bits-ui'
+  import { Slider as BitsSlider, type WithoutChildrenOrChild } from 'bits-ui'
   import { readTextDirection } from '../../internal/direction'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
 
-  type Props = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
+  export type SliderProps = Omit<
+    WithoutChildrenOrChild<BitsSlider.RootProps>,
+    'type' | 'value' | 'onValueChange'
+  > & {
     /** Controlled value. A number for a single thumb, an array for a range. */
     value?: number | number[]
     /** Uncontrolled initial value. */
@@ -23,27 +25,6 @@
     tooltipVisibility?: SliderTooltipVisibility
     /** Accessible name for each thumb. Use a function to name range ends. */
     thumbAriaLabel?: string | ((index: number) => string)
-    /**
-     * @default 0
-     */
-    min?: number
-    /**
-     * @default 100
-     */
-    max?: number
-    /**
-     * @default 1
-     */
-    step?: number
-    /**
-     * @default 'horizontal'
-     */
-    orientation?: 'horizontal' | 'vertical'
-    /**
-     * Blocks interaction and dims the control.
-     * @default false
-     */
-    disabled?: boolean
   }
 
   let {
@@ -59,7 +40,7 @@
     orientation = 'horizontal',
     disabled,
     ...rest
-  }: Props = $props()
+  }: SliderProps = $props()
 
   function toSingle(next: number | number[] | undefined): number {
     if (next == null) return 0

@@ -34,7 +34,7 @@
     lg: 'text-base',
   }
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  export type NumberFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
@@ -91,7 +91,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: NumberFieldProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

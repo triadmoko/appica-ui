@@ -10,9 +10,9 @@
     lg: 'w-5 [&_svg]:size-4.5',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type OTPFieldSeparatorProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: OTPFieldSeparatorProps = $props()
 
   const ctx = getOTPFieldContext()
 </script>

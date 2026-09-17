@@ -10,7 +10,7 @@
 
   const OUTLINED_VARIANTS = new Set<ButtonGroupVariant>(['primary-outline', 'outline', 'light'])
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ButtonGroupProps = HTMLAttributes<HTMLDivElement> & {
     /** Visual style applied to every child `Button`. Inherited unless a button sets its own `variant`. */
     variant?: ButtonGroupVariant
     /** Height/padding applied to every child `Button`. Inherited unless a button sets its own `size`. */
@@ -36,7 +36,7 @@
     orientation = 'horizontal',
     children,
     ...rest
-  }: Props = $props()
+  }: ButtonGroupProps = $props()
 
   setButtonGroupContext({
     get variant() {

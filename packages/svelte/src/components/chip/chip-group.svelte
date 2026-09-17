@@ -6,7 +6,7 @@
   import { setChipGroupContext } from './chip-context'
   import type { ChipSize, ChipVariant } from './chip-variants'
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ChipGroupProps = HTMLAttributes<HTMLDivElement> & {
     /** Default `variant` for every child chip; a chip may override it. */
     variant?: ChipVariant
     /** Default `size` for every child chip; a chip may override it. */
@@ -14,7 +14,7 @@
     children?: Snippet
   }
 
-  let { class: className, variant, size, children, ...rest }: Props = $props()
+  let { class: className, variant, size, children, ...rest }: ChipGroupProps = $props()
 
   const dismissers = new SvelteSet<() => void>()
 

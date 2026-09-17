@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { getToolbarContext } from './toolbar-context.svelte'
 
-  type Props = HTMLButtonAttributes & { children?: Snippet }
+  export type ToolbarButtonProps = HTMLButtonAttributes & { children?: Snippet }
 
-  let { class: className, disabled, type = 'button', children, ...rest }: Props = $props()
+  let { class: className, disabled, type = 'button', children, ...rest }: ToolbarButtonProps = $props()
 
   const ctx = getToolbarContext()
   let node = $state<HTMLButtonElement | undefined>()

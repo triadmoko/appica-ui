@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
   import { untrack } from 'svelte'
-  import { ToggleGroup as BitsToggleGroup } from 'bits-ui'
+  import { ToggleGroup as BitsToggleGroup, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn, commitBindableChange } from '../../internal/utils'
   import { setToggleGroupContext } from './toggle-group-context'
 
-  type Orientation = 'horizontal' | 'vertical'
-
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type ToggleGroupProps = Omit<
+    WithoutChildrenOrChild<BitsToggleGroup.RootProps>,
+    'type' | 'value' | 'onValueChange' | 'loop'
+  > & {
     /** Controlled value. A string when single-select, an array when `multiple`. */
     value?: string | string[]
     /** Uncontrolled initial value. */
@@ -21,20 +21,10 @@
      */
     multiple?: boolean
     /**
-     * Lay items out in a row or a column; sets which arrow keys move focus.
-     * @default 'horizontal'
-     */
-    orientation?: Orientation
-    /**
      * Whether arrow keys wrap around the ends.
      * @default true
      */
     loopFocus?: boolean
-    /**
-     * Disable every toggle in the group.
-     * @default false
-     */
-    disabled?: boolean
     children?: Snippet
   }
 
@@ -49,7 +39,7 @@
     disabled,
     children,
     ...rest
-  }: Props = $props()
+  }: ToggleGroupProps = $props()
 
   setToggleGroupContext()
 

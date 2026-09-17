@@ -4,9 +4,9 @@
   import { cn } from '../../internal/utils'
   import { getToolbarContext } from './toolbar-context.svelte'
 
-  type Props = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
+  export type ToolbarGroupProps = HTMLAttributes<HTMLDivElement> & { children?: Snippet }
 
-  let { class: className, children, ...rest }: Props = $props()
+  let { class: className, children, ...rest }: ToolbarGroupProps = $props()
 
   const ctx = getToolbarContext()
 </script>

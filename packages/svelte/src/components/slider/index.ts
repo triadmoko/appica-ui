@@ -1,1 +1,1 @@
-export { default as Slider, type SliderTooltipVisibility } from './slider.svelte'
+export { default as Slider, type SliderProps, type SliderTooltipVisibility } from './slider.svelte'

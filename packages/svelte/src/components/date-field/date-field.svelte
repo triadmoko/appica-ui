@@ -2,25 +2,15 @@
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import type { DateValue } from '@internationalized/date'
-  import type { DateOnInvalid, DateValidator, EditableSegmentPart } from 'bits-ui'
+  import { type DateFieldRootProps, type WithoutChildrenOrChild } from 'bits-ui'
   export type DateFieldVariant = 'outline' | 'soft'
   export type DateFieldSize = 'sm' | 'md' | 'lg'
   export type DateFieldGranularity = 'day' | 'hour' | 'minute' | 'second'
 
-  export type DateFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'placeholder'> & {
-    /** Controlled value. Pair with `onValueChange` or `bind:value`. */
-    value?: DateValue
+  export type DateFieldProps = Omit<WithoutChildrenOrChild<DateFieldRootProps>, 'readonly'> &
+    Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'placeholder'> & {
     /** Uncontrolled initial value. */
     defaultValue?: DateValue
-    /** Fires when the date changes. */
-    onValueChange?: (value: DateValue | undefined) => void
-    /**
-     * Placeholder date when the field is empty. Also sets the `DateValue` type
-     * (`CalendarDate`, `CalendarDateTime`, or `ZonedDateTime`) and the visible format.
-     */
-    placeholder?: DateValue
-    /** Fires when the placeholder date changes. */
-    onPlaceholderChange?: (value: DateValue | undefined) => void
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
@@ -35,17 +25,11 @@
     start?: Snippet
     /** Adornment rendered after the segments, inside the frame. */
     end?: Snippet
-    disabled?: boolean
     /**
      * Segments stay focusable and readable but can't be edited.
      * @default false
      */
     readOnly?: boolean
-    /**
-     * Marks the hidden form input as required (needs `name`).
-     * @default false
-     */
-    required?: boolean
     /** Renders a hidden `<input>` with the ISO date for form submission. */
     name?: string
     /**
@@ -53,32 +37,6 @@
      * @default false
      */
     unstyled?: boolean
-    /**
-     * Smallest unit shown as a segment. Inferred from the value or placeholder type when omitted:
-     * `day` for `CalendarDate`, `minute` for `CalendarDateTime` and `ZonedDateTime`.
-     */
-    granularity?: DateFieldGranularity
-    /** Locale used to format segments. */
-    locale?: string
-    /** Earliest selectable date. */
-    minValue?: DateValue
-    /** Latest selectable date. */
-    maxValue?: DateValue
-    /**
-     * 12-hour or 24-hour clock when time segments are shown.
-     */
-    hourCycle?: 12 | 24
-    /**
-     * Hide the time zone segment when the value is a `ZonedDateTime`.
-     * @default false
-     */
-    hideTimeZone?: boolean
-    /** Segment parts that stay readable but can't be edited. */
-    readonlySegments?: EditableSegmentPart[]
-    /** Return an error string (or list) when the date is invalid. */
-    validate?: DateValidator
-    /** Fires when the value fails `minValue`, `maxValue`, or `validate`. */
-    onInvalid?: DateOnInvalid
   }
 </script>
 

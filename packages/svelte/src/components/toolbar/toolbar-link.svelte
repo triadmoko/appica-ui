@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte'
   import { getToolbarContext } from './toolbar-context.svelte'
 
-  type Props = HTMLAnchorAttributes & { children?: Snippet }
+  export type ToolbarLinkProps = HTMLAnchorAttributes & { children?: Snippet }
 
-  let { class: className, href, children, ...rest }: Props = $props()
+  let { class: className, href, children, ...rest }: ToolbarLinkProps = $props()
 
   const ctx = getToolbarContext()
   let node = $state<HTMLAnchorElement | undefined>()

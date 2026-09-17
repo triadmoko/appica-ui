@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
-  import { PinInput as BitsPinInput } from 'bits-ui'
+  import { PinInput as BitsPinInput, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { inputVariants } from '../input/input-variants'
   import { getOTPFieldContext, type OTPFieldCell } from './otp-field-context'
@@ -12,13 +11,13 @@
     lg: 'w-12',
   } as const
 
-  type Props = HTMLAttributes<HTMLDivElement> & {
+  export type OTPFieldInputProps = Omit<WithoutChildrenOrChild<BitsPinInput.CellProps>, 'cell'> & {
     /** Cell object from the `OTPField` children snippet. */
     cell: OTPFieldCell
     children?: Snippet
   }
 
-  let { class: className, cell, children, ...rest }: Props = $props()
+  let { class: className, cell, children, ...rest }: OTPFieldInputProps = $props()
 
   const ctx = getOTPFieldContext()
   const classes = $derived(

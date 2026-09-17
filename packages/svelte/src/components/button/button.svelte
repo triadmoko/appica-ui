@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { Snippet } from 'svelte'
+  import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { VariantProps } from 'class-variance-authority'
-  import { Button as BitsButton } from 'bits-ui'
+  import { Button as BitsButton, type WithoutChildrenOrChild } from 'bits-ui'
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getButtonGroupContext } from '../button-group/button-group-context'
   import { buttonVariants } from './button-variants'
@@ -10,7 +10,7 @@
   type ButtonVariant = VariantProps<typeof buttonVariants>['variant']
   type ButtonSize = VariantProps<typeof buttonVariants>['size']
 
-  type Props = HTMLButtonAttributes & {
+  export type ButtonProps = WithoutChildrenOrChild<Extract<BitsButton.RootProps, HTMLButtonAttributes>> & {
     /**
      * Visual style.
      * @default 'primary'
@@ -41,7 +41,7 @@
     onpointerdown,
     children,
     ...rest
-  }: Props = $props()
+  }: ButtonProps = $props()
 
   const group = getButtonGroupContext()
   const resolvedVariant = $derived(variant ?? group?.variant)

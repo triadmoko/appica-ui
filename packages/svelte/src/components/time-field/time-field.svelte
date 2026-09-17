@@ -1,18 +1,15 @@
 <script lang="ts" module>
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import type { TimeValue } from 'bits-ui'
+  import { type TimeFieldRootProps, type TimeValue, type WithoutChildrenOrChild } from 'bits-ui'
   export type TimeFieldVariant = 'outline' | 'soft'
   export type TimeFieldSize = 'sm' | 'md' | 'lg'
   export type TimeFieldGranularity = 'hour' | 'minute' | 'second'
 
-  export type TimeFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
-    /** Controlled value. Pair with `onValueChange` or `bind:value`. */
-    value?: TimeValue
+  export type TimeFieldProps = Omit<WithoutChildrenOrChild<TimeFieldRootProps<TimeValue>>, 'readonly'> &
+    Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /** Uncontrolled initial value. */
     defaultValue?: TimeValue
-    /** Fires when the time changes. */
-    onValueChange?: (value: TimeValue | undefined) => void
     /**
      * Field appearance - bordered or filled.
      * @default 'outline'
@@ -27,28 +24,18 @@
     start?: Snippet
     /** Adornment rendered after the segments, inside the frame. */
     end?: Snippet
-    disabled?: boolean
+    /**
+     * Segments stay focusable and readable but can't be edited.
+     * @default false
+     */
     readOnly?: boolean
-    required?: boolean
+    /** Renders a hidden `<input>` with the ISO time for form submission. */
     name?: string
     /**
      * Drop the input appearance - for composing inside another field (used by `DatePicker`).
      * @default false
      */
     unstyled?: boolean
-    /**
-     * Smallest unit shown as a segment.
-     * @default 'minute'
-     */
-    granularity?: TimeFieldGranularity
-    /** Locale used to format segments. */
-    locale?: string
-    minValue?: TimeValue
-    maxValue?: TimeValue
-    /**
-     * 12-hour or 24-hour clock.
-     */
-    hourCycle?: 12 | 24
   }
 </script>
 

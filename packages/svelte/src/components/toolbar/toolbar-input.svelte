@@ -2,9 +2,9 @@
   import type { HTMLInputAttributes } from 'svelte/elements'
   import { getToolbarContext } from './toolbar-context.svelte'
 
-  type Props = HTMLInputAttributes
+  export type ToolbarInputProps = HTMLInputAttributes
 
-  let { class: className, disabled, ...rest }: Props = $props()
+  let { class: className, disabled, ...rest }: ToolbarInputProps = $props()
 
   const ctx = getToolbarContext()
   let node = $state<HTMLInputElement | undefined>()

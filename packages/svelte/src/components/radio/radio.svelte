@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
-  import { RadioGroup as BitsRadioGroup } from 'bits-ui'
+  import { RadioGroup as BitsRadioGroup, type WithoutChildrenOrChild } from 'bits-ui'
   import { useReducedMotion } from '../../hooks/use-reduced-motion/use-reduced-motion'
   import { asBitsAttrs, cn, invalidDataAttr } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
@@ -8,10 +7,7 @@
   const SQUISH_MS = 300
   const SQUISH_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
-  type Props = HTMLButtonAttributes & {
-    /** Value of this option. Must be unique within the parent `RadioGroup`. */
-    value: string
-  }
+  export type RadioProps = WithoutChildrenOrChild<BitsRadioGroup.ItemProps>
 
   let {
     class: className,
@@ -21,7 +17,7 @@
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     ...rest
-  }: Props = $props()
+  }: RadioProps = $props()
 
   const field = getFieldContext()
   const control = $derived(

@@ -18,7 +18,7 @@
 
   const defaultItemAriaLabel = (value: number, count: number) => `${value} of ${count}`
 
-  type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+  export type RatingProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     /** Controlled rating. Pair with `onValueChange` or `bind:value`. */
     value?: number
     /**
@@ -106,7 +106,7 @@
     style,
     'aria-label': ariaLabel,
     ...rest
-  }: Props = $props()
+  }: RatingProps = $props()
 
   const reducedMotion = useReducedMotion()
   const reduced = $derived(reducedMotion.current)
