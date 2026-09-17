@@ -78,7 +78,7 @@
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Masked</p>
-    <OTPField length={6} type="password" aria-label="Masked code">
+    <OTPField length={6} mask aria-label="Masked code">
       {#snippet children({ cells })}
         {#each cells as cell, index (index)}
           <OTPFieldInput {cell} />
@@ -91,7 +91,7 @@
     <p class="text-foreground-muted text-sm">Controlled verify</p>
     <Field>
       <FieldLabel>Verification code {code ? `(${code})` : ''}</FieldLabel>
-      <OTPField bind:value={code} length={6} onComplete={(next) => (verified = next)} aria-label="Verification code">
+      <OTPField bind:value={code} length={6} onValueComplete={(next) => (verified = next)} aria-label="Verification code">
         {#snippet children({ cells })}
           {#each cells as cell, index (index)}
             {#if index === 3}
@@ -117,7 +117,7 @@
           {/each}
         {/snippet}
       </OTPField>
-      <OTPField length={4} readonly defaultValue="5678" aria-label="Read-only code">
+      <OTPField length={4} readOnly defaultValue="5678" aria-label="Read-only code">
         {#snippet children({ cells })}
           {#each cells as cell, index (index)}
             <OTPFieldInput {cell} />

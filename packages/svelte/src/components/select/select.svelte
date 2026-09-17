@@ -36,6 +36,10 @@
     /** Field name submitted with a form, via a hidden input. */
     name?: string
     disabled?: boolean
+    /**
+     * Map values to labels for the closed trigger. Use when item children are richer than the label text.
+     */
+    items?: Record<string, string>
     children?: Snippet
   }
 
@@ -49,6 +53,7 @@
     multiple = false,
     name,
     disabled,
+    items,
     children,
     ...rest
   }: Props = $props()
@@ -139,6 +144,7 @@
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleMultipleChange}
+    {items}
     {...asBitsAttrs({ ...rest, 'data-slot': 'select' })}
   >
     {@render children?.()}
@@ -150,6 +156,7 @@
     name={control.name}
     disabled={control.disabled}
     onValueChange={handleSingleChange}
+    {items}
     {...asBitsAttrs({ ...rest, 'data-slot': 'select' })}
   >
     {@render children?.()}

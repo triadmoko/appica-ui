@@ -29,7 +29,7 @@
      * Whether arrow keys wrap around the ends.
      * @default true
      */
-    loop?: boolean
+    loopFocus?: boolean
     /**
      * Disable every toggle in the group.
      * @default false
@@ -45,7 +45,7 @@
     onValueChange,
     multiple = false,
     orientation = 'horizontal',
-    loop = true,
+    loopFocus = true,
     disabled,
     children,
     ...rest
@@ -118,7 +118,7 @@
     class={classes}
     bind:value={innerMultiple}
     {orientation}
-    {loop}
+    loop={loopFocus}
     {disabled}
     onValueChange={handleMultipleChange}
     {...asBitsAttrs(rest)}
@@ -132,7 +132,7 @@
     class={classes}
     bind:value={innerSingle}
     {orientation}
-    {loop}
+    loop={loopFocus}
     {disabled}
     onValueChange={handleSingleChange}
     {...asBitsAttrs(rest)}

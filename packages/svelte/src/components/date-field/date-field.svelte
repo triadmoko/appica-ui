@@ -40,7 +40,7 @@
      * Segments stay focusable and readable but can't be edited.
      * @default false
      */
-    readonly?: boolean
+    readOnly?: boolean
     /**
      * Marks the hidden form input as required (needs `name`).
      * @default false
@@ -100,7 +100,7 @@
     start,
     end,
     disabled,
-    readonly,
+    readOnly = false,
     required,
     name,
     unstyled = false,
@@ -171,7 +171,7 @@
   bind:value={() => value ?? defaultValue, handleValueChange}
   bind:placeholder={() => placeholder, handlePlaceholderChange}
   disabled={control.disabled}
-  {readonly}
+  readonly={readOnly}
   {required}
   {granularity}
   {locale}

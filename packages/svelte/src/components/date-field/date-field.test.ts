@@ -61,7 +61,7 @@ describe('DateField', () => {
   })
 
   it('keeps segments focusable when readonly', () => {
-    render(DateFieldHost, { props: { readonly: true, defaultValue: JUN_23 } })
+    render(DateFieldHost, { props: { readOnly: true, defaultValue: JUN_23 } })
     expect(screen.getByRole('group')).not.toHaveAttribute('aria-disabled', 'true')
     expect(screen.getByRole('spinbutton', { name: /month/i })).not.toHaveAttribute('tabindex', '-1')
   })

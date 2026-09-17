@@ -28,7 +28,7 @@
     /** Adornment rendered after the segments, inside the frame. */
     end?: Snippet
     disabled?: boolean
-    readonly?: boolean
+    readOnly?: boolean
     required?: boolean
     name?: string
     /**
@@ -69,7 +69,7 @@
     start,
     end,
     disabled,
-    readonly,
+    readOnly = false,
     required,
     name,
     unstyled = false,
@@ -147,7 +147,7 @@
   bind:value={inner}
   onValueChange={handleValueChange}
   disabled={control.disabled}
-  {readonly}
+  readonly={readOnly}
   {required}
   {granularity}
   {locale}

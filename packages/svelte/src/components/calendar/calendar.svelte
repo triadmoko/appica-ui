@@ -56,7 +56,7 @@
     weekStartsOn?: WeekStartsOn
     /** Locale used to format weekdays, months, and years. */
     locale?: string
-    readonly?: boolean
+    readOnly?: boolean
     /**
      * Prevent clearing the selection by re-clicking the selected day.
      * @default false
@@ -115,7 +115,7 @@
     pagedNavigation = false,
     weekStartsOn = 1,
     locale,
-    readonly,
+    readOnly = false,
     required = false,
     startMonth,
     endMonth,
@@ -246,7 +246,7 @@
     weekStartsOn,
     locale,
     disabled: dateDisabled,
-    readonly,
+    readonly: readOnly,
     minValue,
     maxValue,
     fixedWeeks,

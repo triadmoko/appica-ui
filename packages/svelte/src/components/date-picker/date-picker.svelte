@@ -67,7 +67,7 @@
     /** Adornment rendered after the field(s), inside the frame. */
     end?: Snippet
     disabled?: boolean
-    readonly?: boolean
+    readOnly?: boolean
     required?: boolean
     name?: string
     /**
@@ -276,7 +276,7 @@
     start,
     end,
     disabled,
-    readonly,
+    readOnly = false,
     required,
     name,
     rangeSeparator = '-',
@@ -565,7 +565,7 @@
         {start}
         end={composedEnd}
         disabled={control.disabled}
-        {readonly}
+        readOnly={readOnly}
         {required}
         name={control.name}
         granularity="day"
@@ -586,7 +586,7 @@
             {@render start()}
           </div>
         {/if}
-        <DateField unstyled value={singleDate} onValueChange={handleDateFieldChange} {variant} {size} disabled={control.disabled} {readonly} {required} granularity="day" {locale} {minValue} {maxValue} />
+        <DateField unstyled value={singleDate} onValueChange={handleDateFieldChange} {variant} {size} disabled={control.disabled} readOnly={readOnly} {required} granularity="day" {locale} {minValue} {maxValue} />
         <TimeField
           unstyled
           value={singleDate ? toTimeValue(singleDate) : undefined}
@@ -594,7 +594,7 @@
           {variant}
           {size}
           disabled={control.disabled}
-          {readonly}
+          readOnly={readOnly}
           {required}
           {locale}
           {hourCycle}
@@ -627,7 +627,7 @@
           {variant}
           {size}
           disabled={control.disabled}
-          {readonly}
+          readOnly={readOnly}
           {required}
           granularity="day"
           {locale}
@@ -642,7 +642,7 @@
             {variant}
             {size}
             disabled={control.disabled}
-            {readonly}
+            readOnly={readOnly}
             {required}
             {locale}
             {hourCycle}
@@ -656,7 +656,7 @@
           {variant}
           {size}
           disabled={control.disabled}
-          {readonly}
+          readOnly={readOnly}
           {required}
           granularity="day"
           {locale}
@@ -671,7 +671,7 @@
             {variant}
             {size}
             disabled={control.disabled}
-            {readonly}
+            readOnly={readOnly}
             {required}
             {locale}
             {hourCycle}

@@ -5,6 +5,7 @@
   import { asBitsAttrs, cn } from '../../internal/utils'
   import { getFieldContext, mergeFieldControl } from '../field/field-context'
   import { inputVariants } from '../input/input-variants'
+  import { tryGetToolbarContext } from '../toolbar/toolbar-context.svelte'
   import { getSelectContext } from './select-context'
 
   const ICON_SIZE = {
@@ -34,6 +35,7 @@
     disabled,
     id,
     onkeydown,
+    onfocus,
     'aria-invalid': ariaInvalid,
     'aria-describedby': ariaDescribedby,
     children,
@@ -42,6 +44,7 @@
 
   const ctx = getSelectContext()
   const field = getFieldContext()
+  const toolbar = tryGetToolbarContext()
   const control = $derived(
     mergeFieldControl({
       field,
@@ -51,6 +54,20 @@
       ariaDescribedby,
     }),
   )
+  const isDisabled = $derived(Boolean(control.disabled || toolbar?.disabled))
+  let node = $state<HTMLElement | undefined>()
+  const tabIndex = $derived(toolbar && node && toolbar.isTabStop(node) ? 0 : -1)
+
+  function attach(el: HTMLElement) {
+    node = el
+    if (!toolbar) return
+    return toolbar.register({ el, disabled: () => isDisabled })
+  }
+
+  function handleFocus(event: FocusEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
+    if (node && toolbar) toolbar.tabStop = node
+    onfocus?.(event)
+  }
   const canClear = $derived(clearable && ctx.hasValue())
   const iconSize = $derived(ICON_SIZE[ctx.size])
   const classes = $derived(
@@ -72,14 +89,18 @@
 </script>
 
 <BitsSelect.Trigger
+  {@attach attach}
   data-slot="select-trigger"
   class={classes}
-  disabled={control.disabled}
+  disabled={isDisabled}
   id={control.id}
   aria-invalid={control.ariaInvalid}
   aria-describedby={control.describedby}
   data-invalid={control.invalid ? '' : undefined}
+  data-disabled={toolbar && isDisabled ? '' : undefined}
+  tabindex={toolbar ? tabIndex : undefined}
   onkeydown={handleKeyDown}
+  onfocus={handleFocus}
   {...asBitsAttrs(rest)}
   role="combobox"
 >

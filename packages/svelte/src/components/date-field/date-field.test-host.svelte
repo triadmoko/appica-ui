@@ -11,7 +11,7 @@
     name,
     disabled = false,
     invalid = false,
-    readonly = false,
+    readOnly = false,
     unstyled = false,
     size,
     variant,
@@ -23,7 +23,7 @@
     name?: string
     disabled?: boolean
     invalid?: boolean
-    readonly?: boolean
+    readOnly?: boolean
     unstyled?: boolean
     size?: DateFieldSize
     variant?: DateFieldVariant
@@ -35,8 +35,8 @@
 {#if invalid}
   <Field {invalid} {name}>
     <FieldLabel>{label}</FieldLabel>
-    <DateField {defaultValue} {value} {name} {disabled} {readonly} {unstyled} {size} {variant} {locale} />
+    <DateField {defaultValue} {value} {name} {disabled} {readOnly} {unstyled} {size} {variant} {locale} />
   </Field>
 {:else}
-  <DateField {defaultValue} {value} {name} {disabled} {readonly} {unstyled} {size} {variant} {locale} aria-label={label} />
+  <DateField {defaultValue} {value} {name} {disabled} {readOnly} {unstyled} {size} {variant} {locale} aria-label={label} />
 {/if}

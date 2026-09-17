@@ -18,7 +18,7 @@
     isHovering: boolean
   }
 
-  type Props = Omit<HTMLInputAttributes, 'size' | 'value' | 'children'> & {
+  type Props = Omit<HTMLInputAttributes, 'size' | 'value' | 'children' | 'readonly'> & {
     /**
      * Slot appearance - bordered or filled.
      * @default 'outline'
@@ -40,7 +40,17 @@
     /** Fires when the value changes. */
     onValueChange?: (value: string) => void
     /** Fires when every slot is filled. */
-    onComplete?: (value: string) => void
+    onValueComplete?: (value: string) => void
+    /**
+     * Obscure the entered characters.
+     * @default false
+     */
+    mask?: boolean
+    /**
+     * Slots stay visible but can't be edited.
+     * @default false
+     */
+    readOnly?: boolean
     children?: Snippet<[CellSnippetProps]>
   }
 
@@ -52,7 +62,10 @@
     value = $bindable(),
     defaultValue,
     onValueChange,
-    onComplete,
+    onValueComplete,
+    mask = false,
+    readOnly = false,
+    type,
     disabled,
     id,
     name,
@@ -98,7 +111,7 @@
   }
 
   function handleComplete() {
-    onComplete?.(inner)
+    onValueComplete?.(inner)
   }
 
   setOTPFieldContext({
@@ -121,6 +134,8 @@
   bind:value={inner}
   onValueChange={handleValueChange}
   onComplete={handleComplete}
+  type={mask ? 'password' : type}
+  readonly={readOnly}
   disabled={control.disabled}
   name={control.name}
   inputId={control.id}

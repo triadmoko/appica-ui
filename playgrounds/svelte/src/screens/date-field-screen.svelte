@@ -85,7 +85,7 @@
     <p class="text-foreground-muted text-sm">Disabled, read-only & error</p>
     <div class="flex w-full max-w-40 flex-wrap items-center gap-4">
       <DateField defaultValue={june23} disabled />
-      <DateField defaultValue={june23} readonly />
+      <DateField defaultValue={june23} readOnly />
       <DateField defaultValue={june23} aria-invalid />
     </div>
     <Field class="max-w-40" invalid>

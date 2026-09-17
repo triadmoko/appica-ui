@@ -12,6 +12,7 @@ export class ToolbarState {
   tabStop = $state<HTMLElement | null>(null)
   getOrientation: () => ToolbarOrientation = () => 'horizontal'
   getDisabled: () => boolean = () => false
+  getLoopFocus: () => boolean = () => true
 
   get orientation() {
     return this.getOrientation()
@@ -57,7 +58,10 @@ export class ToolbarState {
     const enabled = this.enabled()
     if (enabled.length === 0) return
     const current = enabled.findIndex((item) => item.el === this.tabStop)
-    this.focusAt((current < 0 ? 0 : current) + delta)
+    const from = current < 0 ? 0 : current
+    const next = from + delta
+    if (!this.getLoopFocus() && (next < 0 || next >= enabled.length)) return
+    this.focusAt(next)
   }
 }
 

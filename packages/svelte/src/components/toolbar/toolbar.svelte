@@ -15,6 +15,11 @@
      * @default false
      */
     disabled?: boolean
+    /**
+     * Whether arrow keys wrap around the ends.
+     * @default true
+     */
+    loopFocus?: boolean
     children?: Snippet
   }
 
@@ -22,6 +27,7 @@
     class: className,
     orientation = 'horizontal',
     disabled = false,
+    loopFocus = true,
     children,
     ...rest
   }: Props = $props()
@@ -29,6 +35,7 @@
   const ctx = new ToolbarState()
   ctx.getOrientation = () => orientation
   ctx.getDisabled = () => disabled
+  ctx.getLoopFocus = () => loopFocus
   setToolbarContext(ctx)
 
   function handleKeydown(event: KeyboardEvent) {

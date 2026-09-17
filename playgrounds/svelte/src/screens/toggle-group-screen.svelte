@@ -1,71 +1,124 @@
 <script lang="ts">
   import { DirectionProvider, Switch, Toggle, ToggleGroup, buttonVariants } from '@appica/ui-svelte'
 
-  let align = $state('left')
-  let color = $state('blue')
-  let dir: 'ltr' | 'rtl' = $state('ltr')
-
-  const swatches = [
-    { value: 'red', class: 'bg-red-500' },
-    { value: 'blue', class: 'bg-blue-500' },
-    { value: 'green', class: 'bg-green-500' },
+  const SWATCHES = [
+    { value: 'sage', name: 'Sage', color: '#8fb478' },
+    { value: 'terracotta', name: 'Terracotta', color: '#cc8259' },
+    { value: 'sand', name: 'Sand', color: '#d9ba6e' },
+    { value: 'blush', name: 'Blush', color: '#db9385' },
+    { value: 'denim', name: 'Denim', color: '#7e9cc9' },
   ]
+
+  let color = $state('sage')
+  let dir: 'ltr' | 'rtl' = $state('ltr')
+  const selected = $derived(SWATCHES.find((swatch) => swatch.value === color))
+
+  const iconClass = buttonVariants({ variant: 'ghost', size: 'icon-md' })
 </script>
+
+{#snippet alignLeft()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M15 12H3" />
+    <path d="M17 18H3" />
+    <path d="M21 6H3" />
+  </svg>
+{/snippet}
+{#snippet alignCenter()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M17 12H7" />
+    <path d="M19 18H5" />
+    <path d="M21 6H3" />
+  </svg>
+{/snippet}
+{#snippet alignRight()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12H9" />
+    <path d="M21 18H7" />
+    <path d="M21 6H3" />
+  </svg>
+{/snippet}
+{#snippet boldIcon()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 12h9a4 4 0 0 1 0 8H6V4h8a4 4 0 0 1 0 8" />
+  </svg>
+{/snippet}
+{#snippet italicIcon()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M19 4h-9" />
+    <path d="M14 20H5" />
+    <path d="m15 4-6 16" />
+  </svg>
+{/snippet}
+{#snippet underlineIcon()}
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 4v6a6 6 0 0 0 12 0V4" />
+    <path d="M4 20h16" />
+  </svg>
+{/snippet}
 
 <section class="flex flex-col gap-8">
   <h2 class="text-foreground-emphasis text-lg font-semibold">ToggleGroup</h2>
 
   <div class="flex flex-col gap-2">
-    <p class="text-foreground-muted text-sm">Single</p>
-    <ToggleGroup bind:value={align} aria-label="Text alignment">
-      <Toggle value="left" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Left</Toggle>
-      <Toggle value="center" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Center</Toggle>
-      <Toggle value="right" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Right</Toggle>
-    </ToggleGroup>
-    <p class="text-foreground-subtle text-xs">Selected: {align}</p>
-  </div>
-
-  <div class="flex flex-col gap-2">
-    <p class="text-foreground-muted text-sm">Multiple</p>
-    <ToggleGroup multiple defaultValue={['bold']} aria-label="Text style">
-      <Toggle value="bold" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Bold</Toggle>
-      <Toggle value="italic" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Italic</Toggle>
-      <Toggle value="underline" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Underline</Toggle>
+    <p class="text-foreground-muted text-sm">Single selection</p>
+    <ToggleGroup aria-label="Text alignment" defaultValue="center">
+      <Toggle value="left" aria-label="Align left" class={iconClass}>{@render alignLeft()}</Toggle>
+      <Toggle value="center" aria-label="Align center" class={iconClass}>{@render alignCenter()}</Toggle>
+      <Toggle value="right" aria-label="Align right" class={iconClass}>{@render alignRight()}</Toggle>
     </ToggleGroup>
   </div>
 
   <div class="flex flex-col gap-2">
-    <p class="text-foreground-muted text-sm">Vertical</p>
-    <ToggleGroup orientation="vertical" defaultValue="sm" aria-label="Size">
-      <Toggle value="sm" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>SM</Toggle>
-      <Toggle value="md" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>MD</Toggle>
-      <Toggle value="lg" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>LG</Toggle>
+    <p class="text-foreground-muted text-sm">Multiple selection</p>
+    <ToggleGroup aria-label="Text formatting" multiple defaultValue={['bold']}>
+      <Toggle value="bold" aria-label="Bold" class={iconClass}>{@render boldIcon()}</Toggle>
+      <Toggle value="italic" aria-label="Italic" class={iconClass}>{@render italicIcon()}</Toggle>
+      <Toggle value="underline" aria-label="Underline" class={iconClass}>{@render underlineIcon()}</Toggle>
+    </ToggleGroup>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-foreground-muted text-sm">Vertical orientation</p>
+    <ToggleGroup aria-label="Text alignment" orientation="vertical" defaultValue="left">
+      <Toggle value="left" aria-label="Align left" class={iconClass}>{@render alignLeft()}</Toggle>
+      <Toggle value="center" aria-label="Align center" class={iconClass}>{@render alignCenter()}</Toggle>
+      <Toggle value="right" aria-label="Align right" class={iconClass}>{@render alignRight()}</Toggle>
     </ToggleGroup>
   </div>
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Disabled</p>
-    <ToggleGroup disabled defaultValue="left" aria-label="Disabled alignment">
-      <Toggle value="left" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Left</Toggle>
-      <Toggle value="center" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Center</Toggle>
-      <Toggle value="right" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Right</Toggle>
+    <ToggleGroup aria-label="Text alignment" disabled defaultValue="center">
+      <Toggle value="left" aria-label="Align left" class={iconClass}>{@render alignLeft()}</Toggle>
+      <Toggle value="center" aria-label="Align center" class={iconClass}>{@render alignCenter()}</Toggle>
+      <Toggle value="right" aria-label="Align right" class={iconClass}>{@render alignRight()}</Toggle>
     </ToggleGroup>
   </div>
 
   <div class="flex flex-col gap-2">
     <p class="text-foreground-muted text-sm">Color swatches</p>
-    <ToggleGroup bind:value={color} aria-label="Color">
-      {#each swatches as swatch (swatch.value)}
-        <Toggle
-          value={swatch.value}
-          class={buttonVariants({ variant: 'ghost', size: 'icon-md' })}
-          aria-label={swatch.value}
-        >
-          <span class={['size-4 rounded-full', swatch.class]}></span>
-        </Toggle>
-      {/each}
-    </ToggleGroup>
-    <p class="text-foreground-subtle text-xs">Selected: {color}</p>
+    <div class="flex flex-col items-start gap-3">
+      <span class="text-foreground-muted text-sm">
+        Color - <span class="text-foreground-intense font-medium">{selected?.name}</span>
+      </span>
+      <ToggleGroup
+        aria-label="Swatch color"
+        class="gap-3"
+        bind:value={color}
+        onValueChange={(next) => {
+          if (typeof next === 'string' && next) color = next
+        }}
+      >
+        {#each SWATCHES as swatch (swatch.value)}
+          <Toggle
+            value={swatch.value}
+            aria-label={swatch.name}
+            style="background-color: {swatch.color}"
+            class="after:ring-border-inverse outline-ring relative size-4 rounded-full outline-offset-2 transition-transform after:pointer-events-none after:absolute after:-inset-0.5 after:scale-50 after:rounded-full after:opacity-0 after:ring-1 after:transition after:duration-200 after:ease-[cubic-bezier(0.175,0.885,0.32,1.5)] active:scale-90 data-pressed:after:scale-100 data-pressed:after:opacity-100 motion-reduce:transition-none motion-reduce:after:transition-none"
+          />
+        {/each}
+      </ToggleGroup>
+    </div>
   </div>
 
   <div class="flex flex-col gap-2">
@@ -76,10 +129,10 @@
     </label>
     <DirectionProvider {dir}>
       <div {dir}>
-        <ToggleGroup defaultValue="left" aria-label="RTL alignment">
-          <Toggle value="left" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Left</Toggle>
-          <Toggle value="center" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Center</Toggle>
-          <Toggle value="right" class={buttonVariants({ variant: 'ghost', size: 'sm' })}>Right</Toggle>
+        <ToggleGroup aria-label="RTL alignment" defaultValue="center">
+          <Toggle value="left" aria-label="Align left" class={iconClass}>{@render alignLeft()}</Toggle>
+          <Toggle value="center" aria-label="Align center" class={iconClass}>{@render alignCenter()}</Toggle>
+          <Toggle value="right" aria-label="Align right" class={iconClass}>{@render alignRight()}</Toggle>
         </ToggleGroup>
       </div>
     </DirectionProvider>
