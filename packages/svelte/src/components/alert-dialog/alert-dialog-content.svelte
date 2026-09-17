@@ -43,9 +43,17 @@
     ...rest
   }: Props = $props()
 
+  const forceBackdrop = $derived(backdropProps?.forceRender === true)
   const showFrame = $derived(frame && backdrop)
   const split = $derived(splitModalProps(rest))
   const keepMounted = $derived(split.keepMounted)
+  const overlayAttrs = $derived.by(() => {
+    if (!backdropProps) return {}
+    const restAttrs = { ...backdropProps }
+    delete restAttrs.forceRender
+    delete restAttrs.class
+    return restAttrs
+  })
   const classes = $derived(
     cn(
       'group/alert-dialog-popup relative flex max-h-full min-h-0 w-100 max-w-full flex-col pointer-events-auto',
@@ -53,7 +61,8 @@
       showFrame
         ? cn(
             'border-white/15 bg-white/10 p-1.5 backdrop-blur-sm',
-            'data-nested:border-border-overlay data-nested:bg-background data-nested:p-0 data-nested:shadow-2xl data-nested:backdrop-blur-none',
+            !forceBackdrop &&
+              'data-nested:border-border-overlay data-nested:bg-background data-nested:p-0 data-nested:shadow-2xl data-nested:backdrop-blur-none',
           )
         : 'bg-background border-border-overlay',
       !showFrame && 'shadow-2xl',
@@ -75,9 +84,10 @@
         'fixed inset-0 z-50 bg-black/30 backdrop-blur-sm supports-[-webkit-touch-callout:none]:absolute',
         'motion-safe:transition-opacity motion-safe:duration-250 motion-safe:ease-out',
         'data-ending-style:motion-safe:opacity-0 data-starting-style:motion-safe:opacity-0',
+        !forceBackdrop && 'data-nested:hidden',
         backdropProps?.class as string | undefined,
       )}
-      {...asBitsAttrs(backdropProps ?? {})}
+      {...asBitsAttrs(overlayAttrs)}
     />
   {/if}
   <div
@@ -93,6 +103,7 @@
       data-frame={showFrame ? '' : undefined}
       class={classes}
       forceMount={keepMounted ? true : undefined}
+      interactOutsideBehavior="ignore"
       {...asBitsAttrs(split.popup)}
     >
       <div
@@ -102,7 +113,8 @@
           showFrame &&
             cn(
               'bg-background rounded-[calc(var(--radius-2xl)*5/6)]',
-              'group-data-nested/alert-dialog-popup:rounded-none group-data-nested/alert-dialog-popup:bg-transparent',
+              !forceBackdrop &&
+                'group-data-nested/alert-dialog-popup:rounded-none group-data-nested/alert-dialog-popup:bg-transparent',
             ),
         )}
       >

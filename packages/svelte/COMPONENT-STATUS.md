@@ -8,7 +8,7 @@ Wave 1 is native HTML + shared Tailwind tokens. **bits-ui** is the Base UI analo
 
 - [x] `accordion` - Wave 2: bits-ui. `multiple` → `type`. Variant/icon context. Closed content unmounts (`forceMount={false}`).
 - [x] `alert` - Wave 1. Dismiss uses `svelte/transition` (`out:`), not Motion. Compound parts: Icon / Title / Description / Action. Title tag via `el`.
-- [x] `alert-dialog` - Wave 2: bits-ui. No default ×. `AlertDialog.createHandle` is a Svelte `$state` handle. Close wraps bits-ui Cancel.
+- [x] `alert-dialog` - Wave 2: bits-ui. No default ×. Nested overlay `data-nested:hidden` unless `backdropProps.forceRender`. `AlertDialog.createHandle` is a Svelte `$state` handle. Close wraps bits-ui Cancel.
 - [x] `autocomplete` - Wave 2: bits-ui Combobox analog. `items` + built-in filter; `value` is the input string. `icon` default `false`. Extra `AutocompleteStatus`. `AutocompleteCollection` maps group items. No 2D grid keyboard nav.
 - [x] `avatar` - Wave 1. Native `<img>` load/error (no Base UI). Group size/shape via context, not `cloneElement`.
 - [x] `background-pattern` - Wave 1. Native CSS masks; spotlight uses `{@attach}` + WAAPI fade (persistent under `useReducedMotion`).
